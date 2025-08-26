@@ -21,7 +21,7 @@ const page = await fetchPageBlocks(slug);
 const { blocks } =  page
 ---
 
-<Layout>
+<Layout seo={page.seo}>
     <p>slug</p>
   <BlocksToComponents blocks={blocks} />
 </Layout>

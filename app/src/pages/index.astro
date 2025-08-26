@@ -6,11 +6,11 @@ import BlocksToComponents from "../components/BlocksToComponents.astro";
 
 const page = await fetchPageBlocks("accueil");
 
-const { blocks } =  page
+const { blocks } =  page;
 
 ---
 
-<Layout>
+<Layout seo={page.seo}>
 	<p>index</p>
    <BlocksToComponents blocks={blocks} />
 </Layout>

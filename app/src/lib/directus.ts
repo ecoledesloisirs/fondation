@@ -5,7 +5,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 const client = createDirectus(DIRECTUS_URL).with(rest());
 
 export async function fetchPageBlocks(slug: string) {
-  console.log('slug', slug);
+  console.log("slug", slug);
   const pages = await client.request(
     readItems("page", {
       filter: {
@@ -23,13 +23,13 @@ export async function fetchPageBlocks(slug: string) {
             },
           ],
         },
+        { seo: ["*"] },
       ],
       limit: 1,
     })
   );
-  console.log('pages', pages);
-  
+  console.log("pages", pages);
+
   return pages[0] || []; // Return blocks array or empty if not found
 }
 export default client;
-
