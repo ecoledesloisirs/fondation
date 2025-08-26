@@ -1,0 +1,23 @@
+# Node
+node_modules/
+
+# Env
+*.env
+*.env.*
+!*.env.example
+
+# Astro
+/app/dist
+/app/.astro/
+
+# Directus
+/directus/uploads
+/directus/.env
+/directus/.env.local
+/directus/.cache
+/directus/database/
+
+# Docker
+**/.DS_Store
+**/.idea/
+**/.vscode/

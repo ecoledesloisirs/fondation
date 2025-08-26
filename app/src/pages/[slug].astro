@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { fetchPageBlocks } from "../lib/directus";
+import client from "../lib/directus";
+import { readItems } from "@directus/sdk";
+import BlocksToComponents from "../components/BlocksToComponents.astro";
+
+
+export async function getStaticPaths() {
+  // Fetch all available pages
+  const pages = await client.request(readItems("page", { fields: ["slug"] }));
+
+  return pages.map((page) => ({
+    params: { slug: page.slug },
+  }));
+}
+const { slug } = Astro.params;
+//fetch blocks for the page
+const page = await fetchPageBlocks(slug);
+
+const { blocks } =  page
+---
+
+<Layout>
+    <p>slug</p>
+  <BlocksToComponents blocks={blocks} />
+</Layout>

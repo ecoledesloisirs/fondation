@@ -1,0 +1,17 @@
+---
+import HeroBanner from "./HeroBanner.astro";
+import Mission from "./Mission.astro";
+
+const { blocks } = Astro.props
+---
+
+{console.log('blocks', blocks)}
+
+{blocks.map((block: any) => {
+  const View = (
+    block.collection === 'block_hero_banner' ? HeroBanner :
+    block.collection === 'block_mission' ? Mission :
+     () => null
+  )
+  return View && <View {...block} />
+})}

@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { fetchPageBlocks } from "../lib/directus";
+import BlocksToComponents from "../components/BlocksToComponents.astro";
+
+
+const page = await fetchPageBlocks("accueil");
+
+const { blocks } =  page
+
+---
+
+<Layout>
+	<p>index</p>
+   <BlocksToComponents blocks={blocks} />
+</Layout>
