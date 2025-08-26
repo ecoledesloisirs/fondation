@@ -33,6 +33,7 @@ services:
     volumes:
       - ./uploads:/directus/uploads
       - ./extensions:/directus/extensions
+      - ./schema:/directus/schema
     restart: unless-stopped
 
 volumes:

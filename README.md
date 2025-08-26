@@ -69,7 +69,7 @@ docker compose exec directus npx directus schema snapshot /directus/schema/snaps
 - Apply :
 
 ```
-compose exec directus npx directus schema apply /directus/schema/snapshot.yaml --yes
+docker compose exec directus npx directus schema apply /directus/schema/snapshot.yaml --yes
 ```
 
 
