@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@directus/sdk": "^18.0.3",
-    "astro": "^5.13.3"
+    "@fontsource-variable/albert-sans": "^5.2.6",
+    "@fontsource/philosopher": "^5.2.6",
+    "astro": "^5.13.3",
+    "sass": "^1.91.0"
   }
 }
