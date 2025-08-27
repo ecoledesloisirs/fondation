@@ -1,0 +1,55 @@
+$color-primary: #27566d;
+$color-info: #25638c;
+$color-secondary: #ffa100;
+$color-secondary-green: #6b9f67;
+$color-tertiary: #062430;
+$color-error: #e10000;
+$color-success: #2e7d31;
+
+$color-white: #ffffff;
+$color-black: #263238;
+$color-blue-tint-2: #a6d4e5;
+
+$font-title: "Philosopher", sans-serif;
+$font-paragraph: "Albert Sans Variable", sans-serif;
+
+$col-sm: 540px; 
+$col-md: 720px; 
+$col-lg: 960px;
+$col-xl: 1140px;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1152px,
+  xxl: 1400px,
+);
+
+$headings: (
+  h1: (
+    64px,
+    72px,
+    72px,
+    80px,
+  ),
+  h2: (
+    36px,
+    40px,
+    40px,
+    44px,
+  ),
+  h3: (
+    28px,
+    32px,
+    32px,
+    36px,
+  ),
+  h4: (
+    20px,
+    24px,
+    24px,
+    28px,
+  ),
+);

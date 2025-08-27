@@ -1,0 +1,88 @@
+@use "./variables" as vars;
+@use "./mixins" as mixins;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  /* 4. Add accessible line-height */
+  line-height: 1.5;
+  /* 5. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+  font-family: vars.$font-title;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: vars.$font-title;
+}
+
+.container {
+  margin: 0 auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  width: 100%;
+
+  @include mixins.respond-above(sm) {
+    max-width: vars.$col-sm;
+  }
+
+  @include mixins.respond-above(md) {
+    max-width: vars.$col-md;
+  }
+
+  @include mixins.respond-above(lg) {
+    max-width: vars.$col-lg;
+  }
+
+  @include mixins.respond-above(xl) {
+    max-width: vars.$col-xl;
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.hide {
+  display: none;
+}

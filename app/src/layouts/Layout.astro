@@ -1,22 +1,244 @@
+---
+import "@fontsource/philosopher";
+import "@fontsource-variable/albert-sans";
+
+import "../styles/global.scss";
+
+import { Image } from "astro:assets";
+import { Picture } from "astro:assets";
+
+import edlLogoMobile from "../assets/logo_header_mobile.png";
+import edlLogoDesktop from "../assets/logo_header_desktop.png";
+import burgerButton from "../assets/burger_button.svg";
+import burgerButtonClose from "../assets/burger_button_close.svg";
+
+const { seo } = Astro.props;
+const { title, description } = seo || {
+  title: "Default Title",
+  description: "Default Description",
+};
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="container">
+          <div class="header-wrapper">
+            <a href="/" class="logo-header-link">
+              <picture class="logo-header">
+                <source
+                  srcset={edlLogoDesktop.src}
+                  media="(min-width: 768px)"
+                />
+                <img
+                  src={edlLogoMobile.src}
+                  alt="Logo de la Fondation de l'Ecole des loisirs"
+                  loading="lazy"
+                  decoding="async"
+                  width={edlLogoMobile.width}
+                  height={edlLogoMobile.height}
+                />
+              </picture>
+            </a>
+
+            <div class="burger-wrapper">
+              <Image
+                class="burger-icon"
+                src={burgerButton}
+                alt="Bouton pour faire apparaitre le menu sur mobile"
+              />
+              <Image
+                class="burger-icon-close hide"
+                src={burgerButtonClose}
+                alt="Bouton pour faire disparaitre le menu sur mobile"
+              />
+              <span class="burger-label-open">MENU</span>
+              <span class="burger-label-close hide">FERMER</span>
+            </div>
+
+            <nav class="menu-header">
+              <ul>
+                <li><a href="#">Missions</a></li>
+                <li><a href="#">Déposer un dossier</a></li>
+                <li><a href="#">Projets Soutenus</a></li>
+                <li><a href="#">Actualités</a></li>
+                <li><a href="#">Contact</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+    </main>
+    <slot />
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style lang="scss">
+  @use "../styles/variables" as vars;
+  @use "../styles/mixins" as mixins;
+
+  header {
+    background-color: vars.$color-primary;
+    padding-bottom: mixins.rem(12px);
+    position: relative;
+
+    .header-wrapper {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: flex-end;
+    }
+
+    .logo-header-link {
+      grid-column: 2;
+      justify-self: center;
+    }
+
+    .logo-header img {
+      display: block;
+      width: 100px;
+      height: auto;
+      max-width: 100%;
+    }
+
+    .burger-wrapper {
+      grid-column: 3;
+      justify-self: end;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: mixins.rem(4px);
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      span {
+        @include mixins.typography(vars.$font-paragraph, 8px, 8px, 700);
+        color: vars.$color-white;
+      }
+    }
+
+    .menu-header {
+      background-color: vars.$color-white;
+      width: 100%;
+      padding: 0 mixins.rem(20px) mixins.rem(20px);
+      position: absolute;
+      top: 100%;
+      left: 0;
+      box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+
+      ul {
+        margin: 0;
+        padding: 0;
+      }
+
+      li {
+        list-style: none;
+      }
+
+      a {
+        color: vars.$color-primary;
+        @include mixins.typography(vars.$font-title, 20px, 24px, 700);
+        text-decoration: none;
+        width: 100%;
+        display: block;
+        padding: mixins.rem(20px) 0;
+      }
+
+      li:not(:last-child) {
+        border-bottom: 1px solid vars.$color-blue-tint-2;
+      }
+    }
+
+    .menu-header.active {
+      transform: translateX(0);
+    }
+  }
+
+  @include mixins.respond-above(lg) {
+    header {
+      .header-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo-header img {
+        width: 140px;
+        height: auto;
+      }
+
+      .burger-wrapper {
+        display: none;
+      }
+
+      .menu-header {
+        position: static;
+        transform: translateX(0);
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0;
+        width: auto;
+
+        ul {
+          display: flex;
+          gap: mixins.rem(42px);
+          margin-top: mixins.rem(12px);
+        }
+
+        a {
+          @include mixins.typography(vars.$font-paragraph, 18px, 24px, 700);
+          color: vars.$color-white;
+          padding: 0;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        li:not(:last-child) {
+          border-bottom: none;
+        }
+      }
+    }
+  }
 </style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const burgerButton = document.querySelector(".burger-wrapper");
+    const menuHeader = document.querySelector(".menu-header");
+    const burgerLabelOpen = document.querySelector(".burger-label-open");
+    const burgerLabelClose = document.querySelector(".burger-label-close");
+    const burgerIconOpen = document.querySelector(".burger-icon");
+    const burgerIconClose = document.querySelector(".burger-icon-close");
+
+    if (
+      burgerButton &&
+      menuHeader &&
+      burgerLabelOpen &&
+      burgerLabelClose &&
+      burgerIconOpen &&
+      burgerIconClose
+    ) {
+      burgerButton.addEventListener("click", () => {
+        menuHeader.classList.toggle("active");
+        burgerLabelOpen.classList.toggle("hide");
+        burgerLabelClose.classList.toggle("hide");
+        burgerIconOpen.classList.toggle("hide");
+        burgerIconClose.classList.toggle("hide");
+      });
+    }
+  });
+</script>
