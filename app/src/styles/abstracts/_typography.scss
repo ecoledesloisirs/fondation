@@ -1,0 +1,19 @@
+@use "sass:list";
+@use "./variables" as vars;
+@use "./mixins" as mixins;
+@use "./functions" as fn;
+
+$font-title: "Philosopher", sans-serif;
+$font-paragraph: "Albert Sans Variable", sans-serif;
+
+@each $tag, $sizes in vars.$headings {
+  #{$tag} {
+    font-size: fn.rem(list.nth($sizes, 1));
+    line-height: fn.rem(list.nth($sizes, 2));
+
+    @include mixins.respond-above(md) {
+      font-size: fn.rem(list.nth($sizes, 3));
+      line-height: fn.rem(list.nth($sizes, 4));
+    }
+  }
+}

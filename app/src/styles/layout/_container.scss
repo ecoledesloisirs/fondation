@@ -1,0 +1,32 @@
+@use "../abstracts";
+
+.container {
+  margin: 0 auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  width: 100%;
+
+  @include abstracts.respond-above(sm) {
+    max-width: abstracts.$col-sm;
+  }
+
+  @include abstracts.respond-above(md) {
+    max-width: abstracts.$col-md;
+  }
+
+  @include abstracts.respond-above(lg) {
+    max-width: abstracts.$col-lg;
+  }
+
+  @include abstracts.respond-above(xl) {
+    max-width: abstracts.$col-xl;
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}

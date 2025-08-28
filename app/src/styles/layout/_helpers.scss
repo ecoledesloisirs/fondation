@@ -1,0 +1,19 @@
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  &:focus {
+    left: 1rem;
+    top: 1rem;
+    z-index: 1000;
+  }
+}

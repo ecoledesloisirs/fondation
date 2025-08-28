@@ -1,0 +1,16 @@
+@use "sass:map";
+@use "./functions" as fn;
+@use "./breakpoints" as bp;
+
+@mixin respond-above($breakpoint) {
+  @media (min-width: map.get(bp.$grid-breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+@mixin typography($family, $size, $lineHeight, $weight: 400) {
+  font-family: $family;
+  font-size: fn.rem($size);
+  line-height: fn.rem($lineHeight);
+  font-weight: $weight;
+}
