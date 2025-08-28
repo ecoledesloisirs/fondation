@@ -1,0 +1,332 @@
+---
+import { Image } from "astro:assets";
+
+import edlLogoMobile from "../assets/logo_header_mobile.png";
+import edlLogoDesktop from "../assets/logo_header_desktop.png";
+import burgerButton from "../assets/burger_button.svg";
+import burgerButtonClose from "../assets/burger_button_close.svg";
+---
+
+<header role="banner">
+  <div class="container">
+    <div class="header-wrapper">
+      <a href="/" class="logo-header-link" aria-current="page">
+        <picture class="logo-header">
+          <source srcset={edlLogoDesktop.src} media="(min-width: 992px)" />
+          <img
+            src={edlLogoMobile.src}
+            alt="Logo de la Fondation de l'École des loisirs"
+            loading="lazy"
+            decoding="async"
+            width={edlLogoMobile.width}
+            height={edlLogoMobile.height}
+          />
+        </picture>
+      </a>
+
+      <button
+        id="menu-toggle"
+        class="burger-button"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+        aria-label="Ouvrir le menu principal"
+      >
+        <Image class="icon-open" src={burgerButton} alt="" aria-hidden="true" />
+        <Image
+          class="icon-close"
+          src={burgerButtonClose}
+          alt=""
+          aria-hidden="true"
+        />
+        <span class="btn-label">Menu</span>
+      </button>
+
+      <nav
+        id="primary-navigation"
+        class="menu-header"
+        aria-label="Menu principal"
+        hidden
+      >
+        <ul>
+          <li><a href="#">Missions</a></li>
+          <li><a href="#">Déposer un dossier</a></li>
+          <li><a href="#">Projets soutenus</a></li>
+          <li><a href="#">Actualités</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style lang="scss">
+  @use "../styles/abstracts";
+
+  header {
+    background-color: abstracts.$color-primary;
+    padding-bottom: abstracts.rem(12px);
+    position: relative;
+
+    .header-wrapper {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: flex-end;
+    }
+
+    .logo-header-link {
+      grid-column: 2;
+      justify-self: center;
+    }
+
+    .logo-header img {
+      display: block;
+      width: 100px;
+      height: auto;
+      max-width: 100%;
+    }
+
+    .menu-header {
+      background-color: abstracts.$color-white;
+      width: 100%;
+      padding: 0 abstracts.rem(20px) abstracts.rem(20px);
+      position: absolute;
+      top: 100%;
+      left: 0;
+      box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+
+      ul {
+        margin: 0;
+        padding: 0;
+      }
+
+      li {
+        list-style: none;
+      }
+
+      a {
+        color: abstracts.$color-primary;
+        @include abstracts.typography(abstracts.$font-title, 20px, 24px, 700);
+        text-decoration: none;
+        width: 100%;
+        display: block;
+        padding: abstracts.rem(20px) 0;
+      }
+
+      li:not(:last-child) {
+        border-bottom: 1px solid abstracts.$color-blue-tint-2;
+      }
+    }
+
+    .menu-header.active {
+      transform: translateX(0);
+    }
+
+    .burger-button {
+      grid-column: 3;
+      justify-self: end;
+      width: max-content;
+      display: inline-flex;
+      align-items: center;
+      gap: abstracts.rem(4px);
+      background-color: transparent;
+      display: flex;
+      flex-direction: column;
+      border: none;
+      color: white;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .burger-button:focus-visible {
+      outline: 2px solid;
+      outline-offset: 3px;
+    }
+
+    .icon-close {
+      display: none;
+    }
+
+    .burger-button.is-open .icon-open {
+      display: none;
+    }
+
+    .burger-button.is-open .icon-close {
+      display: inline;
+    }
+
+    .menu-header[hidden] {
+      display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .menu-header {
+        transition: none;
+      }
+    }
+  }
+
+  @include abstracts.respond-above(lg) {
+    header {
+      .header-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-header img {
+        width: 140px;
+        height: auto;
+      }
+
+      .burger-button {
+        display: none;
+      }
+
+      .menu-header {
+        position: static;
+        transform: translateX(0);
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0;
+        width: auto;
+
+        ul {
+          display: flex;
+          gap: abstracts.rem(42px);
+          margin-top: abstracts.rem(12px);
+        }
+
+        a {
+          @include abstracts.typography(
+            abstracts.$font-paragraph,
+            18px,
+            24px,
+            700
+          );
+          color: abstracts.$color-white;
+          padding: 0;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        li:not(:last-child) {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById(
+      "menu-toggle"
+    ) as HTMLButtonElement | null;
+    const btnLabel = document.querySelector(
+      ".btn-label"
+    ) as HTMLSpanElement | null;
+    const nav = document.getElementById(
+      "primary-navigation"
+    ) as HTMLElement | null;
+
+    const firstLink = (): HTMLElement | null =>
+      nav?.querySelector<HTMLElement>(
+        'a, button, [tabindex]:not([tabindex="-1"])'
+      ) ?? null;
+
+    let lastFocus: HTMLElement | null = null;
+
+    function openMenu() {
+      if (!btn || !nav || !btnLabel) return;
+
+      lastFocus = document.activeElement as HTMLElement | null;
+      nav.hidden = false;
+
+      requestAnimationFrame(() => {
+        nav.classList.add("active");
+        btn.setAttribute("aria-expanded", "true");
+        btn.setAttribute("aria-label", "Fermer le menu principal");
+        btnLabel.textContent = "Fermer";
+        btn.classList.add("is-open");
+        firstLink()?.focus();
+      });
+    }
+
+    function closeMenu() {
+      if (!btn || !nav || !btnLabel) return;
+
+      nav.classList.remove("active");
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-label", "Ouvrir le menu principal");
+      btn.classList.remove("is-open");
+      btnLabel.textContent = "Menu";
+
+      const onEnd = (e: TransitionEvent) => {
+        if (e.propertyName === "transform") {
+          nav.hidden = true;
+          nav.removeEventListener("transitionend", onEnd);
+        }
+      };
+      nav.addEventListener("transitionend", onEnd);
+
+      lastFocus?.focus();
+    }
+
+    btn?.addEventListener("click", () => {
+      if (!btn) return;
+      const expanded = btn.getAttribute("aria-expanded") === "true";
+      expanded ? closeMenu() : openMenu();
+    });
+
+    document.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key === "Escape" && btn?.getAttribute("aria-expanded") === "true") {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener("click", (e: MouseEvent) => {
+      if (!btn || !nav) return;
+
+      const target = e.target as Node | null;
+      if (
+        btn.getAttribute("aria-expanded") === "true" &&
+        target &&
+        !nav.contains(target) &&
+        !btn.contains(target)
+      ) {
+        closeMenu();
+      }
+    });
+
+    const mq = window.matchMedia("(min-width: 992px)");
+
+    function syncMenuToViewport(e?: MediaQueryListEvent) {
+      const matches = e?.matches ?? mq.matches; // desktop ?
+      if (!btn || !nav) return;
+
+      if (matches) {
+        nav.hidden = false;
+        nav.classList.remove("active");
+        btn.setAttribute("aria-expanded", "false");
+        btn.classList.remove("is-open");
+      } else {
+        const isOpen = btn.getAttribute("aria-expanded") === "true";
+        nav.hidden = !isOpen;
+      }
+    }
+
+    syncMenuToViewport();
+
+    if ("addEventListener" in mq) {
+      mq.addEventListener("change", syncMenuToViewport);
+    } else {
+      (mq as any).addListener?.(syncMenuToViewport);
+    }
+  });
+</script>
