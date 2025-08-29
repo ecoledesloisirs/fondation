@@ -1,0 +1,338 @@
+---
+import { Image } from "astro:assets";
+
+import instagramIcon from "../assets/instagram_icon.png";
+import linkedinIcon from "../assets/linkedin_icon.png";
+import edlLogoFooter from "../assets/logo_footer.png";
+---
+
+<footer>
+  <div class="container">
+    <div class="footer-wrapper">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <a href="/" aria-label="Accueil">
+            <Image
+              src={edlLogoFooter}
+              alt="Logo de la Fondation de l'École des loisirs"
+              loading="lazy"
+              decoding="async"
+              width={edlLogoFooter.width}
+              height={edlLogoFooter.height}
+            />
+          </a>
+        </div>
+        <div class="footer-nav">
+          <h4>Fondation <span class="italic">l’école des loisirs</span></h4>
+          <ul>
+            <li><a href="#">Appel à projet</a></li>
+            <li><a href="#">Projets soutenus</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Missions</a></li>
+            <li><a href="#">Actualités</a></li>
+          </ul>
+        </div>
+        <div class="footer-socials-rgaa">
+          <div class="footer-socials">
+            <h4>Réseaux sociaux</h4>
+            <div class="footer-socials-icons">
+              <a href="#" aria-label="LinkedIn">
+                <Image src={linkedinIcon} alt="LinkedIn" />
+              </a>
+              <a href="#" aria-label="Instagram">
+                <Image src={instagramIcon} alt="Instagram" />
+              </a>
+            </div>
+          </div>
+          <p class="footer-rgaa">
+            Site engagé dans une démarche de respect des normes d’<a href="/"
+              >accessibilité RGAA.</a
+            >
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-legal-notice">
+        <ul>
+          <li><a href="#">Conditions générales d’utilisations</a></li>
+          <li><a href="#">Mentions légales</a></li>
+          <li><a href="#">Politique de confidentialité et cookies</a></li>
+          <li><a href="#">Gestion des cookies</a></li>
+          <li><a href="#">Plan du site</a></li>
+        </ul>
+        <p class="copyright">
+          ©2025 Fondation <span class="italic">l’école des loisirs</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style lang="scss">
+  @use "../styles/abstracts";
+
+  h4 {
+    margin: 0 0 abstracts.rem(10px);
+    text-align: center;
+  }
+
+  a {
+    color: abstracts.$color-primary;
+    text-decoration: none;
+  }
+
+  footer {
+    background-color: abstracts.$color-silver;
+    padding-block: abstracts.rem(20px);
+
+    .footer-logo {
+      display: flex;
+      justify-content: center;
+
+      img {
+        max-width: abstracts.rem(100px);
+        height: auto;
+      }
+    }
+
+    .footer-nav {
+      border-top: 1px solid abstracts.$color-grey-blue;
+      border-bottom: 1px solid abstracts.$color-grey-blue;
+      padding-top: abstracts.rem(10px);
+      margin-top: abstracts.rem(30px);
+
+      ul {
+        padding: abstracts.rem(10px) 0 abstracts.rem(30px) abstracts.rem(20px);
+        columns: 2;
+        list-style-type: disc;
+
+        a {
+          @include abstracts.typography(
+            abstracts.$font-paragraph,
+            16px,
+            24px,
+            400
+          );
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      li {
+        padding-block: abstracts.rem(10px);
+        &::marker {
+          color: abstracts.$color-primary;
+        }
+      }
+    }
+
+    .footer-socials {
+      padding: abstracts.rem(10px) 0 abstracts.rem(15px);
+    }
+
+    .footer-socials-icons {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: abstracts.rem(30px);
+      margin-top: abstracts.rem(20px);
+
+      img {
+        max-width: abstracts.rem(20px);
+        height: auto;
+      }
+
+      a {
+        transition: transform 0.2s ease-in-out;
+
+        &:hover {
+          transform: translateY(-2px);
+        }
+      }
+    }
+
+    .footer-rgaa {
+      text-align: center;
+      border-top: 1px solid abstracts.$color-grey-blue;
+      border-bottom: 1px solid abstracts.$color-grey-blue;
+      padding-block: abstracts.rem(10px);
+      margin: 0;
+      @include abstracts.typography(abstracts.$font-paragraph, 12px, 16px, 400);
+
+      a {
+        text-decoration: underline;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    .footer-legal-notice {
+      ul {
+        padding-block: abstracts.rem(10px);
+        @include abstracts.typography(
+          abstracts.$font-paragraph,
+          12px,
+          16px,
+          400
+        );
+      }
+
+      a {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      li:not(:last-child) {
+        padding-bottom: abstracts.rem(20px);
+      }
+
+      li:first-child {
+        padding-top: abstracts.rem(12px);
+      }
+
+      li:last-child {
+        padding-bottom: abstracts.rem(12px);
+      }
+    }
+
+    .copyright {
+      border-top: 1px solid abstracts.$color-grey-blue;
+      @include abstracts.typography(abstracts.$font-paragraph, 12px, 16px, 400);
+      padding-top: abstracts.rem(10px);
+      margin: 0;
+      text-align: center;
+    }
+  }
+
+  @include abstracts.respond-above(md) {
+    footer {
+      .footer-top {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .footer-logo {
+        flex-basis: 30%;
+        border-right: 1px solid abstracts.$color-grey-blue;
+        padding-right: abstracts.rem(30px);
+
+        img {
+          max-width: abstracts.rem(167px);
+        }
+      }
+
+      .footer-nav {
+        flex-basis: 70%;
+        border: none;
+        padding: 0 0 0 abstracts.rem(30px);
+        margin-top: 0;
+      }
+
+      .footer-socials-rgaa {
+        flex-basis: 100%;
+        margin-top: abstracts.rem(30px);
+      }
+
+      .footer-socials {
+        border-top: 1px solid abstracts.$color-grey-blue;
+      }
+    }
+  }
+
+  @include abstracts.respond-above(lg) {
+    h4 {
+      text-align: left;
+    }
+
+    footer {
+      .footer-top {
+        justify-content: space-between;
+      }
+
+      .footer-logo {
+        flex-basis: 25%;
+      }
+
+      .footer-nav {
+        flex-basis: 45%;
+      }
+
+      .footer-socials-rgaa {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 30%;
+        margin-top: abstracts.rem(30px);
+        border-left: 1px solid abstracts.$color-grey-blue;
+        margin-top: 0;
+        padding-left: abstracts.rem(30px);
+      }
+
+      .footer-socials {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0;
+      }
+
+      .footer-socials-icons {
+        justify-content: flex-start;
+        padding-left: abstracts.rem(14px);
+      }
+
+      .footer-rgaa {
+        border: none;
+        text-align: left;
+        margin-top: auto;
+      }
+
+      .footer-legal-notice {
+        ul {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-top: 1px solid abstracts.$color-grey-blue;
+          border-bottom: 1px solid abstracts.$color-grey-blue;
+          margin-top: abstracts.rem(40px);
+          padding-block: abstracts.rem(16px);
+        }
+
+        li:not(:last-child) {
+          padding-bottom: 0;
+        }
+
+        li:first-child {
+          padding-top: 0;
+        }
+
+        li:last-child {
+          padding-bottom: 0;
+        }
+      }
+
+      .copyright {
+        border: none;
+        padding-top: abstracts.rem(16px);
+      }
+    }
+  }
+
+  @include abstracts.respond-above(xl) {
+    footer {
+      .footer-logo {
+        padding-right: abstracts.rem(60px);
+      }
+
+      .footer-nav {
+        padding: 0 0 0 abstracts.rem(60px);
+      }
+
+      .footer-socials-rgaa {
+        padding-left: abstracts.rem(60px);
+      }
+    }
+  }
+</style>

@@ -6,6 +6,7 @@ body {
   /* 5. Improve text rendering */
   -webkit-font-smoothing: antialiased;
   font-family: abstracts.$font-title;
+  color: abstracts.$color-primary;
 }
 
 p,
@@ -36,4 +37,8 @@ h2,
 h3,
 h4 {
   font-family: abstracts.$font-title;
+}
+
+.italic {
+  font-style: italic;
 }
