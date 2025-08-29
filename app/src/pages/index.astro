@@ -3,14 +3,11 @@ import Layout from "../layouts/Layout.astro";
 import { fetchPageBlocks } from "../lib/directus";
 import BlocksToComponents from "../components/BlocksToComponents.astro";
 
-
 const page = await fetchPageBlocks("accueil");
 
-const { blocks } =  page;
-
+const { blocks } = page;
 ---
 
 <Layout seo={page.seo}>
-	<p>index</p>
-   <BlocksToComponents blocks={blocks} />
+  <BlocksToComponents blocks={blocks} />
 </Layout>
