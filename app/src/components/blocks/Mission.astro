@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import quoteImg from "../assets/quote.png";
-import waveImg from "../assets/wave_mobile.png";
+import quoteImg from "../../assets/quote.png";
+import waveImg from "../../assets/wave_mobile.png";
 
 interface Mission {
   id: string;
@@ -50,7 +50,7 @@ const missions = item?.missions?.map((m) => m.item);
 </section>
 
 <style lang="scss">
-  @use "../styles/abstracts";
+  @use "../../styles/abstracts";
 
   section {
     padding-block: abstracts.rem(60px);

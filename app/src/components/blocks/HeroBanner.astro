@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import quoteImg from "../assets/quote.png";
-import waveImg from "../assets/wave_mobile.png";
+import quoteImg from "../../assets/quote.png";
+import waveImg from "../../assets/wave_mobile.png";
 
 interface HeroBannerProps {
   id: string;
@@ -77,7 +77,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 </section>
 
 <style lang="scss">
-  @use "../styles/abstracts";
+  @use "../../styles/abstracts";
 
   $depth: 80;
   $spread: 220;

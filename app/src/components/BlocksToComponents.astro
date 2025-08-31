@@ -1,19 +1,24 @@
 ---
-import HeroBanner from "./HeroBanner.astro";
-import Mission from "./Mission.astro";
+import HeroBanner from "./blocks/HeroBanner.astro";
+import Mission from "./blocks/Mission.astro";
 
-const { blocks } = Astro.props
-
+const { blocks } = Astro.props;
 ---
 
-{blocks?.map((block: any) => {
-  const View = (
-    block.collection === 'block_hero_banner' ? HeroBanner :
-    block.collection === 'block_mission' ? Mission :
-    block.collection === 'block_call_for_projects' ? Mission :
-    block.collection === 'block_news' ? Mission :
-    block.collection === 'block_contact' ? Mission :
-     () => null
-  )
-  return View && <View {...block} />
-})}
+{
+  blocks?.map((block: any) => {
+    const View =
+      block.collection === "block_hero_banner"
+        ? HeroBanner
+        : block.collection === "block_mission"
+          ? Mission
+          : block.collection === "block_call_for_projects"
+            ? Mission
+            : block.collection === "block_news"
+              ? Mission
+              : block.collection === "block_contact"
+                ? Mission
+                : () => null;
+    return View && <View {...block} />;
+  })
+}
