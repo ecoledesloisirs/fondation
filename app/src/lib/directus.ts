@@ -24,6 +24,22 @@ export async function fetchPageBlocks(slug: string) {
                   },
                   { image_mobile: ["id", "description"] },
                 ],
+                block_mission: [
+                  "id",
+                  "title",
+                  "description",
+                  {
+                    missions: [
+                      "id",
+                      "collection",
+                      {
+                        item: {
+                          mission: ["id", "title", "description"],
+                        },
+                      },
+                    ],
+                  },
+                ],
               },
             },
           ],

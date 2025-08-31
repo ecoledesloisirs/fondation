@@ -1,3 +1,99 @@
+---
+import { Image } from "astro:assets";
+import quoteImg from "../assets/quote.png";
+import waveImg from "../assets/wave_mobile.png";
+
+interface Mission {
+  id: string;
+  collection: string;
+  item: {
+    id: string;
+    title: string;
+    description: string;
+  };
+}
+
+interface MissionProps {
+  id: string;
+  item: {
+    title: string;
+    description: string;
+    missions: Mission[];
+  };
+}
+
+const { item } = Astro.props as MissionProps;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+
+const missions = item?.missions?.map((m) => m.item);
+---
+
 <section>
-    <p>test mission</p>
+  <div class="container">
+    <h2>{item.title}</h2>
+    <p>{item.description}</p>
+    {
+      missions?.length > 0 ? (
+        <ol>
+          {missions.map((m, index) => (
+            <li>
+              <span aria-hidden="true">{`0${index + 1}`}</span>
+              <h3>{m.title}</h3>
+              <p>{m.description}</p>
+            </li>
+          ))}
+        </ol>
+      ) : null
+    }
+  </div>
 </section>
+
+<style lang="scss">
+  @use "../styles/abstracts";
+
+  section {
+    padding-block: abstracts.rem(60px);
+
+    h2 {
+      margin: 0 0 abstracts.rem(16px);
+    }
+
+    h3 {
+      margin: abstracts.rem(8px) 0 abstracts.rem(12px);
+    }
+
+    ol {
+      margin-top: abstracts.rem(20px);
+    }
+
+    li {
+      border-top: 2px solid abstracts.$color-blue-tint-2;
+      padding-top: abstracts.rem(20px);
+      padding-bottom: abstracts.rem(40px);
+
+      span {
+        color: abstracts.$color-secondary;
+        @include abstracts.typography(abstracts.$font-title, 48px, 56px, 700);
+      }
+    }
+
+    p {
+      max-width: abstracts.rem(800px);
+    }
+  }
+
+  @include abstracts.respond-above(md) {
+    section {
+      ol {
+        display: flex;
+        gap: abstracts.rem(36px);
+        margin-top: abstracts.rem(60px);
+      }
+
+      li {
+        flex: 1;
+      }
+    }
+  }
+</style>
