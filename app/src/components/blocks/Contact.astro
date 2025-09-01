@@ -1,0 +1,112 @@
+---
+import Button from "../Button.astro";
+
+interface ButtonProps {
+  id: string;
+  item: {
+    label: string;
+    variant: string;
+    size: string;
+    href: string;
+  };
+}
+
+interface ContactProps {
+  id: string;
+  item: {
+    title: string;
+    description: string;
+    image_mobile: {
+      id: string;
+      description: string;
+    };
+    image_desktop: {
+      id: string;
+      description: string;
+    };
+    button: ButtonProps[];
+  };
+}
+
+const {
+  item: { title, description, image_mobile, image_desktop, button },
+} = Astro.props as ContactProps;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+---
+
+<section>
+  <picture>
+    <source
+      media="(min-width: 768px)"
+      srcset={`${DIRECTUS_URL}/assets/${image_desktop.id}?width=1600&format=webp`}
+      type="image/webp"
+    />
+
+    <img
+      srcset={`${DIRECTUS_URL}/assets/${image_mobile.id}?width=992&format=webp`}
+      alt={image_mobile.description}
+      loading="lazy"
+      class="contact-banner-img"
+    />
+  </picture>
+
+  <div class="container">
+    <h2>{title}</h2>
+    <div class="content" set:html={description} />
+    <Button
+      variant={button[0].item.variant}
+      iconPosition="right"
+      iconName="right"
+      href={button[0].item.href}>{button[0].item.label}</Button
+    >
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  section {
+    padding-top: abstracts.rem(30px);
+    padding-bottom: abstracts.rem(120px);
+
+    .contact-banner-img {
+      height: abstracts.rem(280px);
+      display: block;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .container {
+      margin-top: abstracts.rem(30px);
+    }
+
+    h2 {
+      margin: 0 0 abstracts.rem(16px);
+    }
+
+    .ui-btn {
+      max-width: abstracts.rem(320px);
+      width: 100%;
+      margin-block: abstracts.rem(16px);
+    }
+  }
+
+  @include abstracts.respond-above(md) {
+    section {
+      .ui-btn {
+        max-width: abstracts.rem(290px);
+      }
+    }
+  }
+
+  @include abstracts.respond-above(lg) {
+    section {
+      .contact-banner-img {
+        height: abstracts.rem(460px);
+        max-width: abstracts.rem(1440px);
+        margin: auto;
+      }
+    }
+  }
+</style>

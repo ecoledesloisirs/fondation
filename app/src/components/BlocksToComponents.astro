@@ -3,6 +3,7 @@ import HeroBanner from "./blocks/HeroBanner.astro";
 import Mission from "./blocks/Mission.astro";
 import CallForProjects from "./blocks/CallForProjects.astro";
 import NewsTeaser from "./blocks/NewsTeaser.astro";
+import Contact from "./blocks/Contact.astro";
 
 const { blocks } = Astro.props;
 ---
@@ -19,7 +20,7 @@ const { blocks } = Astro.props;
             : block.collection === "block_news"
               ? NewsTeaser
               : block.collection === "block_contact"
-                ? Mission
+                ? Contact
                 : () => null;
     return View && <View {...block} />;
   })

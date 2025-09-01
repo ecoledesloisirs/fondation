@@ -64,6 +64,13 @@ export async function fetchPageBlocks(slug: string) {
                     ],
                   },
                 ],
+                block_contact: [
+                  "title",
+                  "description",
+                  { image_mobile: ["id", "description"] },
+                  { image_desktop: ["id", "description"] },
+                  { button: ["*", { item: ["*"] }] },
+                ],
               },
             },
           ],
