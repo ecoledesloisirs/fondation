@@ -1,0 +1,290 @@
+---
+import Icon from "./Icon.astro";
+
+export interface Props {
+  variant?: string;
+  size?: string;
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  iconPosition?: "left" | "right";
+  disabled?: boolean;
+  loading?: boolean;
+  block?: boolean;
+  ariaLabel?: string;
+  class?: string;
+  iconName?: import("../assets/icons").IconName | string;
+}
+
+const {
+  variant = "primary",
+  size = "normal",
+  href,
+  type = "button",
+  iconPosition,
+  disabled = false,
+  loading = false,
+  block = false,
+  ariaLabel,
+  class: className = "",
+  iconName,
+  ...rest
+} = Astro.props as Props;
+
+const Tag = href ? "a" : "button";
+
+function cx(...classes: Array<string | false | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+const base = "ui-btn";
+const classes = cx(
+  base,
+  `${base}--${variant}`,
+  `${base}--${size}`,
+  iconPosition ? `${base}--icon-${iconPosition}` : "",
+  block && `${base}--block`,
+  loading && `${base}--loading`,
+  className
+);
+---
+
+<Fragment>
+  <Tag
+    class={classes}
+    href={href}
+    type={!href ? type : undefined}
+    aria-busy={loading ? "true" : undefined}
+    aria-disabled={disabled || loading ? "true" : undefined}
+    disabled={!href && (disabled || loading) ? true : undefined}
+    {...rest}
+  >
+    {
+      iconPosition === "left" && iconName ? (
+        <span class="ui-btn__icon" aria-hidden="true">
+          <Icon name={iconName} />
+        </span>
+      ) : null
+    }
+
+    <span class="ui-btn__label"> <slot /> </span>
+
+    {
+      iconPosition === "right" && iconName ? (
+        <span class="ui-btn__icon" aria-hidden="true">
+          <Icon name={iconName} />
+        </span>
+      ) : null
+    }
+
+    {
+      loading ? (
+        <span class="ui-btn__spinner" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ui-btn__spinner-svg">
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke-width="4"
+              fill="none"
+              class="ring"
+            />
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke-width="4"
+              fill="none"
+              class="arc"
+            />
+          </svg>
+        </span>
+      ) : null
+    }
+  </Tag>
+</Fragment>
+
+<style lang="scss">
+  @use "../styles/abstracts";
+
+  /*************************
+  Design tokens (override in your app)
+*************************/
+  :root {
+    --btn-radius: 4px;
+    --btn-font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter,
+      "Albert Sans", sans-serif;
+
+    /* Spacing */
+    --btn-py-normal: 12px;
+    --btn-px-normal: 20px;
+    --btn-py-medium: 10px;
+    --btn-px-medium: 16px;
+    --btn-py-small: 6px;
+    --btn-px-small: 12px;
+    --btn-gap: 10px;
+
+    /* Colors */
+    --primary-bg: #{abstracts.$color-primary};
+    --primary-fg: #{abstracts.$color-white};
+    --primary-bg-hover: #{abstracts.$color-primary};
+    --primary-bg-active: #{abstracts.$color-blue-shade-1};
+    --primary-ring: #62a3b3;
+
+    --secondary-bg: #{abstracts.$color-white};
+    --secondary-fg: #{abstracts.$color-blue-shade-1};
+    --secondary-bg-hover: #{abstracts.$color-silver};
+    --secondary-bg-active: #c9dfe6;
+    --secondary-ring: #8fbecd;
+
+    --tertiary-bg: #{abstracts.$color-silver};
+    --tertiary-fg: #{abstracts.$color-blue-shade-1};
+    --tertiary-bg-hover: #{abstracts.$color-blue-shade-1};
+    --tertiary-bg-active: #c9dfe6;
+    --tertiary-ring: #8fbecd;
+
+    --disabled-bg: #d7dee2;
+    --disabled-fg: #93a1a8;
+  }
+
+  /*************************
+  Base
+*************************/
+  .ui-btn {
+    --_py: var(--btn-py-normal);
+    --_px: var(--btn-px-normal);
+    --_gap: var(--btn-gap);
+    appearance: none;
+    font-family: var(--btn-font);
+    border-radius: var(--btn-radius);
+    border: 1px solid transparent;
+    padding: var(--_py) var(--_px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--_gap);
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    line-height: 1;
+    user-select: none;
+    position: relative;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.05s ease;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--_ring);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+
+    &[aria-disabled="true"] {
+      pointer-events: none;
+    }
+
+    &__label {
+      white-space: nowrap;
+    }
+    &__icon {
+      display: inline-flex;
+    }
+    &__spinner {
+      position: absolute;
+      inset-inline-end: 10px;
+      display: inline-flex;
+    }
+
+    /* Sizes */
+    &--normal {
+      --_py: var(--btn-py-normal);
+      --_px: var(--btn-px-normal);
+      font-size: 16px;
+    }
+    &--medium {
+      --_py: var(--btn-py-medium);
+      --_px: var(--btn-px-medium);
+      font-size: 15px;
+    }
+    &--small {
+      --_py: var(--btn-py-small);
+      --_px: var(--btn-px-small);
+      font-size: 14px;
+    }
+    &--block {
+      width: 100%;
+    }
+
+    &--icon-left {
+      padding-left: calc(var(--_px) - 2px);
+    }
+    &--icon-right {
+      padding-right: calc(var(--_px) - 2px);
+    }
+
+    /* Variants */
+    &--primary {
+      background: var(--primary-bg);
+      color: var(--primary-fg);
+      --_ring: var(--primary-ring);
+
+      &:hover {
+        background: var(--primary-bg-hover);
+      }
+      &:active {
+        background: var(--primary-bg-active);
+      }
+    }
+
+    &--secondary {
+      background: var(--secondary-bg);
+      color: var(--secondary-fg);
+      border-color: #c2d8e0;
+      --_ring: var(--secondary-ring);
+
+      &:hover {
+        background: var(--secondary-bg-hover);
+      }
+      &:active {
+        background: var(--secondary-bg-active);
+      }
+    }
+
+    /* Disabled (sur le bouton lui-même) */
+    &[disabled],
+    &[aria-disabled="true"] {
+      background: var(--disabled-bg);
+      color: var(--disabled-fg);
+      border-color: transparent;
+    }
+
+    /* Spinner */
+    &__spinner-svg {
+      width: 1em;
+      height: 1em;
+
+      .ring {
+        stroke: currentColor;
+        opacity: 0.25;
+      }
+      .arc {
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-dasharray: 60;
+        stroke-dashoffset: 40;
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
