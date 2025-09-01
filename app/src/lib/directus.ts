@@ -40,6 +40,11 @@ export async function fetchPageBlocks(slug: string) {
                     ],
                   },
                 ],
+                block_call_for_projects: [
+                  "*",
+                  { button: ["*", { item: ["*"] }] },
+                  { image: ["id", "description"] },
+                ],
               },
             },
           ],

@@ -1,6 +1,7 @@
 ---
 import HeroBanner from "./blocks/HeroBanner.astro";
 import Mission from "./blocks/Mission.astro";
+import CallForProjects from "./blocks/CallForProjects.astro";
 
 const { blocks } = Astro.props;
 ---
@@ -13,7 +14,7 @@ const { blocks } = Astro.props;
         : block.collection === "block_mission"
           ? Mission
           : block.collection === "block_call_for_projects"
-            ? Mission
+            ? CallForProjects
             : block.collection === "block_news"
               ? Mission
               : block.collection === "block_contact"
