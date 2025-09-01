@@ -1,0 +1,32 @@
+---
+import { getIcon, type IconName } from "../assets/icons";
+
+export interface Props {
+  name: IconName | string;
+  title?: string;
+  class?: string;
+}
+
+const { name, title, class: className = "" } = Astro.props;
+
+function decorate(svg: string) {
+  const a11y = title
+    ? `role="img" aria-label="${title}"`
+    : `aria-hidden="true" focusable="false"`;
+  return svg.replace("<svg", `<svg class="ui-icon ${className}" ${a11y}`);
+}
+
+const raw = getIcon(name);
+const html = raw ? decorate(raw) : null;
+---
+
+{html ? <Fragment set:html={html} /> : null}
+
+<style>
+  .ui-icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+  }
+</style>
