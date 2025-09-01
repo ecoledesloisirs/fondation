@@ -1,0 +1,99 @@
+---
+import Button from "./Button.astro";
+import dayjs from "../utils/dayjs";
+
+interface NewsCardsProps {
+  title: string;
+  description: string;
+  image: {
+    id: string;
+    alt: string;
+  };
+  publication_date: string;
+  category: string;
+  pdf_file: string;
+}
+
+const {
+  title,
+  description,
+  image: { id, alt },
+  publication_date,
+  category,
+  pdf_file,
+} = Astro.props as NewsCardsProps;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+---
+
+<li class="news-card">
+  <img
+    src={`${DIRECTUS_URL}/assets/${id}?width=720&height=720&format=webp`}
+    alt={alt}
+    width="720"
+    height="720"
+    loading="lazy"
+    decoding="async"
+  />
+
+  <p class="news-category">{category}</p>
+  <p class="news-publication-date">
+    {dayjs(publication_date).format("MMMM YYYY")}
+  </p>
+  <h3 class="news-title">{title}</h3>
+  <p class="news-description">{description}</p>
+  <Button
+    variant="secondary"
+    href={`${DIRECTUS_URL}/assets/${pdf_file}`}
+    iconPosition="right"
+    iconName="download"
+    class="see-news-btn"
+  >
+    Consulter le PDF
+  </Button>
+</li>
+
+<style lang="scss">
+  @use "../styles/abstracts";
+
+  .news-card {
+    max-width: abstracts.rem(320px);
+
+    img {
+      width: abstracts.rem(320px);
+      height: auto;
+    }
+
+    .news-category {
+      @include abstracts.typography(abstracts.$font-paragraph, 20px, 32px, 700);
+      color: abstracts.$color-blue-tint-1;
+      text-transform: uppercase;
+      margin-top: abstracts.rem(8px);
+    }
+
+    .news-publication-date {
+      text-transform: capitalize;
+      margin-top: abstracts.rem(8px);
+    }
+
+    h3 {
+      margin-block: abstracts.rem(8px);
+      @include abstracts.typography(abstracts.$font-title, 20px, 24px, 700);
+    }
+
+    .see-news-btn {
+      margin-top: abstracts.rem(20px);
+      width: 100%;
+    }
+  }
+
+  @include abstracts.respond-above(xl) {
+    .news-card {
+      max-width: abstracts.rem(360px);
+
+      img {
+        width: abstracts.rem(360px);
+      }
+    }
+  }
+</style>

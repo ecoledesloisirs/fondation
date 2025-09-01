@@ -2,6 +2,7 @@
 import HeroBanner from "./blocks/HeroBanner.astro";
 import Mission from "./blocks/Mission.astro";
 import CallForProjects from "./blocks/CallForProjects.astro";
+import NewsTeaser from "./blocks/NewsTeaser.astro";
 
 const { blocks } = Astro.props;
 ---
@@ -16,7 +17,7 @@ const { blocks } = Astro.props;
           : block.collection === "block_call_for_projects"
             ? CallForProjects
             : block.collection === "block_news"
-              ? Mission
+              ? NewsTeaser
               : block.collection === "block_contact"
                 ? Mission
                 : () => null;

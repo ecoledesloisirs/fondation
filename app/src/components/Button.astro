@@ -136,10 +136,10 @@ const classes = cx(
     --secondary-bg-active: #c9dfe6;
     --secondary-ring: #8fbecd;
 
-    --tertiary-bg: #{abstracts.$color-silver};
-    --tertiary-fg: #{abstracts.$color-blue-shade-1};
-    --tertiary-bg-hover: #{abstracts.$color-blue-shade-1};
-    --tertiary-bg-active: #c9dfe6;
+    --tertiary-bg: #{abstracts.$color-white};
+    --tertiary-fg: #{abstracts.$color-blue};
+    --tertiary-bg-hover: #{abstracts.$color-silver};
+    --tertiary-bg-active: #{abstracts.$color-white};
     --tertiary-ring: #8fbecd;
 
     --disabled-bg: #d7dee2;
@@ -252,6 +252,21 @@ const classes = cx(
       }
       &:active {
         background: var(--secondary-bg-active);
+      }
+    }
+
+    &--tertiary {
+      background: var(--tertiary-bg);
+      color: var(--tertiary-fg);
+      --_ring: var(--tertiary-ring);
+      text-decoration: underline;
+
+      &:hover {
+        background: var(--tertiary-bg-hover);
+      }
+      &:active {
+        background: var(--tertiary-bg-active);
+        border-color: abstracts.$color-dark-grey;
       }
     }
 

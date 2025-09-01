@@ -1,0 +1,126 @@
+---
+import NewsCards from "../NewsCards.astro";
+import Button from "../Button.astro";
+
+interface News {
+  id: string;
+  collection: string;
+  item: {
+    id: string;
+    image: {
+      id: string;
+      description: string;
+    };
+    title: string;
+    description: string;
+    publication_date: string;
+    category: {
+      id: string;
+      name: string;
+    };
+    pdf_file: {
+      id: string;
+    };
+  };
+}
+
+interface NewsTeaserProps {
+  id: string;
+  item: {
+    title: string;
+    description: string;
+    news: News[];
+  };
+}
+
+const { item } = Astro.props as NewsTeaserProps;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+
+const news = item?.news?.map((n) => n.item);
+---
+
+<section>
+  <div class="container">
+    <h2>{item.title}</h2>
+    <p>{item.description}</p>
+
+    {
+      news.length > 0 ? (
+        <ol id="news-list" class="news-cards-wrapper" data-expanded="false">
+          {news.map((n) => (
+            <NewsCards
+              title={n.title}
+              description={n.description}
+              image={n.image}
+              publication_date={n.publication_date}
+              category={n.category.name}
+              pdf_file={n.pdf_file.id}
+            />
+          ))}
+        </ol>
+      ) : null
+    }
+
+    <div class="all-news-cta">
+      <Button
+        variant="tertiary"
+        iconPosition="right"
+        iconName="plus"
+        type="button"
+        class="toggle-all-news"
+        aria-controls="news-list"
+        aria-expanded="false"
+        href="/"
+      >
+        Voir toutes les actualités
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  section {
+    padding-block: abstracts.rem(60px);
+
+    h2 {
+      margin: 0 0 abstracts.rem(16px);
+    }
+
+    .news-cards-wrapper {
+      padding-top: abstracts.rem(40px);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: abstracts.rem(32px);
+    }
+
+    :global(.news-cards-wrapper > .news-card:nth-child(n + 2)) {
+      display: none;
+    }
+
+    .all-news-cta {
+      display: flex;
+      justify-content: center;
+      margin-top: abstracts.rem(20px);
+    }
+  }
+
+  @include abstracts.respond-above(md) {
+    section {
+      :global(.news-cards-wrapper > .news-card:nth-child(n + 2)) {
+        display: block;
+      }
+    }
+  }
+
+  @include abstracts.respond-above(xl) {
+    section {
+      .all-news-cta {
+        margin-top: abstracts.rem(80px);
+      }
+    }
+  }
+</style>

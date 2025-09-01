@@ -45,6 +45,25 @@ export async function fetchPageBlocks(slug: string) {
                   { button: ["*", { item: ["*"] }] },
                   { image: ["id", "description"] },
                 ],
+                block_news: [
+                  "title",
+                  "description",
+                  {
+                    news: [
+                      {
+                        item: {
+                          news: [
+                            { image: ["id", "description"] },
+                            { category: ["name"] },
+                            "title",
+                            "description",
+                            { pdf_file: ["id"] },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                ],
               },
             },
           ],
