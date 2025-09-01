@@ -1,0 +1,122 @@
+---
+import dayjs from "../../utils/dayjs";
+import { Image } from "astro:assets";
+
+import Button from "../Button.astro";
+import waveBlueImg from "../../assets/wave-blue.png";
+
+interface ButtonProps {
+  id: string;
+  item: {
+    label: string;
+    variant: string;
+    size: string;
+    href: string;
+  };
+}
+
+interface CallForProjectsProps {
+  id: string;
+  item: {
+    image: string;
+    title: string;
+    description: string;
+    button: ButtonProps[];
+    label_submission_period: string;
+    start_submission_period: string;
+    end_submission_period: string;
+  };
+}
+
+const { item } = Astro.props as CallForProjectsProps;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+---
+
+<section>
+  <div class="container">
+    <h2>{item.title}</h2>
+    <div class="content" set:html={item.description} />
+    <Button
+      variant={item.button[0].item.variant}
+      iconPosition="right"
+      iconName="right"
+      href={item.button[0].item.href}>{item.button[0].item.label}</Button
+    >
+    <p class="submission-period-label">{item.label_submission_period}</p>
+    <p class="submission-period">
+      {dayjs(item.start_submission_period).format("D MMMM YYYY")} - {
+        dayjs(item.end_submission_period).format("D MMMM YYYY")
+      }
+    </p>
+  </div>
+  <!-- <Image
+    src={waveBlueImg}
+    alt="Icone d'une forme géométrique"
+    aria-hidden="true"
+    class="wave-blue-img"
+  /> -->
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  section {
+    background-color: abstracts.$color-primary;
+    color: abstracts.$color-blue-tint-3;
+    padding-inline: abstracts.rem(20px);
+    padding-block: abstracts.rem(40px);
+    position: relative;
+
+    h2 {
+      margin: 0 0 abstracts.rem(16px);
+      color: abstracts.$color-silver;
+    }
+
+    .content {
+    }
+
+    .ui-btn {
+      max-width: abstracts.rem(320px);
+      width: 100%;
+      margin-block: abstracts.rem(20px);
+    }
+
+    .ui-icon {
+      fill: abstracts.$color-primary;
+    }
+
+    .submission-period-label {
+      @include abstracts.typography(abstracts.$font-paragraph, 14px, 20px, 400);
+    }
+
+    .submission-period {
+      @include abstracts.typography(abstracts.$font-paragraph, 16px, 20px, 700);
+      margin-top: abstracts.rem(12px);
+    }
+
+    .wave-blue-img {
+      position: absolute;
+      bottom: abstracts.rem(-12px);
+      z-index: 1;
+    }
+  }
+
+  @include abstracts.respond-above(md) {
+    section {
+      .content {
+        @include abstracts.typography(
+          abstracts.$font-paragraph,
+          18px,
+          28px,
+          400
+        );
+      }
+    }
+  }
+
+  @include abstracts.respond-above(lg) {
+    section {
+    }
+  }
+</style>
