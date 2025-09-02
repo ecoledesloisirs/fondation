@@ -1,0 +1,53 @@
+---
+import Icon from "./Icon.astro";
+
+export interface Props {
+  slug: string;
+  pageTitle: string;
+}
+
+const { slug, pageTitle } = Astro.props as Props;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+---
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb__item">
+      <a href={DIRECTUS_URL}>Accueil</a>
+    </li>
+    <li class="breadcrumb__item" aria-current="page">
+      {pageTitle}
+    </li>
+  </ol>
+</nav>
+
+<style lang="scss">
+  @use "../styles/abstracts";
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: abstracts.rem(5px);
+    margin-top: abstracts.rem(20px);
+
+    a,
+    li {
+      @include abstracts.typography(abstracts.$font-paragraph, 12px, 16px, 400);
+      color: abstracts.$color-primary;
+      font-style: italic;
+    }
+
+    .breadcrumb__item + .breadcrumb__item::before {
+      content: "→";
+    }
+
+    &__item {
+      &:last-of-type {
+        a {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+</style>
