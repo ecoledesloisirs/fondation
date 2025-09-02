@@ -4,21 +4,18 @@ import NewsCards from "../NewsCards.astro";
 import Button from "../Button.astro";
 import Icon from "../Icon.astro";
 
-const INITIAL_COUNT = 6;
+const INITIAL_COUNT = 3;
 
-// Data
 const [news, categories] = await Promise.all([
   getAllNews(),
   getNewsCategories(),
 ]);
-
-console.log("news", news);
 ---
 
 <section>
   <div class="container">
     <div class="filters">
-      <label class="filters__label">Filtres :</label>
+      <label class="filters__label" for="filter-select">Filtres :</label>
 
       <select id="filter-select" class="filters__select" aria-label="Catégorie">
         <option value="">Tout afficher</option>
@@ -28,19 +25,25 @@ console.log("news", news);
       <div
         id="filter-buttons"
         class="filters__buttons"
-        role="tablist"
+        role="group"
         aria-label="Filtres catégories"
       >
-        <button value="" class="is-active" aria-pressed="true"
+        <button
+          type="button"
+          data-filter=""
+          class="is-active"
+          aria-pressed="true"
           ><Icon name="check" class="check-icon" /> TOUT AFFICHER</button
         >
         {
-          categories.map((c) => (
-            <button value={c.slug} aria-pressed="false">
-              <Icon name="check" class="check-icon" />
-              {c.name}
-            </button>
-          ))
+          categories.map((c) => {
+            return (
+              <button type="button" data-filter={c.slug} aria-pressed="false">
+                <Icon name="check" class="check-icon" />
+                {c.name}
+              </button>
+            );
+          })
         }
       </div>
     </div>
@@ -52,33 +55,37 @@ console.log("news", news);
       aria-live="polite"
     >
       {
-        news.map((n, i) => (
-          <li
-            class={`news-item ${i >= INITIAL_COUNT ? "is-hidden" : ""}`}
-            data-cat={n.category?.slug ?? ""}
-          >
-            <NewsCards
-              title={n.title}
-              description={n.description}
-              image={n.image}
-              publication_date={n.publication_date ?? n.date_created}
-              pdf_file={n.pdf_file.id}
-              category={n.category?.name}
-            />
-          </li>
-        ))
+        news.map((n, i) => {
+          return (
+            <li
+              class={`news-item ${i >= INITIAL_COUNT ? "is-hidden" : ""}`}
+              data-cat={n.category?.slug ?? ""}
+            >
+              <NewsCards
+                title={n.title}
+                description={n.description}
+                image={n.image}
+                publication_date={n.publication_date ?? n.date_created}
+                pdf_file={n.pdf_file?.id}
+                category={n.category?.name}
+              />
+            </li>
+          );
+        })
       }
     </ul>
+
+    <p id="empty-msg" class="visually-hidden" aria-live="polite"></p>
 
     <div class="more-news-cta">
       <Button
         id="load-more"
-        variant="secondary"
+        variant="tertiary"
         iconPosition="right"
         iconName="plus"
         type="button"
         class="toggle-more-news"
-        aria-controls="news-list"
+        aria-controls="news-cards-grid"
         aria-expanded="false"
       >
         Voir plus d'actualités
@@ -109,31 +116,28 @@ console.log("news", news);
       white-space: nowrap;
     }
 
-    /* Mobile: on montre le select */
     &__select {
       min-width: abstracts.rem(241px);
       text-transform: uppercase;
       background-color: abstracts.$color-silver;
       border: 2px solid abstracts.$color-primary;
-      padding: abstracts.rem(8px) abstracts.rem(24px) abstracts.rem(8px)
-        abstracts.rem(50px);
+      padding: abstracts.rem(8px) abstracts.rem(24px);
       border-radius: abstracts.rem(100px);
       color: abstracts.$color-primary;
-      //   text-align: center;
       @include abstracts.typography(abstracts.$font-paragraph, 14px, 20px, 700);
       display: inline-block;
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M3 8L9.21905 13.3306C9.66844 13.7158 10.3316 13.7158 10.7809 13.3306L17 8' stroke='%2327566D' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 45px center;
+      background-position: right 10px center;
       background-size: 18px;
+      text-align: center;
     }
 
     :global(.check-icon) {
       display: none;
     }
 
-    /* Desktop: on montre les boutons, on cache le select */
     &__buttons {
       display: none;
       gap: abstracts.rem(8px);
@@ -175,16 +179,16 @@ console.log("news", news);
     gap: abstracts.rem(32px);
   }
 
-  .all-news-cta {
+  .more-news-cta {
     display: flex;
     justify-content: center;
     margin-top: abstracts.rem(20px);
   }
 
-  /* Breakpoints : montrer boutons en desktop, select en mobile */
   @include abstracts.respond-above(md) {
     .filters {
       align-items: baseline;
+      justify-content: flex-start;
 
       &__select {
         display: none;
@@ -197,8 +201,8 @@ console.log("news", news);
   }
 
   @include abstracts.respond-above(xl) {
-    .all-news-cta {
-      margin-top: abstracts.rem(80px);
+    .more-news-cta {
+      margin-top: abstracts.rem(40px);
     }
   }
 </style>
@@ -209,28 +213,48 @@ console.log("news", news);
   const select = document.getElementById("filter-select");
   const buttons = document.getElementById("filter-buttons");
   const moreBtn = document.getElementById("load-more");
+  const emptyMsg = document.getElementById("empty-msg");
 
-  const INITIAL = Number(grid.dataset.initial) || 6;
+  const INITIAL = window.innerWidth > 992 ? 6 : 3;
 
   let current = INITIAL;
   let cat = "";
 
+  const getItemCats = (li) =>
+    (li.getAttribute("data-cat") || "").split(/[,\s]+/).filter(Boolean);
+
   function applyVisibility() {
-    const filtered = items.filter((li) => !cat || li.dataset.cat === cat);
+    const filtered = items.filter((li) => {
+      if (!cat) return true;
+      const cats = getItemCats(li);
+      return cats.includes(cat);
+    });
 
     items.forEach((li) => li.classList.add("is-hidden"));
-
     filtered
       .slice(0, current)
       .forEach((li) => li.classList.remove("is-hidden"));
 
-    moreBtn.style.display = filtered.length > current ? "inline-flex" : "none";
+    const hasMore = filtered.length > current;
+    moreBtn.style.display = hasMore ? "inline-flex" : "none";
+    moreBtn.setAttribute(
+      "aria-expanded",
+      String(!hasMore && current > INITIAL)
+    );
+
+    if (filtered.length === 0) {
+      emptyMsg.textContent = cat
+        ? "Aucun article pour ce filtre."
+        : "Aucun article disponible pour le moment.";
+    } else {
+      emptyMsg.textContent = "";
+    }
   }
 
   function setActiveButton(value) {
     const btns = buttons ? buttons.querySelectorAll("button") : [];
     btns.forEach((btn) => {
-      const v = btn.value || "";
+      const v = btn.getAttribute("data-filter") || "";
       const active = v === value;
       btn.classList.toggle("is-active", active);
       btn.setAttribute("aria-pressed", String(active));
@@ -238,30 +262,26 @@ console.log("news", news);
   }
 
   function setFilter(value) {
-    console.log("setFilter", value);
-    cat = value || "";
+    cat = (value || "").trim();
     current = INITIAL;
-    if (select) select.value = cat; // sync -> select
-    setActiveButton(cat); // sync -> boutons
+    if (select) select.value = cat;
+    setActiveButton(cat);
     applyVisibility();
   }
 
-  // Desktop : boutons
   buttons?.addEventListener("click", (e) => {
-    const b = e.target.closest("button");
+    const b = e.target.closest("button[data-filter]");
     if (!b) return;
-    setFilter(b.value || "");
+    const val = b.getAttribute("data-filter") || "";
+    setFilter(val);
   });
 
-  // Mobile : select
   select?.addEventListener("change", (e) => setFilter(e.target.value));
 
-  // Voir plus
   moreBtn.addEventListener("click", () => {
     current += INITIAL;
     applyVisibility();
   });
 
-  // premier état
   applyVisibility();
 </script>

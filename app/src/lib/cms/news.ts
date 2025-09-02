@@ -4,7 +4,7 @@ import { readItems } from "@directus/sdk";
 export const getNewsCategories = () =>
   directus.request(
     readItems("news_category", {
-      fields: ["name"],
+      fields: ["name", "slug"],
       filter: {
         status: { _eq: "published" },
         news: { status: { _eq: "published" } },
