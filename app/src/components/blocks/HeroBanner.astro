@@ -1,7 +1,10 @@
 ---
 import { Image } from "astro:assets";
+
 import quoteImg from "../../assets/quote.png";
 import waveImg from "../../assets/wave_mobile.png";
+
+import Breadcrumb from "../Breadcrumb.astro";
 
 interface HeroBannerProps {
   id: string;
@@ -18,11 +21,24 @@ interface HeroBannerProps {
     breadcrumb: string;
     texte: string;
     auteur: string;
+    content: string;
   };
+  slug: string;
+  pageTitle: string;
 }
 
 const {
-  item: { image_mobile, image_desktop, is_home_page, texte, auteur },
+  item: {
+    image_mobile,
+    image_desktop,
+    is_home_page,
+    texte,
+    auteur,
+    breadcrumb,
+    content,
+  },
+  slug,
+  pageTitle,
 } = Astro.props as HeroBannerProps;
 
 const heightLarge = is_home_page ? "600px" : "460px";
@@ -62,16 +78,20 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
             {texte ? <h1 class="hero-banner-texte">“{texte}”</h1> : null}
             {auteur ? <p class="hero-banner-author">- {auteur}</p> : null}
-
-            <Image
-              src={waveImg}
-              alt="Icone d'une forme géométrique"
-              aria-hidden="true"
-              class="wave-img"
-            />
           </div>
         ) : null
       }
+
+      {breadcrumb ? <Breadcrumb slug={slug} pageTitle={pageTitle} /> : null}
+
+      {content ? <div class="hero-banner-content" set:html={content} /> : null}
+
+      <Image
+        src={waveImg}
+        alt="Icone d'une forme géométrique"
+        aria-hidden="true"
+        class="wave-img"
+      />
     </div>
   </div>
 </section>
@@ -138,6 +158,18 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
           700
         );
       }
+
+      .hero-banner-content {
+        max-width: abstracts.rem(760px);
+      }
+
+      :global(.hero-banner-content h1) {
+        margin: abstracts.rem(20px) 0 abstracts.rem(16px);
+      }
+    }
+
+    .wave-img {
+      margin-top: abstracts.rem(20px);
     }
   }
 
@@ -168,6 +200,10 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         .banner-img {
           height: var(--h-lg);
         }
+      }
+
+      .wave-img {
+        margin-top: abstracts.rem(40px);
       }
     }
   }
