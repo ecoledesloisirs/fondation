@@ -49,14 +49,16 @@ const news = item?.news?.map((n) => n.item);
       news.length > 0 ? (
         <ol id="news-list" class="news-cards-wrapper" data-expanded="false">
           {news.map((n) => (
-            <NewsCards
-              title={n.title}
-              description={n.description}
-              image={n.image}
-              publication_date={n.publication_date}
-              category={n.category.name}
-              pdf_file={n.pdf_file.id}
-            />
+            <li>
+              <NewsCards
+                title={n.title}
+                description={n.description}
+                image={n.image}
+                publication_date={n.publication_date}
+                category={n.category.name}
+                pdf_file={n.pdf_file.id}
+              />
+            </li>
           ))}
         </ol>
       ) : null
@@ -97,7 +99,7 @@ const news = item?.news?.map((n) => n.item);
       gap: abstracts.rem(32px);
     }
 
-    :global(.news-cards-wrapper > .news-card:nth-child(n + 2)) {
+    :global(.news-cards-wrapper > li:nth-child(n + 2)) {
       display: none;
     }
 
@@ -110,7 +112,7 @@ const news = item?.news?.map((n) => n.item);
 
   @include abstracts.respond-above(md) {
     section {
-      :global(.news-cards-wrapper > .news-card:nth-child(n + 2)) {
+      :global(.news-cards-wrapper > li:nth-child(n + 2)) {
         display: block;
       }
     }

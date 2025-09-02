@@ -12,6 +12,7 @@ export interface Props {
   block?: boolean;
   ariaLabel?: string;
   class?: string;
+  id?: string;
   iconName?: import("../assets/icons").IconName | string;
 }
 
@@ -27,6 +28,7 @@ const {
   ariaLabel,
   class: className = "",
   iconName,
+  id,
   ...rest
 } = Astro.props as Props;
 
@@ -50,6 +52,7 @@ const classes = cx(
 
 <Fragment>
   <Tag
+    id={id}
     class={classes}
     href={href}
     type={!href ? type : undefined}
