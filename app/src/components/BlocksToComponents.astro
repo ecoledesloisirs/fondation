@@ -4,8 +4,9 @@ import Mission from "./blocks/Mission.astro";
 import CallForProjects from "./blocks/CallForProjects.astro";
 import NewsTeaser from "./blocks/NewsTeaser.astro";
 import Contact from "./blocks/Contact.astro";
+import NewsGrid from "./blocks/NewsGrid.astro";
 
-const { blocks } = Astro.props;
+const { blocks, slug, pageTitle } = Astro.props;
 ---
 
 {
@@ -21,7 +22,11 @@ const { blocks } = Astro.props;
               ? NewsTeaser
               : block.collection === "block_contact"
                 ? Contact
-                : () => null;
-    return View && <View {...block} />;
+                : block.collection === "block_news_grid"
+                  ? NewsGrid
+                  : block.collection === "block_contact"
+                    ? Contact
+                    : () => null;
+    return View && <View {...block} slug={slug} pageTitle={pageTitle} />;
   })
 }

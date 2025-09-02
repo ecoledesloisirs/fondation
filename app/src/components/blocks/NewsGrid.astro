@@ -1,0 +1,267 @@
+---
+import { getAllNews, getNewsCategories } from "../../lib/cms";
+import NewsCards from "../NewsCards.astro";
+import Button from "../Button.astro";
+import Icon from "../Icon.astro";
+
+const INITIAL_COUNT = 6;
+
+// Data
+const [news, categories] = await Promise.all([
+  getAllNews(),
+  getNewsCategories(),
+]);
+
+console.log("news", news);
+---
+
+<section>
+  <div class="container">
+    <div class="filters">
+      <label class="filters__label">Filtres :</label>
+
+      <select id="filter-select" class="filters__select" aria-label="Catégorie">
+        <option value="">Tout afficher</option>
+        {categories.map((c) => <option value={c.slug}>{c.name}</option>)}
+      </select>
+
+      <div
+        id="filter-buttons"
+        class="filters__buttons"
+        role="tablist"
+        aria-label="Filtres catégories"
+      >
+        <button value="" class="is-active" aria-pressed="true"
+          ><Icon name="check" class="check-icon" /> TOUT AFFICHER</button
+        >
+        {
+          categories.map((c) => (
+            <button value={c.slug} aria-pressed="false">
+              <Icon name="check" class="check-icon" />
+              {c.name}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <ul
+      class="news-cards-grid"
+      id="news-cards-grid"
+      data-initial={INITIAL_COUNT}
+      aria-live="polite"
+    >
+      {
+        news.map((n, i) => (
+          <li
+            class={`news-item ${i >= INITIAL_COUNT ? "is-hidden" : ""}`}
+            data-cat={n.category?.slug ?? ""}
+          >
+            <NewsCards
+              title={n.title}
+              description={n.description}
+              image={n.image}
+              publication_date={n.publication_date ?? n.date_created}
+              pdf_file={n.pdf_file.id}
+              category={n.category?.name}
+            />
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="more-news-cta">
+      <Button
+        id="load-more"
+        variant="secondary"
+        iconPosition="right"
+        iconName="plus"
+        type="button"
+        class="toggle-more-news"
+        aria-controls="news-list"
+        aria-expanded="false"
+      >
+        Voir plus d'actualités
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  .is-hidden {
+    display: none !important;
+  }
+
+  section {
+    padding-block: abstracts.rem(60px);
+  }
+
+  .filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: abstracts.rem(12px);
+
+    &__label {
+      @include abstracts.typography(abstracts.$font-paragraph, 18px, 28px, 700);
+      white-space: nowrap;
+    }
+
+    /* Mobile: on montre le select */
+    &__select {
+      min-width: abstracts.rem(241px);
+      text-transform: uppercase;
+      background-color: abstracts.$color-silver;
+      border: 2px solid abstracts.$color-primary;
+      padding: abstracts.rem(8px) abstracts.rem(24px) abstracts.rem(8px)
+        abstracts.rem(50px);
+      border-radius: abstracts.rem(100px);
+      color: abstracts.$color-primary;
+      //   text-align: center;
+      @include abstracts.typography(abstracts.$font-paragraph, 14px, 20px, 700);
+      display: inline-block;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M3 8L9.21905 13.3306C9.66844 13.7158 10.3316 13.7158 10.7809 13.3306L17 8' stroke='%2327566D' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 45px center;
+      background-size: 18px;
+    }
+
+    :global(.check-icon) {
+      display: none;
+    }
+
+    /* Desktop: on montre les boutons, on cache le select */
+    &__buttons {
+      display: none;
+      gap: abstracts.rem(8px);
+      flex-wrap: wrap;
+    }
+    &__buttons button {
+      text-transform: uppercase;
+      border: 2px solid abstracts.$color-primary;
+      padding: abstracts.rem(8px) abstracts.rem(18px);
+      border-radius: abstracts.rem(100px);
+      background: transparent;
+      color: abstracts.$color-primary;
+      @include abstracts.typography(abstracts.$font-paragraph, 14px, 20px, 700);
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    &__buttons button.is-active {
+      display: flex;
+      gap: abstracts.rem(8px);
+      background: abstracts.$color-silver;
+      :global(.check-icon) {
+        display: block;
+      }
+    }
+
+    &__buttons button:not(button.is-active) {
+      border: 1px solid abstracts.$color-blue-tint-1;
+      @include abstracts.typography(abstracts.$font-paragraph, 14px, 20px, 400);
+    }
+  }
+
+  .news-cards-grid {
+    padding-top: abstracts.rem(40px);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: abstracts.rem(32px);
+  }
+
+  .all-news-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: abstracts.rem(20px);
+  }
+
+  /* Breakpoints : montrer boutons en desktop, select en mobile */
+  @include abstracts.respond-above(md) {
+    .filters {
+      align-items: baseline;
+
+      &__select {
+        display: none;
+      }
+
+      &__buttons {
+        display: flex;
+      }
+    }
+  }
+
+  @include abstracts.respond-above(xl) {
+    .all-news-cta {
+      margin-top: abstracts.rem(80px);
+    }
+  }
+</style>
+
+<script is:inline>
+  const grid = document.getElementById("news-cards-grid");
+  const items = [...grid.querySelectorAll(".news-item")];
+  const select = document.getElementById("filter-select");
+  const buttons = document.getElementById("filter-buttons");
+  const moreBtn = document.getElementById("load-more");
+
+  const INITIAL = Number(grid.dataset.initial) || 6;
+
+  let current = INITIAL;
+  let cat = "";
+
+  function applyVisibility() {
+    const filtered = items.filter((li) => !cat || li.dataset.cat === cat);
+
+    items.forEach((li) => li.classList.add("is-hidden"));
+
+    filtered
+      .slice(0, current)
+      .forEach((li) => li.classList.remove("is-hidden"));
+
+    moreBtn.style.display = filtered.length > current ? "inline-flex" : "none";
+  }
+
+  function setActiveButton(value) {
+    const btns = buttons ? buttons.querySelectorAll("button") : [];
+    btns.forEach((btn) => {
+      const v = btn.value || "";
+      const active = v === value;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", String(active));
+    });
+  }
+
+  function setFilter(value) {
+    console.log("setFilter", value);
+    cat = value || "";
+    current = INITIAL;
+    if (select) select.value = cat; // sync -> select
+    setActiveButton(cat); // sync -> boutons
+    applyVisibility();
+  }
+
+  // Desktop : boutons
+  buttons?.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    setFilter(b.value || "");
+  });
+
+  // Mobile : select
+  select?.addEventListener("change", (e) => setFilter(e.target.value));
+
+  // Voir plus
+  moreBtn.addEventListener("click", () => {
+    current += INITIAL;
+    applyVisibility();
+  });
+
+  // premier état
+  applyVisibility();
+</script>

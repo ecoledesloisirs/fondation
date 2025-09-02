@@ -71,6 +71,7 @@ export async function fetchPageBlocks(slug: string) {
                   { image_desktop: ["id", "description"] },
                   { button: ["*", { item: ["*"] }] },
                 ],
+                block_news_grid: ["id"],
               },
             },
           ],
