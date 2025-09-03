@@ -72,6 +72,53 @@ export async function fetchPageBlocks(slug: string) {
                   { button: ["*", { item: ["*"] }] },
                 ],
                 block_news_grid: ["id"],
+                block_stages_of_the_case: [
+                  "id",
+                  {
+                    cases: [
+                      "id",
+                      "collection",
+                      {
+                        item: {
+                          stage_case: [
+                            "id",
+                            "sort",
+                            "title",
+                            "section_type",
+                            "information",
+                            "content",
+                            "detail_file_size",
+                            {
+                              calendar_items: [
+                                "id",
+                                "collection",
+                                {
+                                  item: {
+                                    stages_case_calendar_item: [
+                                      "id",
+                                      "sort",
+                                      "date",
+                                      "title",
+                                      "text",
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                            { button: ["*", { item: ["*"] }] },
+                            {
+                              download_form_pdf: [
+                                "id",
+                                "filename_download",
+                                "filesize",
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                ],
               },
             },
           ],

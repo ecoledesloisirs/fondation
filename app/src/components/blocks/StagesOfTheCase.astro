@@ -1,0 +1,187 @@
+---
+import { Image } from "astro:assets";
+import waveImg from "../../assets/wave_mobile.png";
+
+import Button from "../Button.astro";
+
+interface StageCaseCalendarItem {
+  id: string;
+  collection: string;
+  item: {
+    id: string;
+    sort?: number;
+    date?: string;
+    title?: string;
+    text?: string;
+  };
+}
+
+interface StageCase {
+  id: string;
+  collection: string;
+  item: {
+    id: string;
+    sort?: number;
+    title: string;
+    section_type?: string;
+    information?: string;
+    content?: string;
+    detail_file_size?: string | null;
+    calendar_items?: StageCaseCalendarItem[];
+    download_form_pdf?: {
+      id: string;
+      filename_download?: string;
+      filesize?: number;
+    } | null;
+  };
+}
+
+interface StagesOfTheCaseProps {
+  id: string;
+  item: {
+    id: string;
+    cases: StageCase[];
+  };
+}
+
+const { item } = Astro.props as StagesOfTheCaseProps;
+
+const stages = (item?.cases ?? []).map((c) => ({
+  ...c.item,
+  calendar_items: (c.item.calendar_items ?? []).map((ci) => ci.item),
+}));
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+---
+
+<section>
+  <div class="container">
+    <ol class="stages">
+      {
+        stages.map((s, index) => (
+          <li>
+            <article
+              id={`stage-${index + 1}`}
+              aria-labelledby={`stage-title-${index + 1}`}
+            >
+              <header>
+                <span
+                  aria-hidden="true"
+                  class="stage-number"
+                >{`0${index + 1}`}</span>
+                <h2 id={`stage-title-${index + 1}`}>{s.title}</h2>
+              </header>
+
+              {s.information && (
+                <div class="stage-info richText" set:html={s.information} />
+              )}
+              {s.content && (
+                <div class="stage-content richText" set:html={s.content} />
+              )}
+
+              {s.calendar_items?.length > 0 && (
+                <ol class="stage-calendar">
+                  {s.calendar_items.map((ci) => (
+                    <li>
+                      {ci.date && <p class="stage-calendar-date">{ci.date}</p>}
+                      {ci.title && (
+                        <h3 class="stage-calendar-title">{ci.title}</h3>
+                      )}
+                      {ci.text && <p>{ci.text}</p>}
+                    </li>
+                  ))}
+                </ol>
+              )}
+
+              {s.download_form_pdf && s.detail_file_size && (
+                <div class="download-form-container">
+                  <div class="download-form-wrapper">
+                    <Button
+                      href={`${DIRECTUS_URL}/assets/${s.download_form_pdf.id}`}
+                      variant="primary"
+                      iconName="download"
+                      iconPosition="right"
+                      class="download-form-btn"
+                      aria-label={`Télécharger le formulaire (PDF, ${s.download_form_pdf.filesize || "taille inconnue"})`}
+                    >
+                      Télécharger le formulaire
+                    </Button>
+                    <span class="detail-file-size">{s.detail_file_size}</span>
+                  </div>
+                </div>
+              )}
+            </article>
+            <Image src={waveImg} alt="" aria-hidden="true" class="wave-img" />
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  section {
+    .stage-number {
+      color: abstracts.$color-secondary;
+      @include abstracts.typography(abstracts.$font-title, 48px, 56px, 700);
+    }
+
+    .stages {
+      li {
+        padding-top: abstracts.rem(40px);
+      }
+    }
+
+    h2 {
+      margin: abstracts.rem(8px) 0 abstracts.rem(20px);
+    }
+
+    h3 {
+      margin-block: abstracts.rem(8px);
+    }
+
+    .stage-calendar-date {
+      @include abstracts.typography(abstracts.$font-paragraph, 20px, 28px, 700);
+      color: abstracts.$color-blue-tint-1;
+    }
+
+    .stage-calendar-title {
+      @include abstracts.typography(abstracts.$font-title, 28px, 32px, 700);
+    }
+
+    .download-form-container {
+      margin-top: abstracts.rem(20px);
+
+      display: flex;
+      justify-content: center;
+    }
+
+    .download-form-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .detail-file-size {
+      @include abstracts.typography(abstracts.$font-paragraph, 14px, 20px, 700);
+      margin: abstracts.rem(8px);
+      align-self: center;
+    }
+
+    .wave-img {
+      margin-top: abstracts.rem(60px);
+    }
+
+    @include abstracts.respond-above(sm) {
+      .download-form-container {
+        justify-content: flex-start;
+      }
+
+      .download-form-wrapper {
+        width: auto;
+      }
+    }
+  }
+</style>
