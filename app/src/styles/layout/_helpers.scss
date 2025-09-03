@@ -24,9 +24,20 @@
   p {
     margin-block: abstracts.rem(16px);
   }
+
   ul {
     list-style: disc;
     padding-left: abstracts.rem(40px);
     margin-block: abstracts.rem(16px);
+  }
+
+  a {
+    text-decoration: underline;
+    color: abstracts.$color-primary;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
   }
 }

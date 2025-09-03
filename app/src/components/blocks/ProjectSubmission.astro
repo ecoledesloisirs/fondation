@@ -1,0 +1,136 @@
+---
+import { Image } from "astro:assets";
+import quoteImg from "../../assets/quote.png";
+import waveImg from "../../assets/wave_mobile.png";
+import Dropzone from "../../components/Dropzone.astro";
+import Button from "../Button.astro";
+
+interface ProjectSubmissionProps {
+  id: string;
+  item: {
+    storage_space_start: string;
+    storage_space_closed: string;
+    title: string;
+    text: string;
+    size_format_pdf: string;
+    gdpr_text: string;
+    optin_text: string;
+  };
+}
+
+const { item } = Astro.props as ProjectSubmissionProps;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+
+console.log("Astro.props", Astro.props);
+---
+
+<section>
+  <div class="container">
+    <span aria-hidden="true" class="stage-number">04</span>
+    <h2>{item.title}</h2>
+    <div class="richText" set:html={item.text} />
+
+    <form
+      id="project-form"
+      method="post"
+      action="/api/submit-projet"
+      enctype="multipart/form-data"
+    >
+      <label for="email">Email (champ obligatoire)</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        placeholder="Email"
+        required
+      />
+
+      <Button
+        class="import-folder-btn"
+        variant="secondary"
+        iconName="document_add"
+        iconPosition="right">Importer un dossier</Button
+      >
+
+      <!-- <Dropzone name="file" /> -->
+
+      <p class="file-size-format">{item.size_format_pdf}</p>
+
+      <div class="richText gdpr-text" set:html={item.gdpr_text} />
+
+      <label class="checkbox">
+        <input type="checkbox" name="rgpd_ok" required />
+        J’ai lu et j’approuve le règlement…
+      </label>
+
+      <button type="submit">Envoyer mon dossier</button>
+    </form>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  section {
+    padding-block: abstracts.rem(60px);
+
+    h2 {
+      margin: abstracts.rem(8px) 0 abstracts.rem(20px);
+    }
+
+    .stage-number {
+      color: abstracts.$color-secondary;
+      @include abstracts.typography(abstracts.$font-title, 48px, 56px, 700);
+    }
+
+    input {
+      border: 1px solid abstracts.$color-blue-tint-1;
+      border-radius: abstracts.rem(8px);
+      padding: abstracts.rem(12px);
+      font-size: abstracts.rem(14px);
+      width: 100%;
+      box-sizing: border-box;
+
+      &:focus {
+        outline: none;
+        border-color: abstracts.$color-primary;
+      }
+
+      &::placeholder {
+        color: abstracts.$color-blue-tint-2;
+        font-style: italic;
+      }
+    }
+
+    .import-folder-btn {
+      margin-top: abstracts.rem(36px);
+      width: 100%;
+      max-width: abstracts.rem(320px);
+    }
+
+    .file-size-format {
+      margin-top: abstracts.rem(8px);
+      text-align: center;
+    }
+
+    .gdpr-text {
+      @include abstracts.typography(abstracts.$font-paragraph, 14px, 20px, 400);
+      padding: abstracts.rem(20px);
+      border: 1px solid abstracts.$color-blue-tint-2;
+      border-radius: abstracts.rem(12px);
+      margin-top: abstracts.rem(36px);
+
+      :global(p:not(.gdpr-title)) {
+        margin: 0;
+      }
+    }
+
+    :global(.gdpr-title) {
+      margin: 0 0 abstracts.rem(30px);
+    }
+  }
+
+  @include abstracts.respond-above(md) {
+  }
+</style>
