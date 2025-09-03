@@ -111,6 +111,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
     .hero-banner-top {
       position: relative;
       max-width: 1440px;
+      margin: auto;
 
       &::after {
         content: "";
@@ -161,6 +162,16 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
       .hero-banner-content {
         max-width: abstracts.rem(760px);
+
+        :global(a) {
+          text-decoration: underline;
+          color: abstracts.$color-primary;
+
+          &:hover,
+          &:focus {
+            text-decoration: none;
+          }
+        }
       }
 
       :global(.hero-banner-content h1) {
