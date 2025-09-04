@@ -1,5 +1,7 @@
 export const prerender = false;
+
 import type { APIRoute } from "astro";
+import { sendMail } from "../../lib/mailer";
 import {
   createDirectus,
   rest,
@@ -8,6 +10,8 @@ import {
   createItem,
   type DirectusFile,
 } from "@directus/sdk";
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
 const url = import.meta.env.DIRECTUS_URL as string;
 const token = import.meta.env.DIRECTUS_TOKEN as string;
@@ -88,6 +92,19 @@ export const POST: APIRoute = async ({ request }) => {
     await client.request(
       createItem("application_file", { email, pdf_form: fileId })
     );
+
+    // 🔔 tenter l’envoi d’email (ne bloque pas la réponse en cas d’échec)
+    try {
+      await sendMail({
+        notifyTo: String(import.meta.env.MAIL_TO || "cb.dauvier@gmail.com"),
+        from: String(import.meta.env.MAIL_FROM || "no-reply@exemple.com"),
+        subject: "Nouveau dépôt de dossier",
+        text: `Un dossier a été déposé par ${email} (fileId: ${DIRECTUS_URL}/assets/${fileId})`,
+        html: `<p>Un dossier a été déposé par <b>${email}</b>.<br/>File ID : ${DIRECTUS_URL}/assets/${fileId}</p>`,
+      });
+    } catch (err) {
+      console.error("Erreur d’envoi mail submit-project:", err);
+    }
 
     return json(200, { ok: true, fileId });
   } catch (e: any) {
