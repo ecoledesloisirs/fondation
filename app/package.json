@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.4.3",
     "@directus/sdk": "^18.0.3",
     "@fontsource-variable/albert-sans": "^5.2.6",
     "@fontsource/philosopher": "^5.2.6",
