@@ -1,208 +1,309 @@
 ---
 interface Props {
   id?: string;
-  name?: string; // name du champ fichier dans le <form>
-  maxSize?: number; // en octets (par défaut 25 Mo)
-  accept?: string; // MIME(s) acceptés
-  buttonLabel?: string;
-  help?: string;
+  name?: string;
+  accept?: string; // ex: "application/pdf"
+  maxSizeMB?: number; // ex: 25
+  multiple?: boolean;
+  label?: string; // ex: "Importer un dossier"
 }
 
 const {
-  id = "project-file",
+  id = "upload-file",
   name = "file",
-  maxSize = 25 * 1024 * 1024,
   accept = "application/pdf",
-  buttonLabel = "Importer un dossier",
-  help = "Poids maximal du dossier : 25 Mo | Formats acceptés : format PDF",
+  maxSizeMB = 25,
+  multiple = false,
+  label = "Importer un dossier",
 } = Astro.props;
 ---
 
-<div class="dropzone" id={id} data-max={maxSize} data-accept={accept}>
-  <input id={`${id}-input`} name={name} type="file" accept={accept} hidden />
+<section
+  class="upload"
+  aria-labelledby="upload-title"
+  data-input-id={id}
+  data-accept={accept}
+  data-max-bytes={(maxSizeMB * 1024 * 1024).toString()}
+  data-multiple={multiple ? "true" : "false"}
+>
+  <div class="upload__inner">
+    <h3 id="upload-title" class="upload__title">Déposer votre dossier</h3>
 
-  <div
-    class="dz-area"
-    role="group"
-    aria-labelledby={`${id}-label`}
-    tabindex="0"
-  >
-    <svg class="dz-icon" aria-hidden="true" viewBox="0 0 24 24"
-      ><path
-        d="M12 16v-8m0 0l-3 3m3-3l3 3M5 20h14a2 2 0 002-2v-3a4 4 0 00-4-4H7a4 4 0 00-4 4v3a2 2 0 002 2z"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"></path></svg
+    <!-- input fichier (toujours présent) -->
+    <input
+      id={id}
+      name={name}
+      class="visually-hidden"
+      type="file"
+      accept={accept}
+      {...multiple ? { multiple: true } : {}}
+      aria-describedby="upload-help upload-constraints upload-status"
+    />
+
+    <!-- Dropzone (contient le bouton) -->
+    <div
+      id="dropzone"
+      class="dropzone"
+      role="button"
+      tabindex="0"
+      aria-describedby="upload-help upload-constraints"
     >
-    <p id={`${id}-label`} class="dz-title">
-      Glissez et déposez votre dossier ici
+      <div class="dropzone__content">
+        <div class="dropzone__icon" aria-hidden="true">📁</div>
+        <p class="dropzone__text">Glissez et déposez votre dossier ici</p>
+        <p class="dropzone__or">ou</p>
+        <label class="btn" for={id} data-variant="secondary">{label}</label>
+      </div>
+    </div>
+
+    <p id="upload-constraints" class="upload__constraints">
+      Poids maximal du dossier : {maxSizeMB} Mo • Format accepté : PDF
     </p>
 
-    <div class="dz-sep" aria-hidden="true"><span>ou</span></div>
-
-    <button class="dz-btn" type="button">{buttonLabel}</button>
-    <p class="dz-help">{help}</p>
-
-    <output class="dz-file" hidden></output>
-    <p class="dz-error" role="alert" hidden></p>
+    <div id="upload-status" class="upload__status" aria-live="polite"></div>
+    <p id="upload-help" class="visually-hidden">
+      Utilisez le bouton pour choisir un fichier, ou glissez-déposez un fichier
+      dans la zone (la zone de dépôt n’est visible qu’à partir de 992 px).
+    </p>
   </div>
-</div>
 
-<style>
-  .dropzone {
-    --dz-border: #bfd7e5;
-    --dz-border-active: #27566d;
-    --dz-bg: #f4fafd;
-    --dz-text: #27566d;
-  }
-  .dz-area {
-    border: 2px dashed var(--dz-border);
-    border-radius: 12px;
-    padding: 28px 22px;
-    text-align: center;
-    background: var(--dz-bg);
-    color: var(--dz-text);
-    transition:
-      border-color 0.15s,
-      box-shadow 0.15s;
-  }
-  .dropzone.is-drag .dz-area {
-    border-color: var(--dz-border-active);
-    box-shadow: 0 0 0 3px rgba(39, 86, 109, 0.12);
-  }
-  .dz-icon {
-    width: 32px;
-    height: 32px;
-    opacity: 0.7;
-    margin-bottom: 10px;
-  }
-  .dz-title {
-    font-weight: 700;
-    margin: 0 0 10px;
-  }
-  .dz-sep {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 10px 0 14px;
-    color: #6e8a9a;
-  }
-  .dz-sep::before,
-  .dz-sep::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: #e1eef5;
-  }
-  .dz-sep span {
-    padding: 0 6px;
-  }
-  .dz-btn {
-    border: 2px solid var(--dz-text);
-    border-radius: 10px;
-    background: #fff;
-    color: var(--dz-text);
-    padding: 10px 18px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  .dz-help {
-    margin: 10px 0 0;
-    font-size: 12px;
-    color: #6e8a9a;
-  }
-  .dz-file {
-    display: block;
-    margin-top: 12px;
-    font-size: 14px;
-  }
-  .dz-error {
-    margin-top: 8px;
-    color: #b00020;
-    font-weight: 600;
-  }
-</style>
+  <script is:inline>
+    (() => {
+      const root = document.currentScript.closest(".upload");
+      const ACCEPT = root.dataset.accept || "";
+      const MAX_BYTES = parseInt(root.dataset.maxBytes || "0", 10);
+      const IS_MULTIPLE = root.dataset.multiple === "true";
 
-<script>
-  (function () {
-    const root = document.currentScript.closest(".dropzone");
-    const input = root.querySelector('input[type="file"]');
-    const btn = root.querySelector(".dz-btn");
-    const area = root.querySelector(".dz-area");
-    const out = root.querySelector(".dz-file");
-    const err = root.querySelector(".dz-error");
-    const max = Number(root.dataset.max || 0);
-    const accept = (root.dataset.accept || "").split(",").map((s) => s.trim());
+      const input = root.querySelector('input[type="file"]');
+      const dz = root.querySelector("#dropzone");
+      const status = root.querySelector("#upload-status");
 
-    function isAccepted(file) {
-      if (!accept.length) return true;
-      // accepte exact mime ou PDF générique
-      return (
-        accept.includes(file.type) ||
-        (file.type === "" && file.name.toLowerCase().endsWith(".pdf"))
-      );
-    }
-
-    function showError(msg) {
-      err.textContent = msg;
-      err.hidden = false;
-    }
-    function clearError() {
-      err.hidden = true;
-    }
-
-    function handleFiles(list) {
-      if (!list || !list.length) return;
-      const f = list[0];
-
-      if (!isAccepted(f))
-        return showError("Seuls les fichiers PDF sont acceptés.");
-      if (max && f.size > max)
-        return showError(
-          `Le fichier dépasse ${(max / 1024 / 1024).toFixed(0)} Mo.`
-        );
-
-      clearError();
-
-      // alimente le <input type="file"> (compat)
-      const dt = new DataTransfer();
-      dt.items.add(f);
-      input.files = dt.files;
-
-      out.hidden = false;
-      out.textContent = `${f.name} — ${(f.size / 1024 / 1024).toFixed(1)} Mo`;
-
-      root.classList.add("has-file");
-      // Event custom si besoin d’écouter à l’extérieur
-      root.dispatchEvent(new CustomEvent("file-selected", { detail: f }));
-    }
-
-    btn.addEventListener("click", () => input.click());
-    input.addEventListener("change", () => handleFiles(input.files));
-
-    // drag & drop
-    ["dragenter", "dragover"].forEach((evt) =>
-      area.addEventListener(evt, (e) => {
-        e.preventDefault();
-        root.classList.add("is-drag");
-      })
-    );
-    ["dragleave", "drop"].forEach((evt) =>
-      area.addEventListener(evt, (e) => {
-        e.preventDefault();
-        root.classList.remove("is-drag");
-      })
-    );
-    area.addEventListener("drop", (e) => handleFiles(e.dataTransfer.files));
-
-    // Accessibilité clavier : Enter/Espace ouvre le sélecteur
-    area.addEventListener("keydown", (e) => {
-      if (e.key === " " || e.key === "Enter") {
-        e.preventDefault();
-        input.click();
+      const label = dz.querySelector("label");
+      if (label) {
+        label.addEventListener("click", (e) => {
+          // On laisse le comportement natif du label (ouvre la popup),
+          // mais on empêche la remontée vers .dropzone.
+          e.stopPropagation();
+          // NE PAS faire input.click() ici !
+        });
       }
-    });
-  })();
-</script>
+
+      const prevent = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      };
+
+      function validateFiles(fileList) {
+        const files = Array.from(fileList || []);
+        if (!files.length)
+          return { ok: false, msg: "Aucun fichier sélectionné." };
+
+        const typeOK = files.every(
+          (f) =>
+            !ACCEPT ||
+            f.type === ACCEPT ||
+            (ACCEPT === "application/pdf" &&
+              f.name.toLowerCase().endsWith(".pdf"))
+        );
+        if (!typeOK)
+          return {
+            ok: false,
+            msg: "Format invalide. Seuls les fichiers PDF sont acceptés.",
+          };
+
+        const sizeOK = files.every((f) => f.size <= MAX_BYTES);
+        if (!sizeOK)
+          return {
+            ok: false,
+            msg: `Taille trop importante. Maximum ${Math.round(MAX_BYTES / 1024 / 1024)} Mo.`,
+          };
+
+        return {
+          ok: true,
+          msg: files
+            .map(
+              (f) =>
+                `Sélectionné : ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} Mo)`
+            )
+            .join(" • "),
+        };
+      }
+
+      function report({ ok, msg }) {
+        status.textContent = msg;
+        status.classList.toggle("is-error", !ok);
+        status.classList.toggle("is-ok", ok);
+      }
+
+      // --- Sélection via le bouton : on VALIDE SEULEMENT (pas de réassignation)
+      input.addEventListener("change", () => {
+        const res = validateFiles(input.files);
+        report(res);
+        // Optionnel: pour autoriser à re-choisir le même fichier juste après
+        // si besoin : if (res.ok) input.value = '';
+      });
+
+      // --- DnD : on assigne au champ fichier SANS déclencher "change"
+      function setFilesOnInput(files) {
+        const dt = new DataTransfer();
+        for (const f of files) dt.items.add(f);
+        input.files = dt.files; // pas d'input.dispatchEvent('change')
+        const res = validateFiles(files); // on valide/affiche manuellement
+        report(res);
+      }
+
+      // Empêcher l’ouverture du PDF dans le navigateur
+      ["dragover", "drop"].forEach((ev) =>
+        document.addEventListener(ev, prevent, false)
+      );
+
+      // Gestion DnD sur la zone
+      ["dragenter", "dragover", "dragleave", "drop"].forEach((ev) =>
+        dz.addEventListener(ev, prevent, false)
+      );
+      ["dragenter", "dragover"].forEach((ev) =>
+        dz.addEventListener(ev, () => dz.classList.add("is-hover"))
+      );
+      ["dragleave", "drop"].forEach((ev) =>
+        dz.addEventListener(ev, () => dz.classList.remove("is-hover"))
+      );
+
+      dz.addEventListener("drop", (e) => {
+        const files = Array.from(e.dataTransfer?.files || []);
+        if (!IS_MULTIPLE && files.length > 1) {
+          report({
+            ok: false,
+            msg: "Vous ne pouvez déposer qu’un seul fichier.",
+          });
+          return;
+        }
+        setFilesOnInput(files);
+      });
+
+      // Accessibilité clavier / clic
+      dz.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          input.click();
+        }
+      });
+      dz.addEventListener("click", (e) => {
+        // Si le clic vient du label (ou d’un enfant du label), on ne fait rien.
+        if (e.target instanceof Element && e.target.closest("label")) return;
+        input.click(); // clic ailleurs dans la zone => ouvrir
+      });
+    })();
+  </script>
+
+  <style lang="scss">
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    .upload {
+      margin: 1.5rem 0;
+
+      &__inner {
+        display: grid;
+        gap: 1rem;
+      }
+      &__title {
+        font-size: 1.125rem;
+        margin: 0;
+      }
+      &__constraints {
+        font-size: 0.875rem;
+        color: #486;
+      }
+      &__status {
+        font-size: 0.9rem;
+        min-height: 1.25rem;
+        &.is-ok {
+          color: #1b5e20;
+        }
+        &.is-error {
+          color: #b00020;
+        }
+      }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.25rem;
+      border-radius: 0.75rem;
+      border: 1px solid #0a7ea4;
+      background: #fff;
+      color: #0a7ea4;
+      font-weight: 600;
+      cursor: pointer;
+      line-height: 1;
+      text-decoration: none;
+      &:hover {
+        filter: brightness(1.05);
+      }
+      &:focus-visible {
+        outline: 3px solid #82d0e6;
+        outline-offset: 2px;
+      }
+    }
+
+    /* Mobile : seul le bouton reste visible */
+    .dropzone {
+      display: block;
+      .dropzone__content {
+        display: grid;
+        justify-items: center;
+        gap: 0.25rem;
+      }
+      .dropzone__icon,
+      .dropzone__text,
+      .dropzone__or {
+        display: none;
+      }
+      &:focus-visible {
+        outline: 3px solid #82d0e6;
+        outline-offset: 2px;
+      }
+    }
+
+    /* ≥ 992px : vraie dropzone */
+    @media (min-width: 992px) {
+      .dropzone {
+        padding: 2rem;
+        border: 2px dashed #82cbdc;
+        border-radius: 1rem;
+        background: #f6fbfd;
+        .dropzone__icon,
+        .dropzone__text,
+        .dropzone__or {
+          display: block;
+        }
+        .dropzone__icon {
+          font-size: 1.75rem;
+          margin-bottom: 0.25rem;
+        }
+        .dropzone__text {
+          margin: 0;
+          font-weight: 600;
+        }
+        .dropzone__or {
+          margin: 0.25rem 0;
+          opacity: 0.7;
+        }
+        &.is-hover {
+          background: #eef8fb;
+          border-color: #0a7ea4;
+        }
+      }
+    }
+  </style>
+</section>

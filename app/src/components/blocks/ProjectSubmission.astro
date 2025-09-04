@@ -21,8 +21,6 @@ interface ProjectSubmissionProps {
 const { item } = Astro.props as ProjectSubmissionProps;
 
 const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
-
-console.log("Astro.props", Astro.props);
 ---
 
 <section>
@@ -34,8 +32,9 @@ console.log("Astro.props", Astro.props);
     <form
       id="project-form"
       method="post"
-      action="/api/submit-projet"
+      action="/api/submit-project"
       enctype="multipart/form-data"
+      novalidate
     >
       <label for="email">Email (champ obligatoire)</label>
       <input
@@ -45,26 +44,128 @@ console.log("Astro.props", Astro.props);
         placeholder="Email"
         required
       />
-
-      <Button
-        class="import-folder-btn"
-        variant="secondary"
-        iconName="document_add"
-        iconPosition="right">Importer un dossier</Button
+      <p
+        class="alert alert-warn"
+        id="err-email"
+        role="alert"
+        aria-live="polite"
+        hidden
       >
+        ⚠️ Veuillez renseigner une adresse e-mail valide
+      </p>
 
-      <!-- <Dropzone name="file" /> -->
+      <div class="hp" aria-hidden="true">
+        <label for="company">Company</label>
+        <input
+          id="company"
+          name="company"
+          type="text"
+          tabindex="-1"
+          autocomplete="off"
+        />
+      </div>
+
+      <input type="hidden" name="ts" value={Date.now()} />
+
+      <Dropzone
+        id="application-file"
+        name="file"
+        accept="application/pdf"
+        maxSizeMB={25}
+        label="Importer un dossier"
+      />
+
+      <p
+        class="alert alert-error"
+        id="err-file-size"
+        role="alert"
+        aria-live="polite"
+        hidden
+      >
+        ⚠️ Le dossier est trop volumineux, veuillez réduire sa taille et
+        réessayer (Max. 25Mo)
+      </p>
+      <p
+        class="alert alert-error"
+        id="err-file-type"
+        role="alert"
+        aria-live="polite"
+        hidden
+      >
+        ⚠️ Votre dossier doit être au format .pdf
+      </p>
+      <p
+        class="alert alert-warn"
+        id="err-file-missing"
+        role="alert"
+        aria-live="polite"
+        hidden
+      >
+        ⚠️ Veuillez joindre votre dossier
+      </p>
 
       <p class="file-size-format">{item.size_format_pdf}</p>
 
       <div class="richText gdpr-text" set:html={item.gdpr_text} />
 
-      <label class="checkbox">
-        <input type="checkbox" name="rgpd_ok" required />
-        J’ai lu et j’approuve le règlement…
-      </label>
+      <div class="consent">
+        <div class="consent__checkbox">
+          <input
+            type="checkbox"
+            id="rules-consent"
+            name="rules-consent"
+            required
+          />
+          <label for="rules-consent">
+            J’ai lu et j’approuve le règlement relatif au dépôt des dossiers
+          </label>
+        </div>
+        <p class="consent__link">
+          <a href="/reglement.pdf" target="_blank" rel="noopener">
+            Consulter le règlement
+          </a>
+        </p>
+      </div>
+      <p
+        class="alert alert-warn"
+        id="err-consent"
+        role="alert"
+        aria-live="polite"
+        hidden
+      >
+        ⚠️ Veuillez cocher la case « J’ai lu et j’approuve le règlement de
+        l’appel à projets »
+      </p>
 
-      <button type="submit">Envoyer mon dossier</button>
+      <div class="submit-btn-wrapper">
+        <Button
+          class="submit-btn"
+          variant="primary"
+          iconName="send"
+          iconPosition="right"
+          type="submit">Envoyer mon dossier</Button
+        >
+      </div>
+
+      <p
+        class="alert alert-success"
+        id="msg-success"
+        role="status"
+        aria-live="polite"
+        hidden
+      >
+        ✅ Votre dossier a bien été envoyé.
+      </p>
+      <p
+        class="alert alert-fail"
+        id="msg-fail"
+        role="alert"
+        aria-live="assertive"
+        hidden
+      >
+        ❌ En raison d’un problème technique, votre dossier n’a pas pu être
+        envoyé. Veuillez réessayer plus tard.
+      </p>
     </form>
   </div>
 </section>
@@ -84,7 +185,7 @@ console.log("Astro.props", Astro.props);
       @include abstracts.typography(abstracts.$font-title, 48px, 56px, 700);
     }
 
-    input {
+    input:not([type="checkbox"]) {
       border: 1px solid abstracts.$color-blue-tint-1;
       border-radius: abstracts.rem(8px);
       padding: abstracts.rem(12px);
@@ -129,8 +230,288 @@ console.log("Astro.props", Astro.props);
     :global(.gdpr-title) {
       margin: 0 0 abstracts.rem(30px);
     }
+
+    .consent {
+      background: #e7f6ff;
+      padding: 20px 40px;
+      border-radius: 12px;
+      max-width: 36rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-top: abstracts.rem(20px);
+
+      &__checkbox {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      input[type="checkbox"] {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      label {
+        position: relative;
+        padding-left: 52px;
+        cursor: pointer;
+        @include abstracts.typography(
+          abstracts.$font-paragraph,
+          16px,
+          24px,
+          700
+        );
+
+        &::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 50%;
+          width: 40px;
+          height: 40px;
+          border: 2px solid #0a4b68;
+          border-radius: 8px;
+          background: #fff;
+          transform: translateY(-50%);
+        }
+      }
+
+      input[type="checkbox"]:checked + label::after {
+        content: "";
+        position: absolute;
+        left: 14px;
+        top: 8px;
+        width: 12px;
+        height: 20px;
+        border: solid #0a4b68;
+        border-width: 0 4px 4px 0;
+        transform: rotate(45deg);
+      }
+
+      input[type="checkbox"]:focus-visible + label::before {
+        outline: 3px solid #0a6ebd;
+        outline-offset: 3px;
+      }
+
+      &__link {
+        margin-top: 6px;
+        font-size: 0.95rem;
+        color: #0a4b68;
+
+        a {
+          text-decoration: underline;
+          color: inherit;
+
+          &:focus-visible {
+            outline: 3px solid #0a6ebd;
+            outline-offset: 2px;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+
+    .submit-btn-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: abstracts.rem(20px);
+    }
+
+    .submit-btn {
+      max-width: abstracts.rem(289px);
+    }
+
+    .alert {
+      margin: 8px 0 0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+
+      &-warn {
+        background: #ffe9e6;
+        color: #a34a3a;
+        border: 1px solid #ffd0c8;
+      } // bandeau rose/orangé
+      &-error {
+        background: #ffe9e6;
+        color: #a34a3a;
+        border: 1px solid #ffd0c8;
+      }
+      &-fail {
+        background: #ffe9e6;
+        color: #a34a3a;
+        border: 1px solid #ffd0c8;
+      }
+
+      &-success {
+        background: #e8f5e9;
+        color: #1b5e20;
+        border: 1px solid #c8e6c9;
+      }
+    }
+
+    .hp {
+      position: absolute !important;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      pointer-events: none; // évite tout clic
+    }
   }
 
   @include abstracts.respond-above(md) {
   }
 </style>
+
+<script is:inline>
+  (() => {
+    const form = document.getElementById("project-form");
+    const email = document.getElementById("email");
+    const consent = document.getElementById("rules-consent");
+    const fileInput = form.querySelector('input[type="file"][name="file"]');
+    const submitBtn = form.querySelector(".submit-btn");
+
+    // Alerts
+    const A = {
+      email: document.getElementById("err-email"),
+      fileMissing: document.getElementById("err-file-missing"),
+      fileSize: document.getElementById("err-file-size"),
+      fileType: document.getElementById("err-file-type"),
+      consent: document.getElementById("err-consent"),
+      success: document.getElementById("msg-success"),
+      fail: document.getElementById("msg-fail"),
+    };
+
+    // Lier les messages aux champs (aria-describedby)
+    function linkDescribedBy(ctrl, ...alerts) {
+      const ids = alerts
+        .filter(Boolean)
+        .map((el) => el.id)
+        .join(" ");
+      if (ids) ctrl.setAttribute("aria-describedby", ids);
+    }
+    linkDescribedBy(email, A.email);
+    linkDescribedBy(consent, A.consent);
+    linkDescribedBy(fileInput, A.fileMissing, A.fileSize, A.fileType);
+
+    // Helpers
+    const MAX_BYTES = 25 * 1024 * 1024;
+    const ACCEPT = "application/pdf";
+    const hide = (el) => el && (el.hidden = true);
+    const show = (el) => el && (el.hidden = false);
+    const hideAll = (...els) => els.forEach(hide);
+
+    function markInvalid(el, invalid) {
+      if (!el) return;
+      el.setAttribute("aria-invalid", invalid ? "true" : "false");
+    }
+
+    // Clear alerts when user corrects
+    email.addEventListener("input", () => {
+      hide(A.email);
+      markInvalid(email, false);
+    });
+    consent.addEventListener("change", () => {
+      hide(A.consent);
+      markInvalid(consent, false);
+    });
+    fileInput.addEventListener("change", () => {
+      hideAll(A.fileMissing, A.fileSize, A.fileType);
+      markInvalid(fileInput, false);
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideAll(
+        A.success,
+        A.fail,
+        A.email,
+        A.fileMissing,
+        A.fileSize,
+        A.fileType,
+        A.consent
+      );
+      markInvalid(email, false);
+      markInvalid(consent, false);
+      markInvalid(fileInput, false);
+
+      let firstInvalid = null;
+
+      // Email
+      if (!email.value.trim() || email.validity.typeMismatch) {
+        show(A.email);
+        markInvalid(email, true);
+        firstInvalid ??= email;
+      }
+
+      // Fichier
+      const files = fileInput.files ? Array.from(fileInput.files) : [];
+      if (files.length === 0) {
+        show(A.fileMissing);
+        markInvalid(fileInput, true);
+        firstInvalid ??= fileInput.closest(".dropzone") || fileInput;
+      } else {
+        const f = files[0];
+        if (!(f.type === ACCEPT || f.name.toLowerCase().endsWith(".pdf"))) {
+          show(A.fileType);
+          markInvalid(fileInput, true);
+          firstInvalid ??= fileInput.closest(".dropzone") || fileInput;
+        }
+        if (f.size > MAX_BYTES) {
+          show(A.fileSize);
+          markInvalid(fileInput, true);
+          firstInvalid ??= fileInput.closest(".dropzone") || fileInput;
+        }
+      }
+
+      // Consentement
+      if (!consent.checked) {
+        show(A.consent);
+        markInvalid(consent, true);
+        firstInvalid ??= consent;
+      }
+
+      if (firstInvalid) {
+        firstInvalid.focus?.();
+        return;
+      }
+
+      // Envoi AJAX
+      submitBtn.setAttribute("aria-busy", "true");
+      submitBtn.disabled = true;
+      try {
+        const fd = new FormData(form);
+        const res = await fetch(form.action, { method: "POST", body: fd });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data?.ok) {
+          show(A.success);
+          form.reset();
+          // Nettoyage visuel dropzone
+          const status = document.getElementById("upload-status");
+          if (status) status.textContent = "";
+          markInvalid(email, false);
+          markInvalid(consent, false);
+          markInvalid(fileInput, false);
+        } else {
+          show(A.fail);
+        }
+      } catch {
+        show(A.fail);
+      } finally {
+        submitBtn.removeAttribute("aria-busy");
+        submitBtn.disabled = false;
+      }
+    });
+  })();
+</script>
