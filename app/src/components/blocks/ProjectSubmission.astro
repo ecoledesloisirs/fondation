@@ -1,7 +1,4 @@
 ---
-import { Image } from "astro:assets";
-import quoteImg from "../../assets/quote.png";
-import waveImg from "../../assets/wave_mobile.png";
 import Dropzone from "../../components/Dropzone.astro";
 import Button from "../Button.astro";
 
@@ -23,150 +20,152 @@ const { item } = Astro.props as ProjectSubmissionProps;
 const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 ---
 
-<section>
+<section aria-labelledby="project-submission-title">
   <div class="container">
-    <span aria-hidden="true" class="stage-number">04</span>
-    <h2>{item.title}</h2>
-    <div class="richText" set:html={item.text} />
+    <div class="wrapper">
+      <span aria-hidden="true" class="stage-number">04</span>
+      <h2 id="project-submission-title">{item.title}</h2>
+      <div class="richText" set:html={item.text} />
 
-    <form
-      id="project-form"
-      method="post"
-      action="/api/submit-project"
-      enctype="multipart/form-data"
-      novalidate
-    >
-      <label for="email">Email (champ obligatoire)</label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        placeholder="Email"
-        required
-      />
-      <p
-        class="alert alert-warn"
-        id="err-email"
-        role="alert"
-        aria-live="polite"
-        hidden
+      <form
+        id="project-form"
+        method="post"
+        action="/api/submit-project"
+        enctype="multipart/form-data"
+        novalidate
       >
-        ⚠️ Veuillez renseigner une adresse e-mail valide
-      </p>
-
-      <div class="hp" aria-hidden="true">
-        <label for="company">Company</label>
+        <label for="email">Email (champ obligatoire)</label>
         <input
-          id="company"
-          name="company"
-          type="text"
-          tabindex="-1"
-          autocomplete="off"
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Email"
+          autocomplete="email"
+          autocapitalize="off"
+          spellcheck="false"
+          required
         />
-      </div>
-
-      <input type="hidden" name="ts" value={Date.now()} />
-
-      <Dropzone
-        id="application-file"
-        name="file"
-        accept="application/pdf"
-        maxSizeMB={25}
-        label="Importer un dossier"
-      />
-
-      <p
-        class="alert alert-error"
-        id="err-file-size"
-        role="alert"
-        aria-live="polite"
-        hidden
-      >
-        ⚠️ Le dossier est trop volumineux, veuillez réduire sa taille et
-        réessayer (Max. 25Mo)
-      </p>
-      <p
-        class="alert alert-error"
-        id="err-file-type"
-        role="alert"
-        aria-live="polite"
-        hidden
-      >
-        ⚠️ Votre dossier doit être au format .pdf
-      </p>
-      <p
-        class="alert alert-warn"
-        id="err-file-missing"
-        role="alert"
-        aria-live="polite"
-        hidden
-      >
-        ⚠️ Veuillez joindre votre dossier
-      </p>
-
-      <p class="file-size-format">{item.size_format_pdf}</p>
-
-      <div class="richText gdpr-text" set:html={item.gdpr_text} />
-
-      <div class="consent">
-        <div class="consent__checkbox">
-          <input
-            type="checkbox"
-            id="rules-consent"
-            name="rules-consent"
-            required
-          />
-          <label for="rules-consent">
-            J’ai lu et j’approuve le règlement relatif au dépôt des dossiers
-          </label>
-        </div>
-        <p class="consent__link">
-          <a href="/reglement.pdf" target="_blank" rel="noopener">
-            Consulter le règlement
-          </a>
+        <p class="alert alert-warn" id="err-email" role="alert" hidden>
+          ⚠️ Veuillez renseigner une adresse e-mail valide
         </p>
-      </div>
-      <p
-        class="alert alert-warn"
-        id="err-consent"
-        role="alert"
-        aria-live="polite"
-        hidden
-      >
-        ⚠️ Veuillez cocher la case « J’ai lu et j’approuve le règlement de
-        l’appel à projets »
-      </p>
 
-      <div class="submit-btn-wrapper">
-        <Button
-          class="submit-btn"
-          variant="primary"
-          iconName="send"
-          iconPosition="right"
-          type="submit">Envoyer mon dossier</Button
+        <div class="hp" aria-hidden="true">
+          <label for="company">Company</label>
+          <input
+            id="company"
+            name="company"
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
+        <input type="hidden" name="ts" value={Date.now()} />
+
+        <Dropzone
+          id="application-file"
+          name="file"
+          accept="application/pdf"
+          maxSizeMB={25}
+          label="Importer un dossier"
+          sizeFormatPdf={item.size_format_pdf}
+        />
+
+        <p
+          class="alert alert-error"
+          id="err-file-size"
+          role="alert"
+          aria-live="polite"
+          hidden
         >
-      </div>
+          ⚠️ Le dossier est trop volumineux, veuillez réduire sa taille et
+          réessayer (Max. 25Mo)
+        </p>
+        <p
+          class="alert alert-error"
+          id="err-file-type"
+          role="alert"
+          aria-live="polite"
+          hidden
+        >
+          ⚠️ Votre dossier doit être au format .pdf
+        </p>
+        <p
+          class="alert alert-warn"
+          id="err-file-missing"
+          role="alert"
+          aria-live="polite"
+          hidden
+        >
+          ⚠️ Veuillez joindre votre dossier
+        </p>
 
-      <p
-        class="alert alert-success"
-        id="msg-success"
-        role="status"
-        aria-live="polite"
-        hidden
-      >
-        ✅ Votre dossier a bien été envoyé.
-      </p>
-      <p
-        class="alert alert-fail"
-        id="msg-fail"
-        role="alert"
-        aria-live="assertive"
-        hidden
-      >
-        ❌ En raison d’un problème technique, votre dossier n’a pas pu être
-        envoyé. Veuillez réessayer plus tard.
-      </p>
-    </form>
+        <div class="richText gdpr-text" set:html={item.gdpr_text} />
+
+        <fieldset class="consent">
+          <legend class="visually-hidden">Règlement de l’appel à projets</legend
+          >
+          <div class="consent__checkbox">
+            <input
+              type="checkbox"
+              id="rules-consent"
+              name="rules-consent"
+              required
+            />
+            <label for="rules-consent"
+              >J’ai lu et j’approuve le règlement relatif au dépôt des dossiers</label
+            >
+          </div>
+          <p class="consent__link">
+            <a href="/reglement.pdf" target="_blank" rel="noopener"
+              >Consulter le règlement <span class="visually-hidden"
+                >(PDF, s’ouvre dans un nouvel onglet)</span
+              ></a
+            >
+          </p>
+        </fieldset>
+        <p
+          class="alert alert-warn"
+          id="err-consent"
+          role="alert"
+          aria-live="polite"
+          hidden
+        >
+          ⚠️ Veuillez cocher la case « J’ai lu et j’approuve le règlement de
+          l’appel à projets »
+        </p>
+
+        <div class="submit-btn-wrapper">
+          <Button
+            class="submit-btn"
+            variant="primary"
+            iconName="send"
+            iconPosition="right"
+            type="submit">Envoyer mon dossier</Button
+          >
+        </div>
+
+        <p
+          class="alert alert-success"
+          id="msg-success"
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          ✅ Votre dossier a bien été envoyé.
+        </p>
+        <p
+          class="alert alert-fail"
+          id="msg-fail"
+          role="alert"
+          aria-live="assertive"
+          hidden
+        >
+          ❌ En raison d’un problème technique, votre dossier n’a pas pu être
+          envoyé. Veuillez réessayer plus tard.
+        </p>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -183,6 +182,10 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
     .stage-number {
       color: abstracts.$color-secondary;
       @include abstracts.typography(abstracts.$font-title, 48px, 56px, 700);
+    }
+
+    form {
+      margin-top: abstracts.rem(18px);
     }
 
     input:not([type="checkbox"]) {
@@ -210,17 +213,12 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       max-width: abstracts.rem(320px);
     }
 
-    .file-size-format {
-      margin-top: abstracts.rem(8px);
-      text-align: center;
-    }
-
     .gdpr-text {
       @include abstracts.typography(abstracts.$font-paragraph, 14px, 20px, 400);
       padding: abstracts.rem(20px);
       border: 1px solid abstracts.$color-blue-tint-2;
       border-radius: abstracts.rem(12px);
-      margin-top: abstracts.rem(36px);
+      margin-top: abstracts.rem(20px);
 
       :global(p:not(.gdpr-title)) {
         margin: 0;
@@ -233,12 +231,12 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
     .consent {
       background: #e7f6ff;
-      padding: 20px 40px;
+      padding: abstracts.rem(28px) abstracts.rem(40px) abstracts.rem(20px);
       border-radius: 12px;
-      max-width: 36rem;
       font-size: 1rem;
       line-height: 1.5;
       margin-top: abstracts.rem(20px);
+      border: none;
 
       &__checkbox {
         position: relative;
@@ -290,7 +288,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         content: "";
         position: absolute;
         left: 14px;
-        top: 8px;
+        top: 22px;
         width: 12px;
         height: 20px;
         border: solid #0a4b68;
@@ -304,7 +302,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       }
 
       &__link {
-        margin-top: 6px;
+        margin-top: abstracts.rem(20px);
         font-size: 0.95rem;
         color: #0a4b68;
 
@@ -316,6 +314,10 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
             outline: 3px solid #0a6ebd;
             outline-offset: 2px;
             border-radius: 4px;
+          }
+
+          &:hover {
+            text-decoration: none;
           }
         }
       }
@@ -336,12 +338,18 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       padding: 10px 12px;
       border-radius: 8px;
       font-size: 0.95rem;
+      text-align: center;
 
       &-warn {
-        background: #ffe9e6;
+        background: abstracts.$color-error-transparent;
         color: #a34a3a;
-        border: 1px solid #ffd0c8;
-      } // bandeau rose/orangé
+        @include abstracts.typography(
+          abstracts.$font-paragraph,
+          18px,
+          28px,
+          700
+        );
+      }
       &-error {
         background: #ffe9e6;
         color: #a34a3a;
@@ -370,7 +378,32 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
     }
   }
 
+  @media (min-width: 415px) {
+    section {
+      .consent {
+        input[type="checkbox"]:checked + label::after {
+          top: 12px;
+        }
+      }
+    }
+  }
+
   @include abstracts.respond-above(md) {
+    section {
+      .consent {
+        input[type="checkbox"]:checked + label::after {
+          top: 0;
+        }
+      }
+    }
+  }
+
+  @include abstracts.respond-above(xl) {
+    section {
+      .wrapper {
+        max-width: abstracts.rem(800px);
+      }
+    }
   }
 </style>
 
@@ -488,7 +521,9 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       }
 
       // Envoi AJAX
+      submitBtn.setAttribute("data-loading", "true");
       submitBtn.setAttribute("aria-busy", "true");
+      form.setAttribute("aria-busy", "true");
       submitBtn.disabled = true;
       try {
         const fd = new FormData(form);
@@ -509,7 +544,9 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       } catch {
         show(A.fail);
       } finally {
+        submitBtn.removeAttribute("data-loading");
         submitBtn.removeAttribute("aria-busy");
+        form.removeAttribute("aria-busy");
         submitBtn.disabled = false;
       }
     });

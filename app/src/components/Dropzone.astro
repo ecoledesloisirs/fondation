@@ -1,11 +1,16 @@
 ---
+import { Image } from "astro:assets";
+import addDocumentIcon from "../assets/icons/document_add.svg";
+import uploadIcon from "../assets/icons/upload.svg";
+
 interface Props {
   id?: string;
   name?: string;
-  accept?: string; // ex: "application/pdf"
-  maxSizeMB?: number; // ex: 25
+  accept?: string;
+  maxSizeMB?: number;
   multiple?: boolean;
-  label?: string; // ex: "Importer un dossier"
+  label?: string;
+  sizeFormatPdf?: string;
 }
 
 const {
@@ -15,20 +20,18 @@ const {
   maxSizeMB = 25,
   multiple = false,
   label = "Importer un dossier",
+  sizeFormatPdf,
 } = Astro.props;
 ---
 
 <section
   class="upload"
-  aria-labelledby="upload-title"
   data-input-id={id}
   data-accept={accept}
   data-max-bytes={(maxSizeMB * 1024 * 1024).toString()}
   data-multiple={multiple ? "true" : "false"}
 >
   <div class="upload__inner">
-    <h3 id="upload-title" class="upload__title">Déposer votre dossier</h3>
-
     <!-- input fichier (toujours présent) -->
     <input
       id={id}
@@ -49,15 +52,19 @@ const {
       aria-describedby="upload-help upload-constraints"
     >
       <div class="dropzone__content">
-        <div class="dropzone__icon" aria-hidden="true">📁</div>
+        <div class="dropzone__icon" aria-hidden="true">
+          <Image src={uploadIcon} alt="" />
+        </div>
         <p class="dropzone__text">Glissez et déposez votre dossier ici</p>
         <p class="dropzone__or">ou</p>
-        <label class="btn" for={id} data-variant="secondary">{label}</label>
+        <label class="btn" for={id} data-variant="secondary"
+          >{label} <Image src={addDocumentIcon} alt="" /></label
+        >
       </div>
     </div>
 
     <p id="upload-constraints" class="upload__constraints">
-      Poids maximal du dossier : {maxSizeMB} Mo • Format accepté : PDF
+      {sizeFormatPdf}
     </p>
 
     <div id="upload-status" class="upload__status" aria-live="polite"></div>
@@ -96,7 +103,7 @@ const {
       function validateFiles(fileList) {
         const files = Array.from(fileList || []);
         if (!files.length)
-          return { ok: false, msg: "Aucun fichier sélectionné." };
+          return { ok: false, msg: "⚠️ Aucun fichier sélectionné." };
 
         const typeOK = files.every(
           (f) =>
@@ -108,14 +115,14 @@ const {
         if (!typeOK)
           return {
             ok: false,
-            msg: "Format invalide. Seuls les fichiers PDF sont acceptés.",
+            msg: "⚠️ Votre dossier doit être au format .pdf",
           };
 
         const sizeOK = files.every((f) => f.size <= MAX_BYTES);
         if (!sizeOK)
           return {
             ok: false,
-            msg: `Taille trop importante. Maximum ${Math.round(MAX_BYTES / 1024 / 1024)} Mo.`,
+            msg: `⚠️ Taille trop importante. Maximum ${Math.round(MAX_BYTES / 1024 / 1024)} Mo.`,
           };
 
         return {
@@ -123,7 +130,7 @@ const {
           msg: files
             .map(
               (f) =>
-                `Sélectionné : ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} Mo)`
+                `✅ Sélectionné : ${f.name} (${(f.size / 1024 / 1024).toFixed(2)} Mo)`
             )
             .join(" • "),
         };
@@ -196,6 +203,8 @@ const {
   </script>
 
   <style lang="scss">
+    @use "../styles/abstracts";
+
     .visually-hidden {
       position: absolute !important;
       width: 1px;
@@ -207,7 +216,7 @@ const {
     }
 
     .upload {
-      margin: 1.5rem 0;
+      margin-top: 1.5rem;
 
       &__inner {
         display: grid;
@@ -218,17 +227,29 @@ const {
         margin: 0;
       }
       &__constraints {
-        font-size: 0.875rem;
-        color: #486;
+        text-align: center;
+        font-style: italic;
       }
       &__status {
-        font-size: 0.9rem;
-        min-height: 1.25rem;
+        display: none;
+        padding: 10px 12px;
+        border-radius: 8px;
+        text-align: center;
+        @include abstracts.typography(
+          abstracts.$font-paragraph,
+          18px,
+          28px,
+          700
+        );
         &.is-ok {
-          color: #1b5e20;
+          color: abstracts.$color-success;
+          display: block;
+          background: abstracts.$color-success-transparent;
         }
         &.is-error {
-          color: #b00020;
+          color: abstracts.$color-error;
+          display: block;
+          background: abstracts.$color-error-transparent;
         }
       }
     }
@@ -239,16 +260,19 @@ const {
       justify-content: center;
       gap: 0.5rem;
       padding: 0.875rem 1.25rem;
-      border-radius: 0.75rem;
-      border: 1px solid #0a7ea4;
-      background: #fff;
-      color: #0a7ea4;
-      font-weight: 600;
+      border-radius: abstracts.rem(4px);
+      border: 1px solid abstracts.$color-blue;
+      background: abstracts.$color-white;
+      color: abstracts.$color-blue-shade-1;
       cursor: pointer;
       line-height: 1;
       text-decoration: none;
+      text-transform: uppercase;
       &:hover {
-        filter: brightness(1.05);
+        background: abstracts.$color-silver;
+      }
+      &:active {
+        background: #c9dfe6;
       }
       &:focus-visible {
         outline: 3px solid #82d0e6;
@@ -256,13 +280,22 @@ const {
       }
     }
 
-    /* Mobile : seul le bouton reste visible */
     .dropzone {
       display: block;
+      width: max-content;
+      margin: auto;
+
       .dropzone__content {
         display: grid;
         justify-items: center;
-        gap: 0.25rem;
+        gap: abstracts.rem(20px);
+
+        .btn {
+          img {
+            height: 24px;
+            width: 24px;
+          }
+        }
       }
       .dropzone__icon,
       .dropzone__text,
@@ -275,13 +308,54 @@ const {
       }
     }
 
-    /* ≥ 992px : vraie dropzone */
     @media (min-width: 992px) {
       .dropzone {
+        width: auto;
+        margin: initial;
         padding: 2rem;
-        border: 2px dashed #82cbdc;
         border-radius: 1rem;
-        background: #f6fbfd;
+        background: abstracts.$color-silver;
+
+        background-image: repeating-linear-gradient(
+            90deg,
+            #5f9cb4,
+            #5f9cb4 8px,
+            transparent 8px,
+            transparent 20px
+          ),
+          repeating-linear-gradient(
+            180deg,
+            #5f9cb4,
+            #5f9cb4 8px,
+            transparent 8px,
+            transparent 20px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            #5f9cb4,
+            #5f9cb4 8px,
+            transparent 8px,
+            transparent 20px
+          ),
+          repeating-linear-gradient(
+            180deg,
+            #5f9cb4,
+            #5f9cb4 8px,
+            transparent 8px,
+            transparent 20px
+          );
+        background-position:
+          left 6px top,
+          right top 6px,
+          left 6px bottom,
+          left top 6px;
+        background-repeat: repeat-x, repeat-y, repeat-x, repeat-y;
+        background-size:
+          calc(100% * 20) 2px,
+          2px calc(100% * 20),
+          calc(100% * 20) 2px,
+          2px calc(100% * 20);
+
         .dropzone__icon,
         .dropzone__text,
         .dropzone__or {
@@ -293,7 +367,12 @@ const {
         }
         .dropzone__text {
           margin: 0;
-          font-weight: 600;
+          @include abstracts.typography(
+            abstracts.$font-paragraph,
+            18px,
+            28px,
+            400
+          );
         }
         .dropzone__or {
           margin: 0.25rem 0;

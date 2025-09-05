@@ -1,5 +1,8 @@
 ---
 import Icon from "./Icon.astro";
+import { Image } from "astro:assets";
+
+import LoadingIcon from "../assets/icons/loading.svg";
 
 export interface Props {
   variant?: string;
@@ -79,6 +82,10 @@ const classes = cx(
       ) : null
     }
 
+    <span class="ui-btn__spinner" aria-hidden="true">
+      <Image src={LoadingIcon} alt="" aria-hidden="true" class="quote-img" />
+    </span>
+
     {
       loading ? (
         <span class="ui-btn__spinner" aria-hidden="true">
@@ -152,6 +159,19 @@ const classes = cx(
   /*************************
   Base
 *************************/
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
   .ui-btn {
     --_py: var(--btn-py-normal);
     --_px: var(--btn-px-normal);
@@ -191,16 +211,27 @@ const classes = cx(
       pointer-events: none;
     }
 
+    &[data-loading="true"] {
+      .ui-btn__spinner {
+        display: inline-flex;
+        animation: rotate 4s infinite linear;
+      }
+
+      .ui-btn__icon {
+        display: none;
+      }
+    }
+
     &__label {
       white-space: nowrap;
     }
+
     &__icon {
       display: inline-flex;
     }
+
     &__spinner {
-      position: absolute;
-      inset-inline-end: 10px;
-      display: inline-flex;
+      display: none;
     }
 
     /* Sizes */
@@ -209,16 +240,19 @@ const classes = cx(
       --_px: var(--btn-px-normal);
       font-size: 16px;
     }
+
     &--medium {
       --_py: var(--btn-py-medium);
       --_px: var(--btn-px-medium);
       font-size: 15px;
     }
+
     &--small {
       --_py: var(--btn-py-small);
       --_px: var(--btn-px-small);
       font-size: 14px;
     }
+
     &--block {
       width: 100%;
     }
@@ -226,6 +260,7 @@ const classes = cx(
     &--icon-left {
       padding-left: calc(var(--_px) - 2px);
     }
+
     &--icon-right {
       padding-right: calc(var(--_px) - 2px);
     }
@@ -239,6 +274,7 @@ const classes = cx(
       &:hover {
         background: var(--primary-bg-hover);
       }
+
       &:active {
         background: var(--primary-bg-active);
       }
@@ -253,6 +289,7 @@ const classes = cx(
       &:hover {
         background: var(--secondary-bg-hover);
       }
+
       &:active {
         background: var(--secondary-bg-active);
       }
@@ -267,13 +304,13 @@ const classes = cx(
       &:hover {
         background: var(--tertiary-bg-hover);
       }
+
       &:active {
         background: var(--tertiary-bg-active);
         border-color: abstracts.$color-dark-grey;
       }
     }
 
-    /* Disabled (sur le bouton lui-même) */
     &[disabled],
     &[aria-disabled="true"] {
       background: var(--disabled-bg);
@@ -281,7 +318,6 @@ const classes = cx(
       border-color: transparent;
     }
 
-    /* Spinner */
     &__spinner-svg {
       width: 1em;
       height: 1em;
@@ -290,6 +326,7 @@ const classes = cx(
         stroke: currentColor;
         opacity: 0.25;
       }
+
       .arc {
         stroke: currentColor;
         stroke-linecap: round;
