@@ -282,7 +282,7 @@ const {
 
     .dropzone {
       display: block;
-      width: max-content;
+      width: 100%;
       margin: auto;
 
       .dropzone__content {
@@ -291,6 +291,8 @@ const {
         gap: abstracts.rem(20px);
 
         .btn {
+          width: 100%;
+          max-width: abstracts.rem(320px);
           img {
             height: 24px;
             width: 24px;
@@ -355,6 +357,12 @@ const {
           2px calc(100% * 20),
           calc(100% * 20) 2px,
           2px calc(100% * 20);
+
+        .dropzone__content {
+          .btn {
+            max-width: abstracts.rem(279px);
+          }
+        }
 
         .dropzone__icon,
         .dropzone__text,

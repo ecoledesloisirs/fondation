@@ -34,22 +34,25 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         enctype="multipart/form-data"
         novalidate
       >
-        <label for="email">Email (champ obligatoire)</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="Email"
-          autocomplete="email"
-          autocapitalize="off"
-          spellcheck="false"
-          required
-        />
-        <p class="alert alert-warn" id="err-email" role="alert" hidden>
-          ⚠️ Veuillez renseigner une adresse e-mail valide
-        </p>
+        <div class="c-field">
+          <label for="email">Email <span aria-hidden="true">*</span></label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            class="c-input"
+            placeholder="Email"
+            autocomplete="email"
+            autocapitalize="off"
+            spellcheck="false"
+            required
+          />
+          <p class="c-alert c-alert--warn" id="err-email" role="alert" hidden>
+            ⚠️ Veuillez renseigner une adresse e-mail valide
+          </p>
+        </div>
 
-        <div class="hp" aria-hidden="true">
+        <div class="visually-hidden" aria-hidden="true">
           <label for="company">Company</label>
           <input
             id="company"
@@ -72,7 +75,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         />
 
         <p
-          class="alert alert-error"
+          class="c-alert c-alert--error"
           id="err-file-size"
           role="alert"
           aria-live="polite"
@@ -82,7 +85,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
           réessayer (Max. 25Mo)
         </p>
         <p
-          class="alert alert-error"
+          class="c-alert c-alert--error"
           id="err-file-type"
           role="alert"
           aria-live="polite"
@@ -91,7 +94,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
           ⚠️ Votre dossier doit être au format .pdf
         </p>
         <p
-          class="alert alert-warn"
+          class="c-alert c-alert--warn"
           id="err-file-missing"
           role="alert"
           aria-live="polite"
@@ -102,10 +105,10 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
         <div class="richText gdpr-text" set:html={item.gdpr_text} />
 
-        <fieldset class="consent">
+        <fieldset class="c-consent c-consent--checkbox">
           <legend class="visually-hidden">Règlement de l’appel à projets</legend
           >
-          <div class="consent__checkbox">
+          <div class="c-consent__checkbox">
             <input
               type="checkbox"
               id="rules-consent"
@@ -116,16 +119,17 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
               >J’ai lu et j’approuve le règlement relatif au dépôt des dossiers</label
             >
           </div>
-          <p class="consent__link">
-            <a href="/reglement.pdf" target="_blank" rel="noopener"
-              >Consulter le règlement <span class="visually-hidden"
+          <p class="consent-link">
+            <a href="/reglement.pdf" target="_blank" rel="noopener">
+              Consulter le règlement
+              <span class="visually-hidden"
                 >(PDF, s’ouvre dans un nouvel onglet)</span
-              ></a
-            >
+              >
+            </a>
           </p>
         </fieldset>
         <p
-          class="alert alert-warn"
+          class="c-alert c-alert--warn"
           id="err-consent"
           role="alert"
           aria-live="polite"
@@ -135,18 +139,22 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
           l’appel à projets »
         </p>
 
-        <div class="submit-btn-wrapper">
+        <!-- CTA -->
+        <div class="c-actions">
           <Button
             class="submit-btn"
             variant="primary"
             iconName="send"
             iconPosition="right"
-            type="submit">Envoyer mon dossier</Button
+            type="submit"
           >
+            Envoyer mon dossier
+          </Button>
         </div>
 
+        <!-- Feedback -->
         <p
-          class="alert alert-success"
+          class="c-alert c-alert--success"
           id="msg-success"
           role="status"
           aria-live="polite"
@@ -155,7 +163,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
           ✅ Votre dossier a bien été envoyé.
         </p>
         <p
-          class="alert alert-fail"
+          class="c-alert c-alert--fail"
           id="msg-fail"
           role="alert"
           aria-live="assertive"
@@ -171,46 +179,24 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
 <style lang="scss">
   @use "../../styles/abstracts";
+  @use "../../styles/components/forms";
 
   section {
     padding-block: abstracts.rem(60px);
 
+    .wrapper {
+      max-width: abstracts.rem(800px);
+    }
     h2 {
       margin: abstracts.rem(8px) 0 abstracts.rem(20px);
+    }
+    form {
+      margin-top: abstracts.rem(18px);
     }
 
     .stage-number {
       color: abstracts.$color-secondary;
       @include abstracts.typography(abstracts.$font-title, 48px, 56px, 700);
-    }
-
-    form {
-      margin-top: abstracts.rem(18px);
-    }
-
-    input:not([type="checkbox"]) {
-      border: 1px solid abstracts.$color-blue-tint-1;
-      border-radius: abstracts.rem(8px);
-      padding: abstracts.rem(12px);
-      font-size: abstracts.rem(14px);
-      width: 100%;
-      box-sizing: border-box;
-
-      &:focus {
-        outline: none;
-        border-color: abstracts.$color-primary;
-      }
-
-      &::placeholder {
-        color: abstracts.$color-blue-tint-2;
-        font-style: italic;
-      }
-    }
-
-    .import-folder-btn {
-      margin-top: abstracts.rem(36px);
-      width: 100%;
-      max-width: abstracts.rem(320px);
     }
 
     .gdpr-text {
@@ -229,179 +215,40 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       margin: 0 0 abstracts.rem(30px);
     }
 
-    .consent {
-      background: #e7f6ff;
-      padding: abstracts.rem(28px) abstracts.rem(40px) abstracts.rem(20px);
-      border-radius: 12px;
-      font-size: 1rem;
-      line-height: 1.5;
+    .consent-link {
       margin-top: abstracts.rem(20px);
-      border: none;
-
-      &__checkbox {
-        position: relative;
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      input[type="checkbox"] {
-        position: absolute;
-        inline-size: 1px;
-        block-size: 1px;
-        margin: 0;
-        padding: 0;
-        border: 0;
-        clip: rect(0 0 0 0);
-        clip-path: inset(50%);
-        overflow: hidden;
-        white-space: nowrap;
-      }
-
-      label {
-        position: relative;
-        padding-left: 52px;
-        cursor: pointer;
-        @include abstracts.typography(
-          abstracts.$font-paragraph,
-          16px,
-          24px,
-          700
-        );
-
-        &::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 50%;
-          width: 40px;
-          height: 40px;
-          border: 2px solid #0a4b68;
-          border-radius: 8px;
-          background: #fff;
-          transform: translateY(-50%);
-        }
-      }
-
-      input[type="checkbox"]:checked + label::after {
-        content: "";
-        position: absolute;
-        left: 14px;
-        top: 22px;
-        width: 12px;
-        height: 20px;
-        border: solid #0a4b68;
-        border-width: 0 4px 4px 0;
-        transform: rotate(45deg);
-      }
-
-      input[type="checkbox"]:focus-visible + label::before {
-        outline: 3px solid #0a6ebd;
-        outline-offset: 3px;
-      }
-
-      &__link {
-        margin-top: abstracts.rem(20px);
-        font-size: 0.95rem;
-        color: #0a4b68;
-
-        a {
-          text-decoration: underline;
-          color: inherit;
-
-          &:focus-visible {
-            outline: 3px solid #0a6ebd;
-            outline-offset: 2px;
-            border-radius: 4px;
-          }
-
-          &:hover {
-            text-decoration: none;
-          }
-        }
-      }
-    }
-
-    .submit-btn-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-top: abstracts.rem(20px);
-    }
-
-    .submit-btn {
-      max-width: abstracts.rem(289px);
-    }
-
-    .alert {
-      margin: 8px 0 0;
-      padding: 10px 12px;
-      border-radius: 8px;
       font-size: 0.95rem;
-      text-align: center;
+      color: #0a4b68;
 
-      &-warn {
-        background: abstracts.$color-error-transparent;
-        color: #a34a3a;
-        @include abstracts.typography(
-          abstracts.$font-paragraph,
-          18px,
-          28px,
-          700
-        );
-      }
-      &-error {
-        background: #ffe9e6;
-        color: #a34a3a;
-        border: 1px solid #ffd0c8;
-      }
-      &-fail {
-        background: #ffe9e6;
-        color: #a34a3a;
-        border: 1px solid #ffd0c8;
-      }
+      a {
+        text-decoration: underline;
+        color: inherit;
 
-      &-success {
-        background: #e8f5e9;
-        color: #1b5e20;
-        border: 1px solid #c8e6c9;
+        &:focus-visible {
+          outline: 3px solid #0a6ebd;
+          outline-offset: 2px;
+          border-radius: 4px;
+        }
+        &:hover {
+          text-decoration: none;
+        }
       }
-    }
-
-    .hp {
-      position: absolute !important;
-      left: -9999px;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      pointer-events: none; // évite tout clic
     }
   }
 
   @media (min-width: 415px) {
     section {
-      .consent {
-        input[type="checkbox"]:checked + label::after {
-          top: 12px;
-        }
+      /* micro-ajustement visuel du check custom si besoin */
+      .c-consent input[type="checkbox"]:checked + label::after {
+        top: 12px;
       }
     }
   }
 
   @include abstracts.respond-above(md) {
     section {
-      .consent {
-        input[type="checkbox"]:checked + label::after {
-          top: 0;
-        }
-      }
-    }
-  }
-
-  @include abstracts.respond-above(xl) {
-    section {
-      .wrapper {
-        max-width: abstracts.rem(800px);
+      .c-consent input[type="checkbox"]:checked + label::after {
+        top: 0;
       }
     }
   }
@@ -415,7 +262,6 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
     const fileInput = form.querySelector('input[type="file"][name="file"]');
     const submitBtn = form.querySelector(".submit-btn");
 
-    // Alerts
     const A = {
       email: document.getElementById("err-email"),
       fileMissing: document.getElementById("err-file-missing"),
@@ -426,7 +272,6 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       fail: document.getElementById("msg-fail"),
     };
 
-    // Lier les messages aux champs (aria-describedby)
     function linkDescribedBy(ctrl, ...alerts) {
       const ids = alerts
         .filter(Boolean)
@@ -438,19 +283,14 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
     linkDescribedBy(consent, A.consent);
     linkDescribedBy(fileInput, A.fileMissing, A.fileSize, A.fileType);
 
-    // Helpers
     const MAX_BYTES = 25 * 1024 * 1024;
     const ACCEPT = "application/pdf";
     const hide = (el) => el && (el.hidden = true);
     const show = (el) => el && (el.hidden = false);
     const hideAll = (...els) => els.forEach(hide);
+    const markInvalid = (el, invalid) =>
+      el?.setAttribute("aria-invalid", invalid ? "true" : "false");
 
-    function markInvalid(el, invalid) {
-      if (!el) return;
-      el.setAttribute("aria-invalid", invalid ? "true" : "false");
-    }
-
-    // Clear alerts when user corrects
     email.addEventListener("input", () => {
       hide(A.email);
       markInvalid(email, false);
@@ -481,14 +321,12 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
       let firstInvalid = null;
 
-      // Email
       if (!email.value.trim() || email.validity.typeMismatch) {
         show(A.email);
         markInvalid(email, true);
         firstInvalid ??= email;
       }
 
-      // Fichier
       const files = fileInput.files ? Array.from(fileInput.files) : [];
       if (files.length === 0) {
         show(A.fileMissing);
@@ -508,7 +346,6 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         }
       }
 
-      // Consentement
       if (!consent.checked) {
         show(A.consent);
         markInvalid(consent, true);
@@ -520,11 +357,11 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         return;
       }
 
-      // Envoi AJAX
       submitBtn.setAttribute("data-loading", "true");
       submitBtn.setAttribute("aria-busy", "true");
       form.setAttribute("aria-busy", "true");
       submitBtn.disabled = true;
+
       try {
         const fd = new FormData(form);
         const res = await fetch(form.action, { method: "POST", body: fd });
@@ -532,7 +369,6 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         if (res.ok && data?.ok) {
           show(A.success);
           form.reset();
-          // Nettoyage visuel dropzone
           const status = document.getElementById("upload-status");
           if (status) status.textContent = "";
           markInvalid(email, false);
