@@ -1,0 +1,184 @@
+@use "../abstracts";
+@use "sass:color";
+
+%form-input-base {
+  border: 1px solid abstracts.$color-blue-tint-1;
+  border-radius: abstracts.rem(8px);
+  padding: abstracts.rem(12px);
+  font-size: abstracts.rem(14px);
+  width: 100%;
+  box-sizing: border-box;
+  background: abstracts.$color-silver;
+
+  &:focus {
+    outline: none;
+    background: abstracts.$color-white;
+  }
+
+  &::placeholder {
+    color: abstracts.$color-blue-tint-2;
+    font-style: italic;
+  }
+
+  &:not(:placeholder-shown) {
+    background-color: abstracts.$color-white;
+  }
+}
+
+.c-input {
+  @extend %form-input-base;
+}
+.c-input--textarea {
+  @extend %form-input-base;
+  resize: vertical;
+}
+
+.c-field {
+  > label {
+    display: inline-block;
+    margin-bottom: abstracts.rem(8px);
+    font-weight: 600;
+  }
+
+  > .c-help,
+  > .c-alert {
+    margin-top: abstracts.rem(8px);
+  }
+}
+
+.c-field:not(.c-row .c-field) {
+  margin-top: abstracts.rem(20px);
+}
+
+.c-row {
+  display: grid;
+  gap: abstracts.rem(16px);
+  margin-top: abstracts.rem(20px);
+  &--2,
+  &--3 {
+    grid-template-columns: 1fr;
+  }
+
+  @include abstracts.respond-above(md) {
+    &--2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    &--3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+}
+
+.c-col {
+  min-width: 0;
+}
+
+.c-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: abstracts.rem(20px);
+
+  .submit-btn {
+    max-width: abstracts.rem(289px);
+  }
+}
+
+.c-alert {
+  margin: abstracts.rem(8px) 0 0;
+  padding: abstracts.rem(10px) abstracts.rem(12px);
+  border-radius: abstracts.rem(8px);
+  font-size: 0.95rem;
+  text-align: center;
+
+  &--warn {
+    background: abstracts.$color-error-transparent;
+    color: abstracts.$color-error;
+  }
+  &--error,
+  &--fail {
+    background: #ffe9e6;
+    color: abstracts.$color-error;
+    border: 1px solid #ffd0c8;
+  }
+  &--success {
+    background: #e8f5e9;
+    color: #1b5e20;
+    border: 1px solid #c8e6c9;
+  }
+}
+
+@mixin custom-checkbox(
+  $size: 40px,
+  $border: 2px,
+  $color: abstracts.$color-primary
+) {
+  input[type="checkbox"] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  label {
+    position: relative;
+    padding-left: calc(#{$size} + 12px);
+    cursor: pointer;
+    font-weight: 700;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: $size;
+      height: $size;
+      border: $border solid $color;
+      border-radius: 8px;
+      background: #fff;
+      transform: translateY(-50%);
+    }
+  }
+
+  input[type="checkbox"]:checked + label::after {
+    content: "";
+    position: absolute;
+    left: calc(#{$size} * 0.35);
+    top: calc(50% - #{$size} * 0.05);
+    width: calc(#{$size} * 0.3);
+    height: calc(#{$size} * 0.5);
+    border: solid $color;
+    border-width: 0 4px 4px 0;
+    transform: rotate(45deg);
+  }
+
+  input[type="checkbox"]:focus-visible + label::before {
+    outline: 3px solid color.adjust($color, $lightness: 15%);
+    outline-offset: 3px;
+  }
+}
+
+.c-consent {
+  background: #e7f6ff;
+  padding: abstracts.rem(20px);
+  border-radius: 12px;
+  margin-top: abstracts.rem(20px);
+  border: none;
+
+  &__checkbox {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  &--checkbox {
+    @include custom-checkbox();
+  }
+}

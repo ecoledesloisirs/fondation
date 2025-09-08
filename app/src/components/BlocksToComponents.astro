@@ -7,6 +7,7 @@ import Contact from "./blocks/Contact.astro";
 import NewsGrid from "./blocks/NewsGrid.astro";
 import StagesOfTheCase from "./blocks/StagesOfTheCase.astro";
 import ProjectSubmission from "./blocks/ProjectSubmission.astro";
+import ContactForm from "./blocks/ContactForm.astro";
 
 const { blocks, slug, pageTitle } = Astro.props;
 ---
@@ -32,7 +33,9 @@ const { blocks, slug, pageTitle } = Astro.props;
                       ? StagesOfTheCase
                       : block.collection === "block_project_submission"
                         ? ProjectSubmission
-                        : () => null;
+                        : block.collection === "block_contact_form"
+                          ? ContactForm
+                          : () => null;
     return View && <View {...block} slug={slug} pageTitle={pageTitle} />;
   })
 }

@@ -128,6 +128,7 @@ export async function fetchPageBlocks(slug: string) {
                   "gdpr_text",
                   "optin_text",
                 ],
+                block_contact_form: ["title", "description", "gdpr_text"],
               },
             },
           ],

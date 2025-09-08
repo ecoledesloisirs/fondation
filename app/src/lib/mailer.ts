@@ -19,11 +19,16 @@ export async function sendMail(payload: MailPayload) {
     },
   });
 
-  await transporter.sendMail({
-    from: payload.from,
-    to: payload.notifyTo,
-    subject: payload.subject,
-    text: payload.text,
-    html: payload.html,
-  });
+  try {
+    await transporter.sendMail({
+      from: payload.from,
+      to: payload.notifyTo,
+      subject: payload.subject,
+      text: payload.text,
+      html: payload.html,
+    });
+    console.log("✅ Mail envoyé");
+  } catch (err) {
+    console.error("❌ Erreur envoi mail:", err);
+  }
 }
