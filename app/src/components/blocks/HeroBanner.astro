@@ -9,18 +9,18 @@ import Breadcrumb from "../Breadcrumb.astro";
 interface HeroBannerProps {
   id: string;
   item: {
-    image_mobile: {
+    image_mobile?: {
       id: string;
       description: string;
     };
-    image_desktop: {
+    image_desktop?: {
       id: string;
       description: string;
     };
     is_home_page: boolean;
-    breadcrumb: string;
-    texte: string;
-    auteur: string;
+    breadcrumb?: string;
+    texte?: string;
+    auteur?: string;
     content: string;
   };
   slug: string;
@@ -47,23 +47,28 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 ---
 
 <section class="hero-banner">
-  <div class="hero-banner-top">
-    <picture>
-      <source
-        media="(min-width: 768px)"
-        srcset={`${DIRECTUS_URL}/assets/${image_desktop.id}?width=1600&format=webp`}
-        type="image/webp"
-      />
+  {
+    image_mobile && image_desktop ? (
+      <div class="hero-banner-top">
+        <picture>
+          <source
+            media="(min-width: 768px)"
+            srcset={`${DIRECTUS_URL}/assets/${image_desktop.id}?width=1600&format=webp`}
+            type="image/webp"
+          />
 
-      <img
-        srcset={`${DIRECTUS_URL}/assets/${image_mobile.id}?width=992&format=webp`}
-        alt={image_mobile.description}
-        loading="lazy"
-        class="banner-img"
-        style={`--h-lg:${heightLarge};`}
-      />
-    </picture>
-  </div>
+          <img
+            srcset={`${DIRECTUS_URL}/assets/${image_mobile.id}?width=992&format=webp`}
+            alt={image_mobile.description}
+            loading="lazy"
+            class="banner-img"
+            style={`--h-lg:${heightLarge};`}
+          />
+        </picture>
+      </div>
+    ) : null
+  }
+
   <div class="hero-banner-bottom">
     <div class="container">
       {
@@ -161,8 +166,6 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       }
 
       .hero-banner-content {
-        max-width: abstracts.rem(760px);
-
         :global(a) {
           text-decoration: underline;
           color: abstracts.$color-primary;
