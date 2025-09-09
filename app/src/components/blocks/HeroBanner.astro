@@ -153,6 +153,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       .hero-banner-texte {
         text-align: center;
         margin: abstracts.rem(7px) 0 abstracts.rem(12px);
+        @include abstracts.typography(abstracts.$font-title, 28px, 32px, 700);
       }
 
       .hero-banner-author {
@@ -196,6 +197,10 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       }
 
       .hero-banner-bottom {
+        .hero-banner-texte {
+          @include abstracts.typography(abstracts.$font-title, 72px, 72px, 700);
+        }
+
         .hero-banner-author {
           @include abstracts.typography(
             abstracts.$font-paragraph,

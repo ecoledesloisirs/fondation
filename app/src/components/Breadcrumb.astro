@@ -29,7 +29,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
     display: flex;
     align-items: center;
     gap: abstracts.rem(5px);
-    margin-top: abstracts.rem(20px);
+    margin: abstracts.rem(20px) 0;
 
     a,
     li {
@@ -47,6 +47,22 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         a {
           text-decoration: none;
         }
+      }
+    }
+  }
+
+  @include abstracts.respond-above(md) {
+    .breadcrumb {
+      margin: abstracts.rem(40px) 0;
+
+      a,
+      li {
+        @include abstracts.typography(
+          abstracts.$font-paragraph,
+          16px,
+          24px,
+          400
+        );
       }
     }
   }
