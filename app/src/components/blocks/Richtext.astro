@@ -1,0 +1,28 @@
+---
+interface RichtextProps {
+  id: string;
+  item: {
+    content: string;
+  };
+}
+
+const {
+  item: { content },
+} = Astro.props as RichtextProps;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+---
+
+<section>
+  <div class="container">
+    <div class="richText" set:html={content} />
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  section {
+    padding-bottom: abstracts.rem(120px);
+  }
+</style>

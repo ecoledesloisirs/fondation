@@ -21,6 +21,10 @@
 }
 
 .richText {
+  h2 {
+    @include abstracts.typography(abstracts.$font-title, 20px, 24px, 700);
+  }
+
   p {
     margin-block: abstracts.rem(16px);
   }
@@ -38,6 +42,14 @@
     &:hover,
     &:focus {
       text-decoration: none;
+    }
+  }
+}
+
+@include abstracts.respond-above(md) {
+  .richText {
+    h2 {
+      @include abstracts.typography(abstracts.$font-title, 28px, 32px, 700);
     }
   }
 }
