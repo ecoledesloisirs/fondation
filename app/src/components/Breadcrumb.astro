@@ -1,6 +1,4 @@
 ---
-import Icon from "./Icon.astro";
-
 export interface Props {
   slug: string;
   pageTitle: string;
@@ -8,13 +6,15 @@ export interface Props {
 
 const { slug, pageTitle } = Astro.props as Props;
 
-const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.DEV
+  ? "/directus"
+  : import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb__item">
-      <a href={DIRECTUS_URL}>Accueil</a>
+      <a href={DIRECTUS_BASE}>Accueil</a>
     </li>
     <li class="breadcrumb__item" aria-current="page">
       {pageTitle}

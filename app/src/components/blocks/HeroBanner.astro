@@ -2,7 +2,11 @@
 import { Image } from "astro:assets";
 
 import quoteImg from "../../assets/quote.png";
-import waveImg from "../../assets/wave_mobile.png";
+import waveImgMobile from "../../assets/wave_mobile.png";
+import waveImgMobile2 from "../../assets/wave_mobile_2.png";
+import waveImgMobile3 from "../../assets/wave_mobile_3.png";
+import waveImgMobile4 from "../../assets/wave_mobile_4.png";
+import waveImgDesktop from "../../assets/wave_desktop.png";
 
 import Breadcrumb from "../Breadcrumb.astro";
 
@@ -43,7 +47,9 @@ const {
 
 const heightLarge = is_home_page ? "600px" : "460px";
 
-const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.DEV
+  ? "/directus"
+  : import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section class="hero-banner">
@@ -53,18 +59,34 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         <picture>
           <source
             media="(min-width: 768px)"
-            srcset={`${DIRECTUS_URL}/assets/${image_desktop.id}?width=1600&format=webp`}
+            srcset={`${DIRECTUS_BASE}/assets/${image_desktop.id}?width=1600&format=webp`}
             type="image/webp"
           />
 
           <img
-            srcset={`${DIRECTUS_URL}/assets/${image_mobile.id}?width=992&format=webp`}
+            srcset={`${DIRECTUS_BASE}/assets/${image_mobile.id}?width=992&format=webp`}
             alt={image_mobile.description}
             loading="lazy"
             class="banner-img"
             style={`--h-lg:${heightLarge};`}
           />
         </picture>
+
+        <svg
+          class="spike"
+          width="1440"
+          height="40"
+          viewBox="0 0 1440 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M1440 40H0V0H1040C1079.96 0 1110.86 11.0892 1140 34C1169.14 11.0892 1200.04 0 1240 0H1440V40Z"
+            fill="white"
+          />
+        </svg>
       </div>
     ) : null
   }
@@ -89,14 +111,44 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
       {breadcrumb ? <Breadcrumb slug={slug} pageTitle={pageTitle} /> : null}
 
-      {content ? <div class="hero-banner-content" set:html={content} /> : null}
+      {
+        content ? (
+          <div class="hero-banner-content richText" set:html={content} />
+        ) : null
+      }
 
-      <Image
-        src={waveImg}
-        alt="Icone d'une forme géométrique"
-        aria-hidden="true"
-        class="wave-img"
-      />
+      <picture>
+        <source
+          media="(min-width: 992px)"
+          srcset={waveImgDesktop.src}
+          type="image/webp"
+        />
+
+        <source
+          media="(min-width: 768px)"
+          srcset={waveImgMobile4.src}
+          type="image/webp"
+        />
+
+        <source
+          media="(min-width: 576px)"
+          srcset={waveImgMobile3.src}
+          type="image/webp"
+        />
+
+        <source
+          media="(min-width: 400px)"
+          srcset={waveImgMobile2.src}
+          type="image/webp"
+        />
+
+        <img
+          class="wave-img"
+          srcset={waveImgMobile.src}
+          alt=""
+          loading="lazy"
+        />
+      </picture>
     </div>
   </div>
 </section>
@@ -118,23 +170,19 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       max-width: 1440px;
       margin: auto;
 
-      &::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -1px;
-        height: 40px;
-        pointer-events: none;
-        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'><path fill='%23ffffff' d='M0,0 H#{$start} A #{$spread} #{$depth} 0 0 1 #{$centerX},#{$depth} A #{$spread} #{$depth} 0 0 1 #{$end},0 H1440 V120 H0 Z'/></svg>")
-          center bottom/100% 100% no-repeat;
-      }
-
       .banner-img {
         display: block;
         width: 100%;
         object-fit: cover;
         height: 280px;
+      }
+
+      .spike {
+        position: absolute;
+        bottom: 0;
+        display: block;
+        width: 100%;
+        height: 15px;
       }
     }
 
@@ -147,7 +195,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       }
 
       .hero-banner-quote-wrapper {
-        margin-top: abstracts.rem(-60px);
+        margin-top: abstracts.rem(-45px);
       }
 
       .hero-banner-texte {
@@ -194,9 +242,16 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         .banner-img {
           height: 380px;
         }
+
+        .spike {
+          height: 30px;
+        }
       }
 
       .hero-banner-bottom {
+        .hero-banner-quote-wrapper {
+          margin-top: abstracts.rem(-60px);
+        }
         .hero-banner-texte {
           @include abstracts.typography(abstracts.$font-title, 72px, 72px, 700);
         }
@@ -221,8 +276,22 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         }
       }
 
+      .spike {
+        height: 35px;
+      }
+
       .wave-img {
         margin-top: abstracts.rem(40px);
+      }
+    }
+  }
+
+  @include abstracts.respond-above(xl) {
+    .hero-banner {
+      .hero-banner-top {
+        .spike {
+          height: 40px;
+        }
       }
     }
   }

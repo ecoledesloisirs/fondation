@@ -1,8 +1,4 @@
 ---
-import { Image } from "astro:assets";
-import quoteImg from "../../assets/quote.png";
-import waveImg from "../../assets/wave_mobile.png";
-
 interface Mission {
   id: string;
   collection: string;
@@ -24,15 +20,19 @@ interface MissionProps {
 
 const { item } = Astro.props as MissionProps;
 
-const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.DEV
+  ? "/directus"
+  : import.meta.env.PUBLIC_DIRECTUS_URL;
 
 const missions = item?.missions?.map((m) => m.item);
 ---
 
 <section id="section-missions">
   <div class="container">
-    <h2>{item.title}</h2>
-    <p>{item.description}</p>
+    <div class="container-reading-comfort">
+      <h2>{item.title}</h2>
+      <p>{item.description}</p>
+    </div>
     {
       missions?.length > 0 ? (
         <ol>

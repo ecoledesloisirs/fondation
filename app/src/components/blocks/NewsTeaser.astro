@@ -1,6 +1,6 @@
 ---
-import NewsCards from "../NewsCards.astro";
 import Button from "../Button.astro";
+import NewsCards from "../NewsCards.astro";
 
 interface News {
   id: string;
@@ -35,7 +35,9 @@ interface NewsTeaserProps {
 
 const { item } = Astro.props as NewsTeaserProps;
 
-const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.DEV
+  ? "/directus"
+  : import.meta.env.PUBLIC_DIRECTUS_URL;
 
 const news = item?.news?.map((n) => n.item);
 ---

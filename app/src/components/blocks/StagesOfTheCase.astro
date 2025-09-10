@@ -1,6 +1,9 @@
 ---
-import { Image } from "astro:assets";
-import waveImg from "../../assets/wave_mobile.png";
+import waveImgMobile from "../../assets/wave_mobile.png";
+import waveImgMobile2 from "../../assets/wave_mobile_2.png";
+import waveImgMobile3 from "../../assets/wave_mobile_3.png";
+import waveImgMobile4 from "../../assets/wave_mobile_4.png";
+import waveImgDesktop from "../../assets/wave_desktop.png";
 
 import Button from "../Button.astro";
 
@@ -50,7 +53,9 @@ const stages = (item?.cases ?? []).map((c) => ({
   ...c.item,
   calendar_items: (c.item.calendar_items ?? []).map((ci) => ci.item),
 }));
-const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.DEV
+  ? "/directus"
+  : import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section>
@@ -60,6 +65,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         stages.map((s, index) => (
           <li>
             <article
+              class="container-reading-comfort"
               id={`stage-${index + 1}`}
               aria-labelledby={`stage-title-${index + 1}`}
             >
@@ -96,7 +102,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
                 <div class="download-form-container">
                   <div class="download-form-wrapper">
                     <Button
-                      href={`${DIRECTUS_URL}/assets/${s.download_form_pdf.id}`}
+                      href={`${DIRECTUS_BASE}/assets/${s.download_form_pdf.id}`}
                       variant="primary"
                       iconName="download"
                       iconPosition="right"
@@ -110,7 +116,38 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
                 </div>
               )}
             </article>
-            <Image src={waveImg} alt="" aria-hidden="true" class="wave-img" />
+            <picture>
+              <source
+                media="(min-width: 992px)"
+                srcset={waveImgDesktop.src}
+                type="image/webp"
+              />
+
+              <source
+                media="(min-width: 768px)"
+                srcset={waveImgMobile4.src}
+                type="image/webp"
+              />
+
+              <source
+                media="(min-width: 576px)"
+                srcset={waveImgMobile3.src}
+                type="image/webp"
+              />
+
+              <source
+                media="(min-width: 400px)"
+                srcset={waveImgMobile2.src}
+                type="image/webp"
+              />
+
+              <img
+                class="wave-img"
+                srcset={waveImgMobile.src}
+                alt=""
+                loading="lazy"
+              />
+            </picture>
           </li>
         ))
       }

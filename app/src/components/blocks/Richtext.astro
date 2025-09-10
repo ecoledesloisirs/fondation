@@ -10,7 +10,9 @@ const {
   item: { content },
 } = Astro.props as RichtextProps;
 
-const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.DEV
+  ? "/directus"
+  : import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section>
