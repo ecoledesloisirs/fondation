@@ -1,0 +1,167 @@
+<mjml>
+  <mj-head>
+    <mj-font
+      name="Philosopher"
+      href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    />
+    <mj-font
+      name="Albert Sans"
+      href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+    />
+
+    <mj-attributes>
+      <mj-all font-family="Albert Sans, Arial, sans-serif" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#F5F7FA">
+    <mj-section>
+      <mj-column>
+        <mj-spacer height="40px" />
+      </mj-column>
+    </mj-section>
+    <mj-wrapper background-color="#FFFFFF">
+      <mj-section>
+        <mj-column>
+          {{#if logoUrl}}
+            <mj-image
+              src="{{logoUrl}}"
+              alt="Logo de la Fondation l'école des loisirs"
+              padding="16px 16px 0"
+              align="center"
+              width="100px"
+            />
+          {{/if}}
+        </mj-column>
+      </mj-section>
+
+      {{#if heroUrl}}
+        <mj-section padding="20px 20px 0 20px">
+          <mj-column padding="0">
+            <mj-image
+              src="{{heroUrl}}"
+              alt=""
+              padding="0"
+              border-radius="4px 4px 0 0"
+            />
+          </mj-column>
+        </mj-section>
+      {{/if}}
+
+      <mj-section padding="20px 20px 0 20px">
+        <mj-column padding="0">
+          <mj-text
+            font-size="28px"
+            line-height="32px"
+            font-weight="700"
+            align="left"
+            color="#27566D"
+            font-family="Philosopher"
+            padding-left="0"
+            padding-right="0"
+          >
+            {{#if (eq mailType "submitProject")}}
+              Confirmation du dépôt de votre dossier
+            {{/if}}
+            {{#if (eq mailType "contactForm")}}
+              Confirmation de l’envoi de votre message
+            {{/if}}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding="20px 20px 0 20px">
+        <mj-column padding="0">
+          <mj-text
+            font-size="16px"
+            line-height="16px"
+            color="#27566D"
+            padding-left="0"
+            padding-right="0"
+          >
+            {{#if (eq mailType "submitProject")}}
+              <strong>Merci d'avoir soumis votre dossier à la Fondation
+                <span style="font-style: italic">l'école des loisirs.</span></strong>
+            {{/if}}
+            {{#if (eq mailType "contactForm")}}
+              Merci d’avoir pris contact avec la Fondation
+              <span style="font-style: italic">l'école des loisirs.</span>
+            {{/if}}
+          </mj-text>
+
+          <mj-text
+            font-size="16px"
+            line-height="16px"
+            color="#27566D"
+            padding-left="0"
+            padding-right="0"
+          >
+            {{#if (eq mailType "submitProject")}}
+              Nous vous invitons à consulter le
+              <a
+                href="{{calendarUrl}}"
+                style="color:#27566D; text-decoration:underline;"
+              >calendrier sur notre site</a>
+              pour connaître les dates et étapes clés du traitement de votre
+              demande
+            {{/if}}
+            {{#if (eq mailType "contactForm")}}
+              Nous avons bien reçu votre demande et notre équipe vous répondra
+              dans les plus brefs délais.
+            {{/if}}
+
+          </mj-text>
+
+          {{#if contactEmail}}
+            <mj-text
+              font-size="16px"
+              line-height="16px"
+              color="#27566D"
+              padding-left="0"
+              padding-right="0"
+            >
+              <strong>Besoin d’aide ?</strong>
+              Vous pouvez nous contacter à l’adresse :
+              <a
+                href="mailto:{{contactEmail}}"
+                style="color:#27566D; text-decoration:underline;"
+              >{{contactEmail}}</a>
+            </mj-text>
+          {{/if}}
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding="0">
+        <mj-column padding="0">
+          <mj-spacer height="60px" />
+        </mj-column>
+      </mj-section>
+
+      {{#if waveUrl}}
+        <mj-section padding="0 16px">
+          <mj-column>
+            <mj-image src="{{waveUrl}}" alt="" padding="0" />
+          </mj-column>
+        </mj-section>
+      {{/if}}
+
+      <mj-section padding-top="20px">
+        <mj-column>
+          <mj-text
+            font-size="12px"
+            line-height="16px"
+            align="center"
+            color="#27566D"
+            font-style="italic"
+          >
+            Ce mail a été envoyé automatiquement. Merci de ne pas y répondre.
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <mj-section>
+      <mj-column>
+        <mj-spacer height="40px" />
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
