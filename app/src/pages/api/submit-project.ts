@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { sendMail } from "../../lib/mailer";
+import { sendMail, sendTemplateMail } from "../../lib/mailer";
 import {
   createDirectus,
   rest,
@@ -12,6 +12,7 @@ import {
 } from "@directus/sdk";
 
 const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const PUBLIC_SITE_URL = import.meta.env.PUBLIC_SITE_URL;
 
 const url = import.meta.env.DIRECTUS_URL as string;
 const token = import.meta.env.DIRECTUS_TOKEN as string;
@@ -101,6 +102,22 @@ export const POST: APIRoute = async ({ request }) => {
         subject: "Nouveau dépôt de dossier",
         text: `Un dossier a été déposé par ${email} (fileId: ${DIRECTUS_URL}/assets/${fileId})`,
         html: `<p>Un dossier a été déposé par <b>${email}</b>.<br/>File ID : ${DIRECTUS_URL}/assets/${fileId}</p>`,
+      });
+
+      await sendTemplateMail({
+        to: email,
+        from: String(import.meta.env.MAIL_FROM || "no-reply@exemple.com"),
+        subject: "Confirmation du dépôt de votre dossier",
+        template: "confirmation",
+        data: {
+          brandName: "Fondation l’école des loisirs",
+          logoUrl: import.meta.env.MAIL_LOGO,
+          heroUrl: import.meta.env.MAIL_HERO,
+          waveUrl: import.meta.env.MAIL_WAVE,
+          mailType: "submitProject",
+          calendarUrl: `${PUBLIC_SITE_URL}/deposer-un-dossier`,
+          contactEmail: "exemple@fondation-ecoledesloisirs.com",
+        },
       });
     } catch (err) {
       console.error("Erreur d’envoi mail submit-project:", err);
