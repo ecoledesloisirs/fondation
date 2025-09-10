@@ -11,6 +11,7 @@ interface Props {
   multiple?: boolean;
   label?: string;
   sizeFormatPdf?: string;
+  disabled?: boolean;
 }
 
 const {
@@ -21,6 +22,7 @@ const {
   multiple = false,
   label = "Importer un dossier",
   sizeFormatPdf,
+  disabled = false,
 } = Astro.props;
 ---
 
@@ -30,9 +32,10 @@ const {
   data-accept={accept}
   data-max-bytes={(maxSizeMB * 1024 * 1024).toString()}
   data-multiple={multiple ? "true" : "false"}
+  data-disabled={disabled ? "true" : "false"}
 >
   <div class="upload__inner">
-    <!-- input fichier (toujours présent) -->
+    <!-- input fichier -->
     <input
       id={id}
       name={name}
@@ -41,15 +44,17 @@ const {
       accept={accept}
       {...multiple ? { multiple: true } : {}}
       aria-describedby="upload-help upload-constraints upload-status"
+      {...disabled ? { disabled: true } : {}}
     />
 
-    <!-- Dropzone (contient le bouton) -->
+    <!-- Dropzone -->
     <div
       id="dropzone"
       class="dropzone"
       role="button"
-      tabindex="0"
+      tabindex={disabled ? "-1" : "0"}
       aria-describedby="upload-help upload-constraints"
+      aria-disabled={disabled ? "true" : "false"}
     >
       <div class="dropzone__content">
         <div class="dropzone__icon" aria-hidden="true">
@@ -84,14 +89,39 @@ const {
       const input = root.querySelector('input[type="file"]');
       const dz = root.querySelector("#dropzone");
       const status = root.querySelector("#upload-status");
+      const fieldset = root.closest("fieldset");
+
+      // ——— Gestion de l’état disabled (prop, ou fieldset disabled)
+      const isDisabled = () =>
+        root.dataset.disabled === "true" || !!(fieldset && fieldset.disabled);
+
+      const applyDisabledUI = () => {
+        const d = isDisabled();
+        dz.setAttribute("aria-disabled", d ? "true" : "false");
+        dz.tabIndex = d ? -1 : 0;
+        input.disabled = d;
+        root.classList.toggle("is-disabled", d);
+      };
+      applyDisabledUI();
+
+      // Si le parent <fieldset> change dynamiquement (ton cas), on s’adapte
+      if (fieldset) {
+        const mo = new MutationObserver(applyDisabledUI);
+        mo.observe(fieldset, {
+          attributes: true,
+          attributeFilter: ["disabled"],
+        });
+      }
 
       const label = dz.querySelector("label");
       if (label) {
         label.addEventListener("click", (e) => {
-          // On laisse le comportement natif du label (ouvre la popup),
-          // mais on empêche la remontée vers .dropzone.
-          e.stopPropagation();
-          // NE PAS faire input.click() ici !
+          if (isDisabled()) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+          e.stopPropagation(); // on laisse le comportement natif du label
         });
       }
 
@@ -142,40 +172,50 @@ const {
         status.classList.toggle("is-ok", ok);
       }
 
-      // --- Sélection via le bouton : on VALIDE SEULEMENT (pas de réassignation)
       input.addEventListener("change", () => {
+        if (isDisabled()) return;
         const res = validateFiles(input.files);
         report(res);
-        // Optionnel: pour autoriser à re-choisir le même fichier juste après
-        // si besoin : if (res.ok) input.value = '';
       });
 
-      // --- DnD : on assigne au champ fichier SANS déclencher "change"
       function setFilesOnInput(files) {
         const dt = new DataTransfer();
         for (const f of files) dt.items.add(f);
-        input.files = dt.files; // pas d'input.dispatchEvent('change')
-        const res = validateFiles(files); // on valide/affiche manuellement
+        input.files = dt.files;
+        const res = validateFiles(files);
         report(res);
       }
 
-      // Empêcher l’ouverture du PDF dans le navigateur
+      // Empêcher l’ouverture par défaut du PDF
       ["dragover", "drop"].forEach((ev) =>
         document.addEventListener(ev, prevent, false)
       );
 
-      // Gestion DnD sur la zone
+      // DnD sur la zone
       ["dragenter", "dragover", "dragleave", "drop"].forEach((ev) =>
-        dz.addEventListener(ev, prevent, false)
+        dz.addEventListener(
+          ev,
+          (e) => {
+            if (isDisabled()) {
+              prevent(e);
+              return;
+            }
+            prevent(e);
+          },
+          false
+        )
       );
-      ["dragenter", "dragover"].forEach((ev) =>
-        dz.addEventListener(ev, () => dz.classList.add("is-hover"))
+      ["dragenter", "dragover"].forEach(() =>
+        dz.addEventListener("dragenter", () => {
+          if (!isDisabled()) dz.classList.add("is-hover");
+        })
       );
-      ["dragleave", "drop"].forEach((ev) =>
-        dz.addEventListener(ev, () => dz.classList.remove("is-hover"))
+      ["dragleave", "drop"].forEach(() =>
+        dz.addEventListener("dragleave", () => dz.classList.remove("is-hover"))
       );
 
       dz.addEventListener("drop", (e) => {
+        if (isDisabled()) return;
         const files = Array.from(e.dataTransfer?.files || []);
         if (!IS_MULTIPLE && files.length > 1) {
           report({
@@ -189,22 +229,22 @@ const {
 
       // Accessibilité clavier / clic
       dz.addEventListener("keydown", (e) => {
+        if (isDisabled()) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           input.click();
         }
       });
       dz.addEventListener("click", (e) => {
-        // Si le clic vient du label (ou d’un enfant du label), on ne fait rien.
+        if (isDisabled()) return;
         if (e.target instanceof Element && e.target.closest("label")) return;
-        input.click(); // clic ailleurs dans la zone => ouvrir
+        input.click();
       });
     })();
   </script>
 
   <style lang="scss">
     @use "../styles/abstracts";
-
     .visually-hidden {
       position: absolute !important;
       width: 1px;
@@ -218,13 +258,32 @@ const {
     .upload {
       margin-top: 1.5rem;
 
+      &.is-disabled {
+        filter: grayscale(1);
+        opacity: 0.65;
+
+        .dropzone,
+        .btn {
+          cursor: not-allowed !important;
+        }
+        .btn {
+          pointer-events: none;
+        }
+        .dropzone {
+          position: relative;
+        }
+        .dropzone::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: rgba(255, 255, 255, 0.45);
+          border-radius: inherit;
+        }
+      }
+
       &__inner {
         display: grid;
         gap: 0.5rem;
-      }
-      &__title {
-        font-size: 1.125rem;
-        margin: 0;
       }
       &__constraints {
         text-align: center;
@@ -317,7 +376,6 @@ const {
         padding: 2rem;
         border-radius: 1rem;
         background: abstracts.$color-silver;
-
         background-image: repeating-linear-gradient(
             90deg,
             #5f9cb4,

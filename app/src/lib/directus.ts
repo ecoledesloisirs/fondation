@@ -124,6 +124,7 @@ export async function fetchPageBlocks(slug: string) {
                   "storage_space_closed",
                   "title",
                   "text",
+                  "text_outside_the_period",
                   "size_format_pdf",
                   "gdpr_text",
                   "optin_text",

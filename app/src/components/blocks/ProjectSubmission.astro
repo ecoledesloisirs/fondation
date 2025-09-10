@@ -9,6 +9,7 @@ interface ProjectSubmissionProps {
     storage_space_closed: string;
     title: string;
     text: string;
+    text_outside_the_period: string;
     size_format_pdf: string;
     gdpr_text: string;
     optin_text: string;
@@ -17,7 +18,9 @@ interface ProjectSubmissionProps {
 
 const { item } = Astro.props as ProjectSubmissionProps;
 
-const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.DEV
+  ? "/directus"
+  : import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section aria-labelledby="project-submission-title">
@@ -25,7 +28,18 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
     <div class="wrapper">
       <span aria-hidden="true" class="stage-number">04</span>
       <h2 id="project-submission-title">{item.title}</h2>
-      <div class="richText" set:html={item.text} />
+      <div
+        id="project-submission-text"
+        data-start={item.storage_space_start}
+        data-end={item.storage_space_closed}
+      >
+        <div id="inside-period" class="richText" set:html={item.text} />
+        <div
+          id="outside-period"
+          class="richText"
+          set:html={item.text_outside_the_period}
+        />
+      </div>
 
       <form
         id="project-form"
@@ -34,123 +48,131 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         enctype="multipart/form-data"
         novalidate
       >
-        <div class="c-field">
-          <label for="email">Email <span aria-hidden="true">*</span></label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            class="c-input"
-            placeholder="Email"
-            autocomplete="email"
-            autocapitalize="off"
-            spellcheck="false"
-            required
-          />
-          <p class="c-alert c-alert--warn" id="err-email" role="alert" hidden>
-            ⚠️ Veuillez renseigner une adresse e-mail valide
-          </p>
-        </div>
-
-        <div class="visually-hidden" aria-hidden="true">
-          <label for="company">Company</label>
-          <input
-            id="company"
-            name="company"
-            type="text"
-            tabindex="-1"
-            autocomplete="off"
-          />
-        </div>
-
-        <input type="hidden" name="ts" value={Date.now()} />
-
-        <Dropzone
-          id="application-file"
-          name="file"
-          accept="application/pdf"
-          maxSizeMB={25}
-          label="Importer un dossier"
-          sizeFormatPdf={item.size_format_pdf}
-        />
-
-        <p
-          class="c-alert c-alert--error"
-          id="err-file-size"
-          role="alert"
-          aria-live="polite"
-          hidden
-        >
-          ⚠️ Le dossier est trop volumineux, veuillez réduire sa taille et
-          réessayer (Max. 25Mo)
-        </p>
-        <p
-          class="c-alert c-alert--error"
-          id="err-file-type"
-          role="alert"
-          aria-live="polite"
-          hidden
-        >
-          ⚠️ Votre dossier doit être au format .pdf
-        </p>
-        <p
-          class="c-alert c-alert--warn"
-          id="err-file-missing"
-          role="alert"
-          aria-live="polite"
-          hidden
-        >
-          ⚠️ Veuillez joindre votre dossier
-        </p>
-
-        <div class="richText gdpr-text" set:html={item.gdpr_text} />
-
-        <fieldset class="c-consent c-consent--checkbox">
-          <legend class="visually-hidden">Règlement de l’appel à projets</legend
-          >
-          <div class="c-consent__checkbox">
+        <fieldset id="project-form-fieldset" class="project-form-fieldset">
+          <div class="c-field">
+            <label for="email">Email (champ obligatoire)</label>
             <input
-              type="checkbox"
-              id="rules-consent"
-              name="rules-consent"
+              id="email"
+              name="email"
+              type="email"
+              class="c-input"
+              placeholder="Email"
+              autocomplete="email"
+              autocapitalize="off"
+              spellcheck="false"
               required
             />
-            <label for="rules-consent"
-              >J’ai lu et j’approuve le règlement relatif au dépôt des dossiers</label
-            >
+            <p class="c-alert c-alert--warn" id="err-email" role="alert" hidden>
+              ⚠️ Veuillez renseigner une adresse e-mail valide
+            </p>
           </div>
-          <p class="consent-link">
-            <a href="/reglement.pdf" target="_blank" rel="noopener">
-              Consulter le règlement
-              <span class="visually-hidden"
-                >(PDF, s’ouvre dans un nouvel onglet)</span
-              >
-            </a>
-          </p>
-        </fieldset>
-        <p
-          class="c-alert c-alert--warn"
-          id="err-consent"
-          role="alert"
-          aria-live="polite"
-          hidden
-        >
-          ⚠️ Veuillez cocher la case « J’ai lu et j’approuve le règlement de
-          l’appel à projets »
-        </p>
 
-        <!-- CTA -->
-        <div class="c-actions">
-          <Button
-            class="submit-btn"
-            variant="primary"
-            iconName="send"
-            iconPosition="right"
-            type="submit"
+          <div class="visually-hidden" aria-hidden="true">
+            <label for="company">Company</label>
+            <input
+              id="company"
+              name="company"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            />
+          </div>
+
+          <input type="hidden" name="ts" value={Date.now()} />
+
+          <Dropzone
+            id="application-file"
+            name="file"
+            accept="application/pdf"
+            maxSizeMB={25}
+            label="Importer un dossier"
+            sizeFormatPdf={item.size_format_pdf}
+          />
+
+          <p
+            class="c-alert c-alert--error"
+            id="err-file-size"
+            role="alert"
+            aria-live="polite"
+            hidden
           >
-            Envoyer mon dossier
-          </Button>
-        </div>
+            ⚠️ Le dossier est trop volumineux, veuillez réduire sa taille et
+            réessayer (Max. 25Mo)
+          </p>
+          <p
+            class="c-alert c-alert--error"
+            id="err-file-type"
+            role="alert"
+            aria-live="polite"
+            hidden
+          >
+            ⚠️ Votre dossier doit être au format .pdf
+          </p>
+          <p
+            class="c-alert c-alert--warn"
+            id="err-file-missing"
+            role="alert"
+            aria-live="polite"
+            hidden
+          >
+            ⚠️ Veuillez joindre votre dossier
+          </p>
+
+          <div class="richText gdpr-text" set:html={item.gdpr_text} />
+
+          <fieldset class="c-consent c-consent--checkbox">
+            <legend class="visually-hidden"
+              >Règlement de l’appel à projets</legend
+            >
+            <div class="c-consent__checkbox">
+              <input
+                type="checkbox"
+                id="rules-consent"
+                name="rules-consent"
+                required
+              />
+              <label for="rules-consent"
+                >J’ai lu et j’approuve le règlement relatif au dépôt des
+                dossiers</label
+              >
+            </div>
+            <p class="consent-link">
+              <a
+                href="/reglement-appel-a-projet"
+                target="_blank"
+                rel="noopener"
+              >
+                Consulter le règlement
+                <span class="visually-hidden"
+                  >(PDF, s’ouvre dans un nouvel onglet)</span
+                >
+              </a>
+            </p>
+          </fieldset>
+          <p
+            class="c-alert c-alert--warn"
+            id="err-consent"
+            role="alert"
+            aria-live="polite"
+            hidden
+          >
+            ⚠️ Veuillez cocher la case « J’ai lu et j’approuve le règlement de
+            l’appel à projets »
+          </p>
+
+          <!-- CTA -->
+          <div class="c-actions">
+            <Button
+              class="submit-btn"
+              variant="primary"
+              iconName="send"
+              iconPosition="right"
+              type="submit"
+            >
+              Envoyer mon dossier
+            </Button>
+          </div>
+        </fieldset>
 
         <!-- Feedback -->
         <p
@@ -187,11 +209,31 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
     .wrapper {
       max-width: abstracts.rem(800px);
     }
+
     h2 {
       margin: abstracts.rem(8px) 0 abstracts.rem(20px);
     }
+
     form {
       margin-top: abstracts.rem(18px);
+
+      &.is-disabled {
+        opacity: 0.5;
+
+        input,
+        select,
+        textarea,
+        button,
+        label {
+          cursor: not-allowed !important;
+        }
+      }
+    }
+
+    .project-form-fieldset {
+      border: none;
+      padding: 0;
+      margin: 0;
     }
 
     .stage-number {
@@ -204,7 +246,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
       padding: abstracts.rem(20px);
       border: 1px solid abstracts.$color-blue-tint-2;
       border-radius: abstracts.rem(12px);
-      margin-top: abstracts.rem(20px);
+      margin-top: abstracts.rem(36px);
 
       :global(p:not(.gdpr-title)) {
         margin: 0;
@@ -257,6 +299,7 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 <script is:inline>
   (() => {
     const form = document.getElementById("project-form");
+    const formFieldset = document.getElementById("project-form-fieldset");
     const email = document.getElementById("email");
     const consent = document.getElementById("rules-consent");
     const fileInput = form.querySelector('input[type="file"][name="file"]');
@@ -386,5 +429,38 @@ const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
         submitBtn.disabled = false;
       }
     });
+
+    const projectSubmissionText = document.getElementById(
+      "project-submission-text"
+    );
+    const start = new Date(projectSubmissionText.dataset.start);
+    const end = new Date(projectSubmissionText.dataset.end);
+    const now = new Date();
+
+    const inside = document.getElementById("inside-period");
+    const outside = document.getElementById("outside-period");
+
+    // const isActive = now >= start && now <= end;
+    const isActive = true;
+
+    console.log("Disponible ?", isActive);
+    if (isActive) {
+      outside.style.display = "none";
+    } else {
+      inside.style.display = "none";
+    }
+
+    if (!isActive) {
+      formFieldset.disabled = true;
+      form.setAttribute("aria-disabled", "true");
+      form.classList.add("is-disabled");
+
+      const dz = form.querySelector(".dropzone");
+      dz?.setAttribute("data-disabled", "true");
+    } else {
+      fs.disabled = false;
+      form.removeAttribute("aria-disabled");
+      form.classList.remove("is-disabled");
+    }
   })();
 </script>
