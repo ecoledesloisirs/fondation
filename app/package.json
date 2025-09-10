@@ -15,10 +15,16 @@
     "@fontsource/philosopher": "^5.2.6",
     "astro": "^5.13.3",
     "dayjs": "^1.11.18",
+    "fast-glob": "^3.3.3",
+    "handlebars": "^4.7.8",
+    "html-to-text": "^9.0.5",
+    "mjml": "^4.15.3",
     "nodemailer": "^7.0.6",
     "sass": "^1.91.0"
   },
   "devDependencies": {
+    "@types/html-to-text": "^9.0.4",
+    "@types/mjml": "^4.7.4",
     "@types/nodemailer": "^7.0.1"
   }
 }
