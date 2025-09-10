@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets";
 
-import instagramIcon from "../assets/instagram_icon.png";
 import linkedinIcon from "../assets/linkedin_icon.png";
 import edlLogoFooter from "../assets/logo_footer.png";
 ---
@@ -25,11 +24,10 @@ import edlLogoFooter from "../assets/logo_footer.png";
         <div class="footer-nav">
           <h4>Fondation <span class="italic">l’école des loisirs</span></h4>
           <ul>
-            <li><a href="#">Appel à projet</a></li>
-            <li><a href="#">Projets soutenus</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">Missions</a></li>
-            <li><a href="#">Actualités</a></li>
+            <li><a href="/deposer-un-dossier">Appel à projet</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/#section-missions">Missions</a></li>
+            <li><a href="/actualites">Actualités</a></li>
           </ul>
         </div>
         <div class="footer-socials-rgaa">
@@ -39,14 +37,11 @@ import edlLogoFooter from "../assets/logo_footer.png";
               <a href="#" aria-label="LinkedIn">
                 <Image src={linkedinIcon} alt="LinkedIn" />
               </a>
-              <a href="#" aria-label="Instagram">
-                <Image src={instagramIcon} alt="Instagram" />
-              </a>
             </div>
           </div>
           <p class="footer-rgaa">
-            Site engagé dans une démarche de respect des normes d’<a href="/"
-              >accessibilité RGAA.</a
+            Site engagé dans une démarche de respect des normes d’<a
+              href="/demarche-accessibilite">accessibilité RGAA.</a
             >
           </p>
         </div>
@@ -54,9 +49,17 @@ import edlLogoFooter from "../assets/logo_footer.png";
 
       <div class="footer-legal-notice">
         <ul>
-          <li><a href="#">Conditions générales d’utilisations</a></li>
-          <li><a href="#">Mentions légales</a></li>
-          <li><a href="#">Politique de confidentialité et cookies</a></li>
+          <li>
+            <a href="/conditions-generales-utilisation"
+              >Conditions générales d’utilisations</a
+            >
+          </li>
+          <li><a href="/mentions-legales">Mentions légales</a></li>
+          <li>
+            <a href="/politique-de-confidentialite-et-cookies"
+              >Politique de confidentialité et cookies</a
+            >
+          </li>
           <li><a href="#">Gestion des cookies</a></li>
           <li><a href="#">Plan du site</a></li>
         </ul>
