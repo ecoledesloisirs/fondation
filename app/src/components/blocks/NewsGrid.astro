@@ -1,6 +1,6 @@
 ---
 import { getAllNews, getNewsCategories } from "../../lib/cms";
-import NewsCards from "../NewsCards.astro";
+import NewsCard from "../NewsCard.astro";
 import Button from "../Button.astro";
 import Icon from "../Icon.astro";
 
@@ -61,7 +61,7 @@ const [news, categories] = await Promise.all([
               class={`news-item ${i >= INITIAL_COUNT ? "is-hidden" : ""}`}
               data-cat={n.category?.slug ?? ""}
             >
-              <NewsCards
+              <NewsCard
                 title={n.title}
                 description={n.description}
                 image={n.image}
@@ -102,7 +102,7 @@ const [news, categories] = await Promise.all([
   }
 
   section {
-    padding-block: abstracts.rem(60px);
+    padding-block: abstracts.rem(20px);
   }
 
   .filters {
@@ -173,10 +173,10 @@ const [news, categories] = await Promise.all([
 
   .news-cards-grid {
     padding-top: abstracts.rem(40px);
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 320px);
+    grid-gap: abstracts.rem(32px);
     justify-content: center;
-    flex-wrap: wrap;
-    gap: abstracts.rem(32px);
   }
 
   .more-news-cta {
@@ -186,6 +186,10 @@ const [news, categories] = await Promise.all([
   }
 
   @include abstracts.respond-above(md) {
+    section {
+      padding-block: abstracts.rem(60px);
+    }
+
     .filters {
       align-items: baseline;
       justify-content: flex-start;
@@ -201,6 +205,10 @@ const [news, categories] = await Promise.all([
   }
 
   @include abstracts.respond-above(xl) {
+    .news-cards-grid {
+      justify-content: space-between;
+    }
+
     .more-news-cta {
       margin-top: abstracts.rem(40px);
     }

@@ -113,7 +113,10 @@ const DIRECTUS_BASE = import.meta.env.DEV
 
       {
         content ? (
-          <div class="hero-banner-content richText" set:html={content} />
+          <div
+            class="hero-banner-content richText container-reading-comfort"
+            set:html={content}
+          />
         ) : null
       }
 

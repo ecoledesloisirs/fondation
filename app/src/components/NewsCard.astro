@@ -59,10 +59,7 @@ const DIRECTUS_BASE = import.meta.env.DEV
   @use "../styles/abstracts";
 
   .news-card {
-    max-width: abstracts.rem(320px);
-
     img {
-      width: abstracts.rem(320px);
       height: auto;
     }
 
@@ -86,16 +83,6 @@ const DIRECTUS_BASE = import.meta.env.DEV
     .see-news-btn {
       margin-top: abstracts.rem(20px);
       width: 100%;
-    }
-  }
-
-  @include abstracts.respond-above(xl) {
-    .news-card {
-      max-width: abstracts.rem(360px);
-
-      img {
-        width: abstracts.rem(360px);
-      }
     }
   }
 </style>

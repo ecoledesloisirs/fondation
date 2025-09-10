@@ -1,6 +1,6 @@
 ---
 import Button from "../Button.astro";
-import NewsCards from "../NewsCards.astro";
+import NewsCard from "../NewsCard.astro";
 
 interface News {
   id: string;
@@ -52,7 +52,7 @@ const news = item?.news?.map((n) => n.item);
         <ol id="news-list" class="news-cards-wrapper" data-expanded="false">
           {news.map((n) => (
             <li>
-              <NewsCards
+              <NewsCard
                 title={n.title}
                 description={n.description}
                 image={n.image}
@@ -95,10 +95,10 @@ const news = item?.news?.map((n) => n.item);
 
     .news-cards-wrapper {
       padding-top: abstracts.rem(40px);
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 320px);
+      grid-gap: abstracts.rem(32px);
       justify-content: center;
-      flex-wrap: wrap;
-      gap: abstracts.rem(32px);
     }
 
     :global(.news-cards-wrapper > li:nth-child(n + 2)) {

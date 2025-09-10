@@ -20,7 +20,6 @@
 
   @include abstracts.respond-above(xl) {
     max-width: abstracts.$col-xl;
-    padding-inline: 0;
   }
 }
 
