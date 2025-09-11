@@ -1,11 +1,13 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { sendMail } from "../../lib/mailer";
+import { sendMail, sendTemplateMail } from "../../lib/mailer";
 
 function isPhone(v: string) {
   return /^[+()\-.\s\d]{6,}$/.test(v || "");
 }
+
+const PUBLIC_SITE_URL = import.meta.env.PUBLIC_SITE_URL;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -69,6 +71,20 @@ export const POST: APIRoute = async ({ request }) => {
       subject: "Un visiteur vient d'envoyer un message",
       text: plain,
       html,
+    });
+
+    await sendTemplateMail({
+      to: email,
+      from: String(import.meta.env.MAIL_FROM || "no-reply@exemple.com"),
+      subject: "Confirmation de l’envoi de votre message",
+      template: "confirmation",
+      data: {
+        brandName: "Fondation l’école des loisirs",
+        logoUrl: import.meta.env.MAIL_LOGO,
+        heroUrl: import.meta.env.MAIL_HERO,
+        waveUrl: import.meta.env.MAIL_WAVE,
+        mailType: "contactForm",
+      },
     });
 
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
