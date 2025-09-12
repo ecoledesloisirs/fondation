@@ -1,105 +1,34 @@
 import type { APIRoute } from "astro";
-
-type PageItem = {
-  slug?: string;
-  status?: string;
-  date_created?: string;
-  date_updated?: string;
-};
-
-function getEnv(key: string) {
-  return (import.meta.env as any)[key] ?? process.env[key];
-}
-
-const COLLECTIONS = [
-  {
-    name: "page",
-    buildPath: (i: PageItem) => {
-      if (!i.slug) return null;
-      return i.slug === "accueil" ? "/" : `/${i.slug}`;
-    },
-    changefreq: "weekly" as const,
-  },
-];
-
-async function fetchAllPages(collection: string) {
-  const base = (getEnv("DIRECTUS_URL") || getEnv("PUBLIC_DIRECTUS_URL")) as
-    | string
-    | undefined;
-  if (!base) throw new Error("DIRECTUS_URL ou PUBLIC_DIRECTUS_URL manquant");
-
-  const token = (getEnv("DIRECTUS_STATIC_TOKEN") ||
-    getEnv("DIRECTUS_TOKEN")) as string | undefined;
-
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-
-  const baseUrl = base.replace(/\/+$/, "");
-  const limit = 200;
-  let page = 1;
-  const all: PageItem[] = [];
-
-  while (true) {
-    const params = new URLSearchParams({
-      page: String(page),
-      limit: String(limit),
-      sort: "-date_updated",
-      fields: "slug,status,date_updated,date_created",
-    });
-
-    // 👉 garde cette ligne si tu n’as pas mis le filtre au niveau du rôle
-    params.set("filter[status][_eq]", "published");
-
-    const url = `${baseUrl}/items/${collection}?${params.toString()}`;
-    const res = await fetch(url, { headers });
-
-    if (!res.ok) {
-      const errText = await res.text().catch(() => "");
-      console.error("Directus error:", res.status, errText);
-      throw new Error(`Directus ${collection} HTTP ${res.status}`);
-    }
-
-    const json = await res.json();
-    const data: PageItem[] = json?.data || [];
-    all.push(...data);
-
-    const meta = json?.meta;
-    if (!(meta?.page && meta?.pageCount && meta.page < meta.pageCount)) break;
-    page++;
-  }
-
-  return all;
-}
+import {
+  getPublishedPages,
+  buildPagePath,
+  pageLastmod,
+  getSiteBase,
+} from "../lib/cms/sitemap";
 
 export const GET: APIRoute = async () => {
-  const site = (getEnv("PUBLIC_SITE_URL") || "http://localhost:4321").replace(
-    /\/+$/,
-    ""
-  );
+  const site = getSiteBase();
 
-  const entries: Array<{ loc: string; lastmod?: string; changefreq?: string }> =
-    [];
+  const pages = await getPublishedPages();
 
-  // pages
-  const pages = await fetchAllPages("page");
-  for (const p of pages) {
-    const path = COLLECTIONS[0].buildPath(p);
-    if (!path) continue;
-
-    entries.push({
-      loc: `${site}${path.startsWith("/") ? "" : "/"}${path}`.replace(
-        /\/+$/,
-        ""
-      ),
-      lastmod:
-        p.date_updated || p.date_created
-          ? new Date(p.date_updated || p.date_created || "").toISOString()
-          : undefined,
-      changefreq: COLLECTIONS[0].changefreq,
-    });
-  }
+  const entries = pages
+    .map((p) => {
+      const path = buildPagePath(p);
+      if (!path) return null;
+      return {
+        loc: `${site}${path.startsWith("/") ? "" : "/"}${path}`.replace(
+          /\/+$/,
+          ""
+        ),
+        lastmod: pageLastmod(p),
+        changefreq: "weekly",
+      };
+    })
+    .filter(Boolean) as Array<{
+    loc: string;
+    lastmod?: string;
+    changefreq?: string;
+  }>;
 
   // dédoublonnage + tri
   const seen = new Set<string>();
