@@ -35,10 +35,6 @@ interface NewsTeaserProps {
 
 const { item } = Astro.props as NewsTeaserProps;
 
-const DIRECTUS_BASE = import.meta.env.DEV
-  ? "/directus"
-  : import.meta.env.PUBLIC_DIRECTUS_URL;
-
 const news = item?.news?.map((n) => n.item);
 ---
 

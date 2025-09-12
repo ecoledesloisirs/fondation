@@ -7,8 +7,6 @@ function isPhone(v: string) {
   return /^[+()\-.\s\d]{6,}$/.test(v || "");
 }
 
-const PUBLIC_SITE_URL = import.meta.env.PUBLIC_SITE_URL;
-
 export const POST: APIRoute = async ({ request }) => {
   try {
     const form = await request.formData();

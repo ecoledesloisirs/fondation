@@ -17,10 +17,6 @@ interface ProjectSubmissionProps {
 }
 
 const { item } = Astro.props as ProjectSubmissionProps;
-
-const DIRECTUS_BASE = import.meta.env.DEV
-  ? "/directus"
-  : import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section aria-labelledby="project-submission-title">

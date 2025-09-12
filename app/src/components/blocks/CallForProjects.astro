@@ -28,10 +28,6 @@ interface CallForProjectsProps {
 }
 
 const { item } = Astro.props as CallForProjectsProps;
-
-const DIRECTUS_BASE = import.meta.env.DEV
-  ? "/directus"
-  : import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section style={`--bg: url(${bgImage.src})`}>
