@@ -131,6 +131,7 @@ export async function fetchPageBlocks(slug: string) {
                 ],
                 block_contact_form: ["title", "description", "gdpr_text"],
                 block_richtext: ["content"],
+                block_sitemapList: ["id"],
               },
             },
           ],

@@ -1,0 +1,74 @@
+---
+import {
+  getPublishedPages,
+  buildPagePath,
+  type PageItem,
+} from "../../lib/cms/sitemap";
+
+type NavItem = { href: string; label: string };
+
+const allPages: PageItem[] = await getPublishedPages();
+
+const pages = allPages.filter(
+  (p): p is PageItem & { slug: string } => !!p.slug && p.slug !== "plan-du-site"
+);
+
+function labelOf(p: PageItem): string {
+  return (
+    p.title?.trim() ||
+    (p.slug ?? "")
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (c: string) => c.toUpperCase())
+  );
+}
+
+const rawItems = pages
+  .map((p): NavItem | null => {
+    const path = buildPagePath(p);
+    if (!path) return null;
+    return {
+      href: path,
+      label: p.slug === "accueil" ? "Accueil" : labelOf(p),
+    };
+  })
+  .filter((x): x is NavItem => x !== null);
+
+const seen = new Set<string>();
+const items: NavItem[] = rawItems
+  .filter((it) => (seen.has(it.href) ? false : (seen.add(it.href), true)))
+  .sort((a, b) => a.label.localeCompare(b.label));
+---
+
+<section>
+  <div class="container">
+    <nav aria-labelledby="sitemap-title">
+      <h2 id="sitemap-title" class="visually-hidden">Liste des pages</h2>
+      <ul class="sitemap-list">
+        {
+          items.map((it) => (
+            <li>
+              <a href={it.href}>{it.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  section {
+    padding-bottom: abstracts.rem(120px);
+
+    a {
+      color: abstracts.$color-primary;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+</style>
