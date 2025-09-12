@@ -2,10 +2,12 @@
 import { defineConfig } from "astro/config";
 import node from "@astrojs/node";
 
-const NGROK = "54b5e2e69bf0.ngrok-free.app";
+const NGROK = "81ce8e8b86f4.ngrok-free.app";
+const SITE = process.env.PUBLIC_SITE_URL;
 
 // https://astro.build/config
 export default defineConfig({
+  site: SITE,
   adapter: node({ mode: "standalone" }),
   // Astro dev server (utile pour ngrok)
   server: {
@@ -13,17 +15,30 @@ export default defineConfig({
   },
   vite: {
     server: {
-      // accepte tous les sous-domaines ngrok (wildcard, pas de https://)
-      allowedHosts: ["*.ngrok-free.app"],
-      // (optionnel) HMR via ngrok si tu as des soucis de websocket
+      // important: noms d'hôtes EXACTS (sans https:// et sans wildcard)
+      allowedHosts: [NGROK, "localhost", "127.0.0.1"],
+
+      // ton proxy Directus (inchangé)
+      proxy: {
+        "/directus": {
+          target: "http://localhost:8055",
+          changeOrigin: true,
+          secure: false,
+          rewrite: (p) => p.replace(/^\/directus/, ""),
+        },
+      },
+
+      // Optionnel, utile si HMR casse derrière ngrok
       hmr: {
         host: NGROK,
         protocol: "wss",
         clientPort: 443,
       },
     },
+
+    // utile si tu fais `astro preview` via ngrok
     preview: {
-      allowedHosts: ["*.ngrok-free.app"],
+      allowedHosts: [NGROK],
     },
   },
 });
