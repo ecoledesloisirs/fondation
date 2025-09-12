@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (
       origin &&
       new URL(origin).host !==
-        new URL(import.meta.env.SITE ?? "http://localhost:4321").host
+        new URL(process.env.PUBLIC_SITE_URL ?? "http://localhost:4321").host
     ) {
       return json(403, { ok: false, error: "Forbidden" });
     }
