@@ -11,23 +11,20 @@ import {
   type DirectusFile,
 } from "@directus/sdk";
 
-const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
-const PUBLIC_SITE_URL = import.meta.env.PUBLIC_SITE_URL;
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL as string;
+const PUBLIC_SITE_URL = import.meta.env.PUBLIC_SITE_URL as string;
 
-const url = import.meta.env.DIRECTUS_URL as string;
-const token = import.meta.env.DIRECTUS_TOKEN as string;
-const folder = import.meta.env.DIRECTUS_FOLDER_ID as string | undefined;
+const TOKEN = import.meta.env.DIRECTUS_TOKEN as string;
+const FOLDER = import.meta.env.DIRECTUS_FOLDER_ID as string | undefined;
 
-const client = createDirectus(url).with(rest()).with(staticToken(token));
+const client = createDirectus(DIRECTUS_URL)
+  .with(rest())
+  .with(staticToken(TOKEN));
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const origin = request.headers.get("origin");
-    if (
-      origin &&
-      new URL(origin).host !==
-        new URL(process.env.PUBLIC_SITE_URL ?? "http://localhost:4321").host
-    ) {
+    if (origin && new URL(origin).host !== new URL(PUBLIC_SITE_URL).host) {
       return json(403, { ok: false, error: "Forbidden" });
     }
 
@@ -76,7 +73,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const fd = new FormData();
     fd.append("file", file, file.name);
-    if (folder) fd.append("folder", folder);
+    if (FOLDER) fd.append("folder", FOLDER);
 
     const uploaded = await client.request(uploadFiles(fd));
     const fileId = Array.isArray(uploaded)
@@ -94,11 +91,11 @@ export const POST: APIRoute = async ({ request }) => {
       createItem("application_file", { email, pdf_form: fileId })
     );
 
-    // 🔔 tenter l’envoi d’email (ne bloque pas la réponse en cas d’échec)
+    // Notifications (non-bloquant)
     try {
       await sendMail({
         notifyTo: String(import.meta.env.MAIL_TO || "cb.dauvier@gmail.com"),
-        from: String(import.meta.env.MAIL_FROM || "no-reply@exemple.com"),
+        from: String(import.meta.env.MAIL_FROM || "no-reply@example.com"),
         subject: "Nouveau dépôt de dossier",
         text: `Un dossier a été déposé par ${email} (fileId: ${DIRECTUS_URL}/assets/${fileId})`,
         html: `<p>Un dossier a été déposé par <b>${email}</b>.<br/>File ID : ${DIRECTUS_URL}/assets/${fileId}</p>`,
@@ -106,7 +103,7 @@ export const POST: APIRoute = async ({ request }) => {
 
       await sendTemplateMail({
         to: email,
-        from: String(import.meta.env.MAIL_FROM || "no-reply@exemple.com"),
+        from: String(import.meta.env.MAIL_FROM || "no-reply@example.com"),
         subject: "Confirmation du dépôt de votre dossier",
         template: "confirmation",
         data: {
