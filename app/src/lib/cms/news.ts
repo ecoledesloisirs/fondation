@@ -39,16 +39,3 @@ export const getAllNews = () =>
       limit: -1,
     })
   );
-
-// export const getNewsByCategorySlug = (slug: string) =>
-//   directus.request(
-//     readItems("news", {
-//       fields: baseFields,
-//       sort: ["-date_created"],
-//       filter: {
-//         status: { _eq: "published" },
-//         category: { slug: { _eq: slug } },
-//       },
-//       limit: -1,
-//     })
-//   );
