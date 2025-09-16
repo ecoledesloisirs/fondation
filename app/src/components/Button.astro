@@ -17,12 +17,14 @@ export interface Props {
   class?: string;
   id?: string;
   iconName?: import("../assets/icons").IconName | string;
+  target?: string;
 }
 
 const {
   variant = "primary",
   size = "normal",
   href,
+  target = "_self",
   type = "button",
   iconPosition,
   disabled = false,
@@ -62,6 +64,7 @@ const classes = cx(
     aria-busy={loading ? "true" : undefined}
     aria-disabled={disabled || loading ? "true" : undefined}
     disabled={!href && (disabled || loading) ? true : undefined}
+    target={href ? target : undefined}
     {...rest}
   >
     {
@@ -136,7 +139,7 @@ const classes = cx(
     /* Colors */
     --primary-bg: #{abstracts.$color-primary};
     --primary-fg: #{abstracts.$color-white};
-    --primary-bg-hover: #{abstracts.$color-primary};
+    --primary-bg-hover: #{abstracts.$color-tertiary};
     --primary-bg-active: #{abstracts.$color-blue-shade-1};
     --primary-ring: #62a3b3;
 
