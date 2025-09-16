@@ -1,6 +1,7 @@
 ---
 import dayjs from "../utils/dayjs";
 import Button from "./Button.astro";
+import { Categories } from "../enums/categories";
 
 interface NewsCardsProps {
   title: string;
@@ -51,7 +52,7 @@ const DIRECTUS_BASE = import.meta.env.DEV
     iconName="download"
     class="see-news-btn"
   >
-    Consulter le PDF
+    {category === Categories.Press ? "Accéder à l'article" : "Consulter le PDF"}
   </Button>
 </div>
 
