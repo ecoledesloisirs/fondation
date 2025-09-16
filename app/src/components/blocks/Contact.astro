@@ -1,15 +1,6 @@
 ---
 import Button from "../Button.astro";
-
-interface ButtonProps {
-  id: string;
-  item: {
-    label: string;
-    variant: string;
-    size: string;
-    href: string;
-  };
-}
+import type { ButtonProps } from "../../types/directus";
 
 interface ContactProps {
   id: string;

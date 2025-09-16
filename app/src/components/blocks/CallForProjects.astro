@@ -1,18 +1,8 @@
 ---
 import dayjs from "../../utils/dayjs";
-
+import type { ButtonProps } from "../../types/directus";
 import Button from "../Button.astro";
 import bgImage from "../../assets/background-call-for-projects.jpg";
-
-interface ButtonProps {
-  id: string;
-  item: {
-    label: string;
-    variant: string;
-    size: string;
-    href: string;
-  };
-}
 
 interface CallForProjectsProps {
   id: string;
