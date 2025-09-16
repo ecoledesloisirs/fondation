@@ -39,6 +39,7 @@ const { item } = Astro.props as ProjectSubmissionProps;
 
       <form
         id="project-form"
+        class="project-form"
         method="post"
         action="/api/submit-project"
         enctype="multipart/form-data"
@@ -116,6 +117,20 @@ const { item } = Astro.props as ProjectSubmissionProps;
 
           <div class="richText gdpr-text" set:html={item.gdpr_text} />
 
+          <div class="c-rules">
+            <Button
+              class="rules-btn"
+              variant="secondary"
+              iconName="right"
+              iconPosition="right"
+              type="submit"
+              href="/reglement-appel-a-projet"
+              target="_blank"
+            >
+              Consulter le règlement
+            </Button>
+          </div>
+
           <fieldset class="c-consent c-consent--checkbox">
             <legend class="visually-hidden"
               >Règlement de l’appel à projets</legend
@@ -132,18 +147,6 @@ const { item } = Astro.props as ProjectSubmissionProps;
                 dossiers</label
               >
             </div>
-            <p class="consent-link">
-              <a
-                href="/reglement-appel-a-projet"
-                target="_blank"
-                rel="noopener"
-              >
-                Consulter le règlement
-                <span class="visually-hidden"
-                  >(PDF, s’ouvre dans un nouvel onglet)</span
-                >
-              </a>
-            </p>
           </fieldset>
           <p
             class="c-alert c-alert--warn"
@@ -251,26 +254,6 @@ const { item } = Astro.props as ProjectSubmissionProps;
 
     :global(.gdpr-title) {
       margin: 0 0 abstracts.rem(30px);
-    }
-
-    .consent-link {
-      margin-top: abstracts.rem(20px);
-      font-size: 0.95rem;
-      color: #0a4b68;
-
-      a {
-        text-decoration: underline;
-        color: inherit;
-
-        &:focus-visible {
-          outline: 3px solid #0a6ebd;
-          outline-offset: 2px;
-          border-radius: 4px;
-        }
-        &:hover {
-          text-decoration: none;
-        }
-      }
     }
   }
 
