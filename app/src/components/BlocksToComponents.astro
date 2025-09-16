@@ -10,6 +10,7 @@ import ProjectSubmission from "./blocks/ProjectSubmission.astro";
 import ContactForm from "./blocks/ContactForm.astro";
 import Richtext from "./blocks/Richtext.astro";
 import SitemapList from "./blocks/SitemapList.astro";
+import SupportedProjects from "./blocks/SupportedProjects.astro";
 
 const { blocks, slug, pageTitle } = Astro.props;
 ---
@@ -41,7 +42,9 @@ const { blocks, slug, pageTitle } = Astro.props;
                             ? Richtext
                             : block.collection === "block_sitemap_list"
                               ? SitemapList
-                              : () => null;
+                              : block.collection === "block_supported_projects"
+                                ? SupportedProjects
+                                : () => null;
     return View && <View {...block} slug={slug} pageTitle={pageTitle} />;
   })
 }

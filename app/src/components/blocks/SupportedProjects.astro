@@ -1,0 +1,350 @@
+---
+import { getAllSupportedProjects } from "../../lib/cms";
+import dayjs from "../../utils/dayjs";
+import Button from "../Button.astro";
+import { Image } from "astro:assets";
+
+import type { SupportedProjectsProps } from "../../types/directus";
+
+const INITIAL_COUNT = 3;
+
+const [supportedProjects] = await Promise.all([
+  getAllSupportedProjects() as Promise<SupportedProjectsProps[]>,
+]);
+
+const DIRECTUS_BASE = import.meta.env.DEV
+  ? "/directus"
+  : import.meta.env.PUBLIC_DIRECTUS_URL;
+---
+
+<section>
+  <div class="container">
+    <ul
+      class="supported-projects-list"
+      id="supported-projects-list"
+      data-initial={INITIAL_COUNT}
+      aria-live="polite"
+    >
+      {
+        supportedProjects.map((item, i) => {
+          return (
+            <li
+              class={`supported-projects-item ${i >= INITIAL_COUNT ? "is-hidden" : ""}`}
+            >
+              <div class="left-side">
+                <Image
+                  src={`${DIRECTUS_BASE}/assets/${item.image.id}`}
+                  alt={item.image.description ?? ""}
+                  width="640"
+                  height="840"
+                />
+              </div>
+              <div class="right-side">
+                <p class="supported-project-publication-date">
+                  {dayjs(item.date_created).format("MMMM YYYY")}
+                </p>
+                <p class="supported-project-subtitle">{item.subtitle}</p>
+
+                <h2 id={`proj-title-${i}`} class="supported-project-title">
+                  {item.title}
+                </h2>
+
+                <div
+                  class="supported-project-text richText"
+                  id={`sp-text-${i}`}
+                  data-expanded="false"
+                  set:html={item.text}
+                />
+
+                <button
+                  type="button"
+                  class="see-more"
+                  data-target={`sp-text-${i}`}
+                  aria-controls={`sp-text-${i}`}
+                  aria-expanded="false"
+                  aria-describedby={`proj-title-${i}`}
+                  hidden
+                >
+                  Afficher plus
+                </button>
+
+                {Array.isArray(item.button) && item.button.length !== 0 && (
+                  <Button
+                    variant={item.button[0].item.variant}
+                    href={item.button[0].item.href}
+                    iconPosition="right"
+                    iconName="extra_link"
+                    class="see-website-btn"
+                  >
+                    {item.button[0].item.label}
+                  </Button>
+                )}
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <p
+      id="supported-projects-status"
+      class="visually-hidden"
+      aria-live="polite"
+    >
+    </p>
+
+    <div class="more-projects-cta">
+      <Button
+        id="load-more"
+        variant="tertiary"
+        iconPosition="right"
+        iconName="plus"
+        type="button"
+        aria-controls="supported-projects-list"
+        aria-expanded="false"
+      >
+        Voir plus de projets
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  @use "../../styles/abstracts";
+
+  .is-hidden {
+    display: none !important;
+  }
+
+  section {
+    padding: abstracts.rem(60px) 0 abstracts.rem(20px);
+  }
+
+  img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  h2 {
+    margin-bottom: 0;
+  }
+
+  .supported-projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: abstracts.rem(20px);
+  }
+
+  .supported-projects-item {
+    border: 2px solid abstracts.$color-blue-tint-2;
+    border-radius: abstracts.rem(16px);
+    padding: abstracts.rem(16px);
+  }
+
+  .supported-project-publication-date {
+    @include abstracts.typography(abstracts.$font-paragraph, 16px, 24px, 400);
+    text-transform: capitalize;
+    margin-top: abstracts.rem(8px);
+  }
+
+  .supported-project-subtitle {
+    @include abstracts.typography(abstracts.$font-paragraph, 16px, 24px, 700);
+    margin-top: abstracts.rem(8px);
+    color: abstracts.$color-blue-tint-1;
+  }
+
+  .supported-project-title {
+    @include abstracts.typography(abstracts.$font-title, 20px, 24px, 700);
+    margin-top: abstracts.rem(8px);
+  }
+
+  .supported-project-text-wrap {
+    position: relative;
+  }
+
+  .supported-project-text {
+    padding-top: abstracts.rem(8px);
+  }
+
+  .richText {
+    position: relative;
+
+    &[data-expanded="false"] {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
+
+    &[data-expanded="true"] {
+      -webkit-line-clamp: unset;
+      max-height: 100lh;
+    }
+  }
+
+  .see-more {
+    margin-top: 0.5rem;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+    text-decoration: underline;
+    @include abstracts.typography(abstracts.$font-paragraph, 16px, 24px, 700);
+    color: abstracts.$color-primary;
+    display: block;
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  .see-website-btn {
+    width: 100%;
+    margin-top: abstracts.rem(20px);
+  }
+
+  .more-projects-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: abstracts.rem(20px);
+  }
+
+  @include abstracts.respond-above(md) {
+    section {
+      padding: abstracts.rem(20px) 0 abstracts.rem(120px);
+    }
+
+    .supported-projects-item {
+      display: flex;
+      gap: abstracts.rem(40px);
+
+      .left-side {
+        flex-basis: 40%;
+      }
+      .right-side {
+        flex-basis: 60%;
+      }
+    }
+
+    .see-website-btn {
+      max-width: abstracts.rem(233px);
+    }
+  }
+
+  @include abstracts.respond-above(lg) {
+    .supported-projects-item {
+      display: flex;
+      gap: abstracts.rem(40px);
+
+      .left-side {
+        flex-basis: 30%;
+      }
+      .right-side {
+        flex-basis: 70%;
+      }
+    }
+  }
+
+  @include abstracts.respond-above(xl) {
+    img {
+      width: abstracts.rem(320px);
+      height: abstracts.rem(420px);
+      object-fit: cover;
+    }
+    .more-projects-cta {
+      margin-top: abstracts.rem(40px);
+    }
+  }
+</style>
+
+<script is:inline>
+  const grid = document.getElementById("supported-projects-list");
+  const items = [...grid.querySelectorAll(".supported-projects-item")];
+  const moreBtn = document.getElementById("load-more");
+  const pairs = [];
+  const status = document.getElementById("supported-projects-status");
+
+  const INITIAL = window.innerWidth > 992 ? 6 : 3;
+
+  let current = INITIAL;
+
+  function applyVisibility() {
+    const before = items.filter(
+      (li) => !li.classList.contains("is-hidden")
+    ).length;
+
+    items.forEach((li) => li.classList.add("is-hidden"));
+    items.slice(0, current).forEach((li) => li.classList.remove("is-hidden"));
+
+    const after = items.filter(
+      (li) => !li.classList.contains("is-hidden")
+    ).length;
+    if (status && after > before) {
+      const added = after - before;
+      status.textContent = `${added} projet${added > 1 ? "s" : ""} supplémentaire${added > 1 ? "s" : ""} affiché${added > 1 ? "s" : ""}.`;
+    }
+
+    const hasMore = items.length > current;
+    moreBtn.style.display = hasMore ? "inline-flex" : "none";
+    moreBtn.setAttribute("aria-expanded", String(current > INITIAL));
+  }
+
+  moreBtn.addEventListener("click", () => {
+    current += INITIAL;
+    applyVisibility();
+  });
+
+  applyVisibility();
+
+  function needsToggle(el) {
+    // si le contenu dépasse, scrollHeight > clientHeight
+    return el.scrollHeight - el.clientHeight > 1;
+  }
+
+  function initOne(container, button) {
+    function refresh() {
+      const need = needsToggle(container);
+      button.hidden = !need;
+      if (!need) {
+        // Rien à déplier
+        container.dataset.expanded = "true";
+        button.setAttribute("aria-expanded", "true");
+        button.textContent = "Afficher moins";
+      } else {
+        // Par défaut, pinçé
+        container.dataset.expanded = container.dataset.expanded ?? "false";
+        button.setAttribute("aria-expanded", container.dataset.expanded);
+        button.textContent =
+          container.dataset.expanded === "true"
+            ? "Afficher moins"
+            : "Afficher plus";
+      }
+    }
+
+    button.addEventListener("click", () => {
+      const expanded = container.dataset.expanded === "true";
+      container.dataset.expanded = String(!expanded);
+      button.setAttribute("aria-expanded", String(!expanded));
+      button.textContent = expanded ? "Afficher plus" : "Afficher moins";
+    });
+
+    // Premier calcul
+    refresh();
+
+    // Recalculer au redimensionnement (layout peut changer)
+    const onResize = () => refresh();
+    window.addEventListener("resize", onResize);
+    pairs.push(() => window.removeEventListener("resize", onResize));
+  }
+
+  // Instancie pour chaque bloc WYSIWYG
+  document.querySelectorAll(".richText[id]").forEach((el) => {
+    const id = el.id;
+    const btn = el.parentElement.querySelector(
+      `.see-more[data-target="${id}"]`
+    );
+    if (btn) initOne(el, btn);
+  });
+</script>
