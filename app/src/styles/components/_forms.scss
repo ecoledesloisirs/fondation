@@ -9,6 +9,7 @@
   width: 100%;
   box-sizing: border-box;
   background: abstracts.$color-silver;
+  font-family: abstracts.$font-paragraph;
 
   &:focus {
     outline: none;
@@ -31,6 +32,7 @@
 .c-input--textarea {
   @extend %form-input-base;
   resize: vertical;
+  height: abstracts.rem(187px);
 }
 
 .c-field {
@@ -72,14 +74,18 @@
   min-width: 0;
 }
 
-.c-actions {
+.project-form {
+  .submit-btn,
+  .rules-btn {
+    width: abstracts.rem(271px);
+  }
+}
+
+.c-actions,
+.c-rules {
   display: flex;
   justify-content: center;
   margin-top: abstracts.rem(20px);
-
-  .submit-btn {
-    max-width: abstracts.rem(289px);
-  }
 }
 
 .c-alert {
@@ -126,7 +132,7 @@
 
   label {
     position: relative;
-    padding-left: calc(#{$size} + 12px);
+    padding-left: calc(#{$size} + 22px);
     cursor: pointer;
     font-weight: 700;
 
