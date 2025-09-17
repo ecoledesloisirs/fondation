@@ -2,8 +2,9 @@
 import { defineConfig } from "astro/config";
 import node from "@astrojs/node";
 
-const NGROK = "81ce8e8b86f4.ngrok-free.app";
+const NGROK = "e9a7e9d91016.ngrok-free.app";
 const SITE = process.env.PUBLIC_SITE_URL;
+const DIRECTUS = process.env.PUBLIC_DIRECTUS_URL;
 
 // https://astro.build/config
 export default defineConfig({
