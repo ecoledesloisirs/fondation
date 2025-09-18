@@ -8,14 +8,15 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
 interface Props {
-  seo: {
+  seo?: {
     title: string;
     description: string;
+    noindex?: boolean;
   };
 }
 
 const { seo } = Astro.props;
-const { title, description } = seo || {
+const { title, description, noindex } = seo || {
   title: "Default Title",
   description: "Default Description",
 };
@@ -28,6 +29,7 @@ const { title, description } = seo || {
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <title>{title}</title>
   </head>
   <body>

@@ -1,13 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { fetchPageBlocks } from "../lib/directus";
+import type { Page } from "../types/directus";
 import BlocksToComponents from "../components/BlocksToComponents.astro";
 
-const page = await fetchPageBlocks("accueil");
-
-const { blocks } = page;
+const page = (await fetchPageBlocks("accueil")) as Page | null;
+if (!page) {
+  return new Response(null, { status: 404 });
+}
+const pageData = page as Page;
+const { blocks } = pageData;
 ---
 
-<Layout seo={page.seo}>
+<Layout seo={pageData.seo}>
   <BlocksToComponents blocks={blocks} />
 </Layout>

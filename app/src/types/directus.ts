@@ -17,3 +17,15 @@ export interface SupportedProjectsProps {
   date_created: string;
   button?: ButtonProps[];
 }
+
+export type SEO = {
+  title: string;
+  description: string;
+  noindex?: boolean;
+};
+
+export type Page = {
+  title: string;
+  seo: SEO;
+  blocks: any[];
+};

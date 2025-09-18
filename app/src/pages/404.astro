@@ -1,0 +1,26 @@
+---
+import Button from "../components/Button.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  seo={{
+    title: "Page non trouvée — Fondation de l’École des loisirs",
+    description:
+      "La page demandée est introuvable. Retournez à l’accueil ou explorez nos sections.",
+    noindex: true,
+  }}
+>
+  <p>Oups !</p>
+  <p>La page que vous recherchez semble introuvable...</p>
+  <p>Code erreur : 404</p>
+  <Button
+    variant="secondary"
+    href="/"
+    iconPosition="right"
+    iconName="download"
+    class="see-news-btn"
+  >
+    Retourner à l'accueil
+  </Button>
+</Layout>

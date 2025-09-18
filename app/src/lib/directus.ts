@@ -1,14 +1,16 @@
 import { createDirectus, rest, readItems } from "@directus/sdk";
+import type { Page } from "../types/directus";
 
 const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
 
 const client = createDirectus(DIRECTUS_URL).with(rest());
 
-export async function fetchPageBlocks(slug: string) {
+export async function fetchPageBlocks(slug: string): Promise<Page | null> {
   const pages = await client.request(
     readItems("page", {
       filter: {
         slug: { _eq: slug },
+        status: { _eq: "published" },
       },
       fields: [
         "*",
@@ -142,6 +144,7 @@ export async function fetchPageBlocks(slug: string) {
     })
   );
 
-  return pages[0] || []; // Return blocks array or empty if not found
+  const page = (pages?.[0] as Page | undefined) ?? null;
+  return page;
 }
 export default client;
