@@ -12,9 +12,7 @@ const [supportedProjects] = await Promise.all([
   getAllSupportedProjects() as Promise<SupportedProjectsProps[]>,
 ]);
 
-const DIRECTUS_BASE = import.meta.env.DEV
-  ? "/directus"
-  : import.meta.env.PUBLIC_DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section>

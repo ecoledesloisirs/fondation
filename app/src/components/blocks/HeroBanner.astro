@@ -2,11 +2,11 @@
 import { Image } from "astro:assets";
 
 import quoteImg from "../../assets/quote.png";
+import waveImgDesktop from "../../assets/wave_desktop.png";
 import waveImgMobile from "../../assets/wave_mobile.png";
 import waveImgMobile2 from "../../assets/wave_mobile_2.png";
 import waveImgMobile3 from "../../assets/wave_mobile_3.png";
 import waveImgMobile4 from "../../assets/wave_mobile_4.png";
-import waveImgDesktop from "../../assets/wave_desktop.png";
 
 import Breadcrumb from "../Breadcrumb.astro";
 
@@ -47,9 +47,7 @@ const {
 
 const heightLarge = is_home_page ? "600px" : "460px";
 
-const DIRECTUS_BASE = import.meta.env.DEV
-  ? "/directus"
-  : import.meta.env.PUBLIC_DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section class="hero-banner">

@@ -1,6 +1,6 @@
 ---
-import Button from "../Button.astro";
 import type { ButtonProps } from "../../types/directus";
+import Button from "../Button.astro";
 
 interface ContactProps {
   id: string;
@@ -23,9 +23,7 @@ const {
   item: { title, description, image_mobile, image_desktop, button },
 } = Astro.props as ContactProps;
 
-const DIRECTUS_BASE = import.meta.env.DEV
-  ? "/directus"
-  : import.meta.env.PUBLIC_DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section>

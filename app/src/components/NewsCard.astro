@@ -1,7 +1,7 @@
 ---
+import { Categories } from "../enums/categories";
 import dayjs from "../utils/dayjs";
 import Button from "./Button.astro";
-import { Categories } from "../enums/categories";
 
 interface NewsCardsProps {
   title: string;
@@ -24,9 +24,7 @@ const {
   pdf_file,
 } = Astro.props as NewsCardsProps;
 
-const DIRECTUS_BASE = import.meta.env.DEV
-  ? "/directus"
-  : import.meta.env.PUBLIC_DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <div class="news-card">

@@ -1,9 +1,9 @@
 ---
+import waveImgDesktop from "../../assets/wave_desktop.png";
 import waveImgMobile from "../../assets/wave_mobile.png";
 import waveImgMobile2 from "../../assets/wave_mobile_2.png";
 import waveImgMobile3 from "../../assets/wave_mobile_3.png";
 import waveImgMobile4 from "../../assets/wave_mobile_4.png";
-import waveImgDesktop from "../../assets/wave_desktop.png";
 
 import Button from "../Button.astro";
 
@@ -53,9 +53,7 @@ const stages = (item?.cases ?? []).map((c) => ({
   ...c.item,
   calendar_items: (c.item.calendar_items ?? []).map((ci) => ci.item),
 }));
-const DIRECTUS_BASE = import.meta.env.DEV
-  ? "/directus"
-  : import.meta.env.PUBLIC_DIRECTUS_URL;
+const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <section>
