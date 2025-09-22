@@ -1,5 +1,5 @@
 ---
-import { Categories } from "../enums/categories";
+import type { ButtonProps } from "../types/directus";
 import dayjs from "../utils/dayjs";
 import Button from "./Button.astro";
 
@@ -12,7 +12,8 @@ interface NewsCardsProps {
   };
   publication_date: string;
   category: string;
-  pdf_file: string;
+  pdf_file?: string;
+  button_link?: ButtonProps[];
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   publication_date,
   category,
   pdf_file,
+  button_link = [],
 } = Astro.props as NewsCardsProps;
 
 const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
@@ -43,15 +45,25 @@ const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
   </p>
   <h3 class="news-title">{title}</h3>
   <p class="news-description">{description}</p>
-  <Button
-    variant="secondary"
-    href={`${DIRECTUS_BASE}/assets/${pdf_file}`}
-    iconPosition="right"
-    iconName="download"
-    class="see-news-btn"
-  >
-    {category === Categories.Press ? "Accéder à l'article" : "Consulter le PDF"}
-  </Button>
+  {
+    (pdf_file || button_link?.[0]?.item?.href) && (
+      <Button
+        variant="secondary"
+        href={
+          pdf_file
+            ? `${DIRECTUS_BASE}/assets/${pdf_file}`
+            : button_link?.[0]?.item?.href
+        }
+        iconPosition="right"
+        iconName={pdf_file ? "download" : "extra_link"}
+        class="see-news-btn"
+      >
+        {pdf_file
+          ? "Consulter le PDF"
+          : (button_link?.[0]?.item?.label ?? "Accéder à l'article")}
+      </Button>
+    )
+  }
 </div>
 
 <style lang="scss">

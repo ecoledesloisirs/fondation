@@ -67,6 +67,7 @@ const [news, categories] = await Promise.all([
                 image={n.image}
                 publication_date={n.publication_date ?? n.date_created}
                 pdf_file={n.pdf_file?.id}
+                button_link={n.button_link}
                 category={n.category?.name}
               />
             </li>

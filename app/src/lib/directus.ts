@@ -60,6 +60,7 @@ export async function fetchPageBlocks(slug: string): Promise<Page | null> {
                             "title",
                             "description",
                             { pdf_file: ["id"] },
+                            { button_link: ["*", { item: ["*"] }] },
                           ],
                         },
                       },

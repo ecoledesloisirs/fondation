@@ -25,7 +25,7 @@ export const getAllNews = () =>
         "status",
         { image: ["id", "description"] },
         { pdf_file: ["id"] },
-
+        { button_link: ["*", { item: ["*"] }] },
         { category: ["id", "name", "slug", "status"] },
       ],
       filter: {
