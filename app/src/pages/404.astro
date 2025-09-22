@@ -1,6 +1,8 @@
 ---
 import Button from "../components/Button.astro";
 import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import logo from "../assets/logo_404.png";
 ---
 
 <Layout
@@ -11,16 +13,111 @@ import Layout from "../layouts/Layout.astro";
     noindex: true,
   }}
 >
-  <p>Oups !</p>
-  <p>La page que vous recherchez semble introuvable...</p>
-  <p>Code erreur : 404</p>
-  <Button
-    variant="secondary"
-    href="/"
-    iconPosition="right"
-    iconName="download"
-    class="see-news-btn"
-  >
-    Retourner à l'accueil
-  </Button>
+  <section>
+    <div class="container">
+      <div class="wrapper">
+        <div class="left-side">
+          <div>
+            <p>Erreur</p>
+            <p>404</p>
+          </div>
+          <p>
+            <span>Désolé, la page que vous recherchez est introuvable.</span><br
+            />
+            Il se peut que le lien soit casséou que la page ait été supprimée.
+          </p>
+          <Button
+            variant="primary"
+            href="/"
+            iconPosition="left"
+            iconName="left"
+          >
+            Retourner à l'accueil
+          </Button>
+        </div>
+        <div class="right-side">
+          <div>
+            <Image
+              src={logo}
+              alt="Logo de la Fondation de l'École des loisirs"
+              loading="lazy"
+              decoding="async"
+              width={logo.width}
+              height={logo.height}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<style lang="scss">
+  @use "../styles/abstracts";
+
+  section {
+    padding-block: abstracts.rem(140px) abstracts.rem(120px);
+  }
+
+  .wrapper {
+  }
+
+  .left-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: abstracts.rem(20px);
+
+    p {
+      text-align: center;
+    }
+
+    > div {
+      p:nth-child(1) {
+        @include abstracts.typography(abstracts.$font-title, 28px, 32px, 700);
+      }
+      p:nth-child(2) {
+        @include abstracts.typography(abstracts.$font-title, 64px, 72px, 700);
+      }
+    }
+
+    span {
+      @include abstracts.typography(abstracts.$font-paragraph, 18px, 28px, 700);
+    }
+
+    a {
+      width: abstracts.rem(320px);
+    }
+  }
+
+  .right-side {
+    display: none;
+  }
+
+  @include abstracts.respond-above(md) {
+    .wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: abstracts.rem(16px);
+    }
+
+    .left-side {
+      align-items: flex-start;
+
+      p {
+        text-align: left;
+      }
+    }
+
+    .right-side {
+      display: block;
+      max-width: abstracts.rem(427px);
+
+      img {
+        height: 100%;
+      }
+    }
+  }
+</style>
