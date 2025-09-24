@@ -14,6 +14,7 @@ interface NewsCardsProps {
   category: string;
   pdf_file?: string;
   button_link?: ButtonProps[];
+  headingLevel?: "h2" | "h3";
 }
 
 const {
@@ -24,7 +25,12 @@ const {
   category,
   pdf_file,
   button_link = [],
+  headingLevel: _headingLevel = "h3",
 } = Astro.props as NewsCardsProps;
+
+const headingLevel: "h2" | "h3" =
+  _headingLevel === "h2" || _headingLevel === "h3" ? _headingLevel : "h3";
+const HeadingTag = headingLevel;
 
 const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
@@ -43,7 +49,7 @@ const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
   <p class="news-publication-date">
     {dayjs(publication_date).format("MMMM YYYY")}
   </p>
-  <h3 class="news-title">{title}</h3>
+  <HeadingTag class="news-title">{title}</HeadingTag>
   <p class="news-description">{description}</p>
   {
     (pdf_file || button_link?.[0]?.item?.href) && (
@@ -86,7 +92,7 @@ const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
       margin-top: abstracts.rem(8px);
     }
 
-    h3 {
+    .news-title {
       margin-block: abstracts.rem(8px);
       @include abstracts.typography(abstracts.$font-title, 20px, 24px, 700);
     }

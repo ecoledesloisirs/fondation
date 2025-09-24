@@ -13,6 +13,12 @@
   position: absolute;
   left: -9999px;
   top: auto;
+  background: abstracts.$color-white;
+  color: abstracts.$color-primary;
+  padding: abstracts.rem(8px) abstracts.rem(12px);
+  border-radius: abstracts.rem(4px);
+  text-decoration: none;
+  box-shadow: 0 0 0 2px abstracts.$color-primary;
   &:focus {
     left: 1rem;
     top: 1rem;

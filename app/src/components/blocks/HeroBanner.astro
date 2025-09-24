@@ -48,23 +48,113 @@ const {
 const heightLarge = is_home_page ? "600px" : "460px";
 
 const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
+
+const makeSrcSet = (
+  id: string,
+  widths: number[],
+  format: "webp" | "avif" = "webp",
+  quality: number | ((w: number) => number) = 75
+) =>
+  widths
+    .map((w) => {
+      const q = typeof quality === "function" ? quality(w) : quality;
+      return `${DIRECTUS_BASE}/assets/${id}?width=${w}&format=${format}&quality=${q} ${w}w`;
+    })
+    .join(", ");
+
+// Responsive width candidates for each breakpoint
+const mobileWidths = [
+  320, 360, 420, 480, 560, 640, 720, 768, 840, 960, 992,
+];
+// Desktop candidates must also cover widths right above 768px since desktop source matches there
+const desktopWidths = [768, 840, 960, 992, 1200, 1280, 1440];
+// Hero banner spans full viewport width up to 1440px
+const sizes = "(min-width: 1440px) 1440px, 100vw";
 ---
+
+{
+  image_mobile && image_desktop ? (
+    <Fragment slot="head">
+      {/** Preload AVIF (primary format on modern browsers) */}
+      <link
+        rel="preload"
+        as="image"
+        imagesrcset={makeSrcSet(
+          image_desktop.id,
+          desktopWidths,
+          "avif",
+          (w) => (w >= 960 ? 55 : w >= 720 ? 60 : 70)
+        )}
+        imagesizes={sizes}
+        media="(min-width: 768px)"
+        fetchpriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        imagesrcset={makeSrcSet(
+          image_mobile.id,
+          mobileWidths,
+          "avif",
+          (w) => (w >= 960 ? 55 : w >= 720 ? 60 : 70)
+        )}
+        imagesizes={sizes}
+        media="(max-width: 767px)"
+        fetchpriority="high"
+      />
+    </Fragment>
+  ) : null
+}
 
 <section class="hero-banner">
   {
     image_mobile && image_desktop ? (
       <div class="hero-banner-top">
         <picture>
+          {/** Desktop, AVIF then WebP */}
           <source
             media="(min-width: 768px)"
-            srcset={`${DIRECTUS_BASE}/assets/${image_desktop.id}?width=1600&format=webp`}
+            srcset={makeSrcSet(
+              image_desktop.id,
+              desktopWidths,
+              "avif",
+              (w) => (w >= 960 ? 55 : w >= 720 ? 60 : 70)
+            )}
+            sizes={sizes}
+            type="image/avif"
+          />
+          <source
+            media="(min-width: 768px)"
+            srcset={makeSrcSet(image_desktop.id, desktopWidths, "webp", 75)}
+            sizes={sizes}
             type="image/webp"
           />
 
+          {/** Mobile, AVIF preferred for capable browsers */}
+          <source
+            srcset={makeSrcSet(
+              image_mobile.id,
+              mobileWidths,
+              "avif",
+              (w) => (w >= 960 ? 55 : w >= 720 ? 60 : 70)
+            )}
+            sizes={sizes}
+            type="image/avif"
+          />
+
           <img
-            srcset={`${DIRECTUS_BASE}/assets/${image_mobile.id}?width=992&format=webp`}
+            src={`${DIRECTUS_BASE}/assets/${image_mobile.id}?width=480&format=webp&quality=75`}
+            srcset={makeSrcSet(
+              image_mobile.id,
+              mobileWidths,
+              "webp",
+              (w) => (w >= 720 ? 70 : 75)
+            )}
+            sizes={sizes}
             alt={image_mobile.description}
-            loading="lazy"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
             class="banner-img"
             style={`--h-lg:${heightLarge};`}
           />

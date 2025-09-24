@@ -436,7 +436,7 @@ const { item } = Astro.props as ProjectSubmissionProps;
       const dz = form.querySelector(".dropzone");
       dz?.setAttribute("data-disabled", "true");
     } else {
-      fs.disabled = false;
+      formFieldset.disabled = false;
       form.removeAttribute("aria-disabled");
       form.classList.remove("is-disabled");
     }

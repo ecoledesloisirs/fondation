@@ -22,7 +22,9 @@ import edlLogoFooter from "../assets/logo_footer.png";
           </a>
         </div>
         <div class="footer-nav">
-          <h4>Fondation <span class="italic">l’école des loisirs</span></h4>
+          <p class="footer-title">
+            Fondation <span class="italic">l’école des loisirs</span>
+          </p>
           <ul>
             <li><a href="/deposer-un-dossier">Déposer un dossier</a></li>
             <li><a href="/contact">Contact</a></li>
@@ -32,7 +34,7 @@ import edlLogoFooter from "../assets/logo_footer.png";
         </div>
         <div class="footer-socials-rgaa">
           <div class="footer-socials">
-            <h4>Réseaux sociaux</h4>
+            <p class="footer-title">Réseaux sociaux</p>
             <div class="footer-socials-icons">
               <a href="#" aria-label="LinkedIn">
                 <Image src={linkedinIcon} alt="LinkedIn" />
@@ -74,11 +76,6 @@ import edlLogoFooter from "../assets/logo_footer.png";
 <style lang="scss">
   @use "../styles/abstracts";
 
-  h4 {
-    margin: 0 0 abstracts.rem(10px);
-    text-align: center;
-  }
-
   a {
     color: abstracts.$color-primary;
     text-decoration: none;
@@ -96,6 +93,12 @@ import edlLogoFooter from "../assets/logo_footer.png";
         max-width: abstracts.rem(100px);
         height: auto;
       }
+    }
+
+    .footer-title {
+      margin: 0 0 abstracts.rem(10px);
+      text-align: center;
+      @include abstracts.typography(abstracts.$font-title, 20px, 24px, 700);
     }
 
     .footer-nav {
@@ -248,13 +251,13 @@ import edlLogoFooter from "../assets/logo_footer.png";
   }
 
   @include abstracts.respond-above(lg) {
-    h4 {
-      text-align: left;
-    }
-
     footer {
       .footer-top {
         justify-content: space-between;
+      }
+
+      .footer-title {
+        text-align: left;
       }
 
       .footer-logo {

@@ -1,6 +1,13 @@
 ---
-import "@fontsource/philosopher";
-import "@fontsource-variable/albert-sans";
+// Load only needed font weights and provide preloads for them
+import "@fontsource/philosopher/latin-400.css";
+import "@fontsource/philosopher/latin-700.css";
+import "@fontsource-variable/albert-sans/wght.css";
+
+// Asset URLs for preloading
+import philosopherLatin400Url from "@fontsource/philosopher/files/philosopher-latin-400-normal.woff2?url";
+import philosopherLatin700Url from "@fontsource/philosopher/files/philosopher-latin-700-normal.woff2?url";
+import albertSansVarLatinUrl from "@fontsource-variable/albert-sans/files/albert-sans-latin-wght-normal.woff2?url";
 
 import "../styles/main.scss";
 
@@ -20,6 +27,9 @@ const { title, description, noindex } = seo || {
   title: "Default Title",
   description: "Default Description",
 };
+
+// External assets origin (Directus). Used for hero images and media.
+const DIRECTUS_BASE = import.meta.env.PUBLIC_DIRECTUS_URL;
 ---
 
 <!doctype html>
@@ -29,15 +39,50 @@ const { title, description, noindex } = seo || {
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content={description} />
+    <slot name="head" />
+    {
+      /** Preconnect to the Directus asset origin to speed up first image fetch */
+    }
+    {
+      DIRECTUS_BASE && (
+        <>
+          <link rel="preconnect" href={DIRECTUS_BASE} crossorigin />
+          <link rel="dns-prefetch" href={DIRECTUS_BASE} />
+        </>
+      )
+    }
+
+    {/** Preload critical fonts to reduce request chaining for LCP text */}
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={philosopherLatin700Url}
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={philosopherLatin400Url}
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={albertSansVarLatinUrl}
+      crossorigin
+    />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <title>{title}</title>
   </head>
   <body>
-    <main>
-      <a class="skip-link" href="#main">Aller au contenu</a>
-      <Header />
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <Header />
+    <main id="main" tabindex="-1">
       <slot />
-      <Footer />
     </main>
+    <Footer />
   </body>
 </html>

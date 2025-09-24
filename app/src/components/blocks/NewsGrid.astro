@@ -69,6 +69,7 @@ const [news, categories] = await Promise.all([
                 pdf_file={n.pdf_file?.id}
                 button_link={n.button_link}
                 category={n.category?.name}
+                headingLevel="h2"
               />
             </li>
           );
@@ -192,7 +193,6 @@ const [news, categories] = await Promise.all([
     }
 
     .filters {
-      align-items: baseline;
       justify-content: flex-start;
 
       &__select {

@@ -65,6 +65,7 @@ const classes = cx(
     aria-disabled={disabled || loading ? "true" : undefined}
     disabled={!href && (disabled || loading) ? true : undefined}
     target={href ? target : undefined}
+    rel={href && target === "_blank" ? "noopener noreferrer" : undefined}
     {...rest}
   >
     {

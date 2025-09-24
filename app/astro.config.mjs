@@ -8,4 +8,10 @@ const SITE = process.env.PUBLIC_SITE_URL;
 export default defineConfig({
   site: SITE,
   adapter: node({ mode: "standalone" }),
+  // Reduce render-blocking requests by inlining CSS into HTML.
+  // Astro defaults to 'auto' (inline small files). For Lighthouse
+  // improvements on this project, force inlining for all pages.
+  build: {
+    inlineStylesheets: "always",
+  },
 });
