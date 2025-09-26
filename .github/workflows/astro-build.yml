@@ -1,0 +1,19 @@
+name: astro-build
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.20.8
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm --prefix app ci
+      - run: npm --prefix app run build -- --mode=dev
+      # Optionnel : déploiement (rsync/ssh/Docker, etc.)
