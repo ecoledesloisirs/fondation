@@ -21,7 +21,9 @@ collections:
       singleton: false
       sort: 1
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Blocs
       unarchive_value: null
       versioning: false
   - collection: Entities
@@ -43,7 +45,9 @@ collections:
       singleton: false
       sort: 2
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Entités
       unarchive_value: null
       versioning: false
   - collection: application_file
@@ -65,7 +69,9 @@ collections:
       singleton: false
       sort: 8
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Candidature
       unarchive_value: draft
       versioning: false
     schema:
@@ -89,7 +95,9 @@ collections:
       singleton: false
       sort: 3
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Appel à projets
       unarchive_value: draft
       versioning: false
     schema:
@@ -137,7 +145,9 @@ collections:
       singleton: false
       sort: 5
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Contact
       unarchive_value: draft
       versioning: false
     schema:
@@ -185,7 +195,9 @@ collections:
       singleton: false
       sort: 9
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Formulaire contact
       unarchive_value: null
       versioning: false
     schema:
@@ -199,7 +211,7 @@ collections:
       collapse: open
       collection: block_hero_banner
       color: null
-      display_template: null
+      display_template: Bannière
       group: Blocks
       hidden: false
       icon: hexagon
@@ -209,7 +221,9 @@ collections:
       singleton: false
       sort: 1
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Bannière
       unarchive_value: draft
       versioning: false
     schema:
@@ -233,7 +247,9 @@ collections:
       singleton: false
       sort: 2
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Mission
       unarchive_value: draft
       versioning: false
     schema:
@@ -281,7 +297,9 @@ collections:
       singleton: false
       sort: 4
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Actualité
       unarchive_value: draft
       versioning: false
     schema:
@@ -307,7 +325,9 @@ collections:
       singleton: false
       sort: 6
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Grille des actualités
       unarchive_value: null
       versioning: false
     schema:
@@ -355,7 +375,9 @@ collections:
       singleton: false
       sort: 8
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Formulaire dépôt de dossier
       unarchive_value: null
       versioning: false
     schema:
@@ -379,7 +401,9 @@ collections:
       singleton: false
       sort: 10
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Texte enrichi
       unarchive_value: null
       versioning: false
     schema:
@@ -403,7 +427,9 @@ collections:
       singleton: false
       sort: 11
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Plan du site
       unarchive_value: null
       versioning: false
     schema:
@@ -427,7 +453,9 @@ collections:
       singleton: false
       sort: 7
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Etapes dépôt dossier
       unarchive_value: null
       versioning: false
     schema:
@@ -475,7 +503,9 @@ collections:
       singleton: false
       sort: 12
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Projets soutenus
       unarchive_value: null
       versioning: false
     schema:
@@ -523,7 +553,9 @@ collections:
       singleton: false
       sort: 5
       sort_field: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Bouton
       unarchive_value: draft
       versioning: false
     schema:
@@ -571,11 +603,37 @@ collections:
       singleton: false
       sort: 2
       sort_field: sort
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Actualité
       unarchive_value: draft
       versioning: false
     schema:
       name: news
+  - collection: news_button_link
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: news_button_link
+      color: null
+      display_template: null
+      group: null
+      hidden: true
+      icon: import_export
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: news_button_link
   - collection: news_category
     meta:
       accountability: all
@@ -595,7 +653,9 @@ collections:
       singleton: false
       sort: 3
       sort_field: sort
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Catégorie actualité
       unarchive_value: draft
       versioning: false
     schema:
@@ -691,7 +751,9 @@ collections:
       singleton: false
       sort: 7
       sort_field: sort
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Etape dépôt dossier
       unarchive_value: null
       versioning: false
     schema:
@@ -763,7 +825,9 @@ collections:
       singleton: false
       sort: 6
       sort_field: sort
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Calendrier dépôt dossier
       unarchive_value: null
       versioning: false
     schema:
@@ -787,7 +851,9 @@ collections:
       singleton: false
       sort: 9
       sort_field: sort
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Projet soutenu
       unarchive_value: draft
       versioning: false
     schema:
@@ -2625,7 +2691,9 @@ fields:
       required: false
       sort: 2
       special: null
-      translations: null
+      translations:
+        - language: fr-CA
+          translation: Statut
       validation: null
       validation_message: null
       width: full
@@ -2815,7 +2883,15 @@ fields:
     type: alias
     meta:
       collection: block_hero_banner
-      conditions: null
+      conditions:
+        - hidden: true
+          name: Présent en page d'accueil
+          options:
+            start: open
+          rule:
+            _and:
+              - is_home_page:
+                  _eq: false
       display: null
       display_options: null
       field: citation
@@ -2936,7 +3012,9 @@ fields:
       sort: 10
       special:
         - cast-boolean
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Fil d'ariane
       validation: null
       validation_message: null
       width: full
@@ -2962,7 +3040,32 @@ fields:
     type: text
     meta:
       collection: block_hero_banner
-      conditions: null
+      conditions:
+        - hidden: true
+          name: Présent en page d'accueil
+          options:
+            font: sans-serif
+            toolbar:
+              - bold
+              - italic
+              - underline
+              - h1
+              - h2
+              - h3
+              - numlist
+              - bullist
+              - removeformat
+              - blockquote
+              - customLink
+              - customImage
+              - customMedia
+              - hr
+              - code
+              - fullscreen
+          rule:
+            _and:
+              - is_home_page:
+                  _eq: true
       display: null
       display_options: null
       field: content
@@ -3003,7 +3106,9 @@ fields:
       required: false
       sort: 12
       special: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Contenu
       validation: null
       validation_message: null
       width: full
@@ -3083,7 +3188,9 @@ fields:
       sort: 8
       special:
         - file
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Image ordinateur
       validation: null
       validation_message: null
       width: full
@@ -3124,7 +3231,9 @@ fields:
       sort: 9
       special:
         - cast-boolean
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Présent dans la page d'accueil
       validation: null
       validation_message: null
       width: full
@@ -3230,7 +3339,9 @@ fields:
       required: false
       sort: 2
       special: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Statut
       validation: null
       validation_message: null
       width: full
@@ -3433,7 +3544,9 @@ fields:
       required: true
       sort: 7
       special: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Titre
       validation: null
       validation_message: null
       width: full
@@ -3495,7 +3608,9 @@ fields:
       required: false
       sort: 8
       special: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Description
       validation: null
       validation_message: null
       width: full
@@ -6304,7 +6419,14 @@ fields:
     type: uuid
     meta:
       collection: news
-      conditions: null
+      conditions:
+        - hidden: true
+          name: Affichage
+          options: {}
+          rule:
+            _and:
+              - category:
+                  _eq: e0677626-f199-4f85-b515-73eae16c2d7d
       display: null
       display_options: null
       field: pdf_file
@@ -6340,34 +6462,6 @@ fields:
       foreign_key_table: directus_files
       foreign_key_column: id
   - collection: news
-    field: links-5b12p0
-    type: alias
-    meta:
-      collection: news
-      conditions: null
-      display: null
-      display_options: null
-      field: links-5b12p0
-      group: null
-      hidden: false
-      interface: presentation-links
-      note: null
-      options:
-        links:
-          - icon: download
-            label: Consulter le pdf
-            type: primary
-      readonly: false
-      required: false
-      sort: 14
-      special:
-        - alias
-        - no-data
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-  - collection: news
     field: category
     type: uuid
     meta:
@@ -6383,7 +6477,7 @@ fields:
       options:
         template: '{{name}}'
       readonly: false
-      required: false
+      required: true
       sort: 9
       special:
         - m2o
@@ -6408,6 +6502,196 @@ fields:
       has_auto_increment: false
       foreign_key_table: news_category
       foreign_key_column: id
+  - collection: news
+    field: button_link
+    type: alias
+    meta:
+      collection: news
+      conditions:
+        - hidden: true
+          name: Affichage
+          options:
+            allowDuplicates: false
+            enableCreate: true
+            enableSelect: true
+            limit: 15
+          rule:
+            _and:
+              - category:
+                  _neq: e0677626-f199-4f85-b515-73eae16c2d7d
+      display: null
+      display_options: null
+      field: button_link
+      group: null
+      hidden: false
+      interface: list-m2a
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 14
+      special:
+        - m2a
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: news_button_link
+    field: id
+    type: integer
+    meta:
+      collection: news_button_link
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: news_button_link
+      data_type: integer
+      default_value: nextval('news_button_link_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: news_button_link
+    field: news_id
+    type: uuid
+    meta:
+      collection: news_button_link
+      conditions: null
+      display: null
+      display_options: null
+      field: news_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: news_id
+      table: news_button_link
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: news
+      foreign_key_column: id
+  - collection: news_button_link
+    field: item
+    type: string
+    meta:
+      collection: news_button_link
+      conditions: null
+      display: null
+      display_options: null
+      field: item
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: item
+      table: news_button_link
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: news_button_link
+    field: collection
+    type: string
+    meta:
+      collection: news_button_link
+      conditions: null
+      display: null
+      display_options: null
+      field: collection
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: collection
+      table: news_button_link
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: news_category
     field: id
     type: uuid
@@ -6830,14 +7114,14 @@ fields:
       display: null
       display_options: null
       field: id
-      group: content_group
+      group: null
       hidden: true
       interface: input
       note: null
       options: null
       readonly: true
       required: false
-      sort: 1
+      sort: 2
       special:
         - uuid
       translations: null
@@ -6887,14 +7171,14 @@ fields:
             value: archived
         showAsDot: true
       field: status
-      group: content_group
+      group: null
       hidden: false
       interface: select-dropdown
       note: null
       options:
         choices:
           - color: var(--theme--primary)
-            text: $t:published
+            text: Publié
             value: published
           - color: var(--theme--foreground)
             text: $t:draft
@@ -6904,9 +7188,11 @@ fields:
             value: archived
       readonly: false
       required: false
-      sort: 2
+      sort: 3
       special: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Statut
       validation: null
       validation_message: null
       width: full
@@ -6936,7 +7222,7 @@ fields:
       display: user
       display_options: null
       field: user_created
-      group: content_group
+      group: null
       hidden: true
       interface: select-dropdown-m2o
       note: null
@@ -6944,7 +7230,7 @@ fields:
         template: '{{avatar}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: 3
+      sort: 6
       special:
         - user-created
       translations: null
@@ -6978,14 +7264,14 @@ fields:
       display_options:
         relative: true
       field: date_created
-      group: content_group
+      group: null
       hidden: true
       interface: datetime
       note: null
       options: null
       readonly: true
       required: false
-      sort: 4
+      sort: 5
       special:
         - date-created
       translations: null
@@ -7018,7 +7304,7 @@ fields:
       display: user
       display_options: null
       field: user_updated
-      group: content_group
+      group: null
       hidden: true
       interface: select-dropdown-m2o
       note: null
@@ -7026,7 +7312,7 @@ fields:
         template: '{{avatar}} {{first_name}} {{last_name}}'
       readonly: true
       required: false
-      sort: 5
+      sort: 7
       special:
         - user-updated
       translations: null
@@ -7060,14 +7346,14 @@ fields:
       display_options:
         relative: true
       field: date_updated
-      group: content_group
+      group: null
       hidden: true
       interface: datetime
       note: null
       options: null
       readonly: true
       required: false
-      sort: 6
+      sort: 4
       special:
         - date-updated
       translations: null
@@ -7100,7 +7386,7 @@ fields:
       display: null
       display_options: null
       field: title
-      group: content_group
+      group: null
       hidden: false
       interface: input
       note: null
@@ -7108,9 +7394,11 @@ fields:
         placeholder: Page title
       readonly: false
       required: true
-      sort: 7
+      sort: 8
       special: null
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Titre
       validation: null
       validation_message: null
       width: full
@@ -7140,18 +7428,18 @@ fields:
       display: raw
       display_options: null
       field: slug
-      group: content_group
+      group: null
       hidden: false
       interface: input
       note: >-
         Si le champ n'est pas renseigné, il sera automatiquement alimenté par la
-        valeur du champ "Titre"
+        valeur du champ "Titre". Il correspond à www.monsite.fr/slug 
       options:
         placeholder: Le texte qui sera utilisé dans l'url de la page
         slug: true
       readonly: false
       required: false
-      sort: 8
+      sort: 9
       special: null
       translations:
         - language: en-GB
@@ -7187,42 +7475,19 @@ fields:
       display: null
       display_options: null
       field: blocks
-      group: content_group
+      group: null
       hidden: false
       interface: list-m2a
       note: null
       options: null
       readonly: false
       required: false
-      sort: 9
+      sort: 10
       special:
         - m2a
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-  - collection: page
-    field: content_group
-    type: alias
-    meta:
-      collection: page
-      conditions: null
-      display: null
-      display_options: null
-      field: content_group
-      group: null
-      hidden: false
-      interface: group-detail
-      note: null
-      options: null
-      readonly: false
-      required: false
-      sort: 1
-      special:
-        - alias
-        - no-data
-        - group
-      translations: null
+      translations:
+        - language: fr-FR
+          translation: Blocs
       validation: null
       validation_message: null
       width: full
@@ -7241,8 +7506,8 @@ fields:
       note: null
       options: null
       readonly: false
-      required: false
-      sort: 10
+      required: true
+      sort: 11
       special:
         - m2o
       translations: null
@@ -7516,7 +7781,7 @@ fields:
       note: null
       options: null
       readonly: false
-      required: false
+      required: true
       sort: 7
       special: null
       translations: null
@@ -7555,7 +7820,7 @@ fields:
       note: null
       options: null
       readonly: false
-      required: false
+      required: true
       sort: 8
       special: null
       translations: null
@@ -9872,6 +10137,41 @@ relations:
       foreign_key_table: news_category
       foreign_key_column: id
       constraint_name: news_category_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: news_button_link
+    field: item
+    related_collection: null
+    meta:
+      junction_field: news_id
+      many_collection: news_button_link
+      many_field: item
+      one_allowed_collections:
+        - button
+      one_collection: null
+      one_collection_field: collection
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+  - collection: news_button_link
+    field: news_id
+    related_collection: news
+    meta:
+      junction_field: item
+      many_collection: news_button_link
+      many_field: news_id
+      one_allowed_collections: null
+      one_collection: news
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: button_link
+      sort_field: null
+    schema:
+      table: news_button_link
+      column: news_id
+      foreign_key_table: news
+      foreign_key_column: id
+      constraint_name: news_button_link_news_id_foreign
       on_update: NO ACTION
       on_delete: SET NULL
   - collection: news_category
