@@ -9,22 +9,22 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^9.4.3",
+    "@astrojs/node": "^9.4.4",
     "@directus/sdk": "^18.0.3",
-    "@fontsource-variable/albert-sans": "^5.2.6",
-    "@fontsource/philosopher": "^5.2.6",
-    "astro": "^5.13.3",
+    "@fontsource-variable/albert-sans": "^5.2.8",
+    "@fontsource/philosopher": "^5.2.8",
+    "astro": "^5.14.1",
     "dayjs": "^1.11.18",
     "fast-glob": "^3.3.3",
     "handlebars": "^4.7.8",
     "html-to-text": "^9.0.5",
-    "mjml": "^4.15.3",
+    "mjml": "^4.16.1",
     "nodemailer": "^7.0.6",
-    "sass": "^1.91.0"
+    "sass": "^1.93.2"
   },
   "devDependencies": {
     "@types/html-to-text": "^9.0.4",
     "@types/mjml": "^4.7.4",
-    "@types/nodemailer": "^7.0.1"
+    "@types/nodemailer": "^7.0.2"
   }
 }
