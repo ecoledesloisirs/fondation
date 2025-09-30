@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, passthroughImageService } from "astro/config";
 import node from "@astrojs/node";
 
 const SITE = process.env.PUBLIC_SITE_URL;
@@ -13,5 +13,8 @@ export default defineConfig({
   // improvements on this project, force inlining for all pages.
   build: {
     inlineStylesheets: "always",
+  },
+  image: {
+    service: passthroughImageService(),
   },
 });
